@@ -220,8 +220,7 @@ class Parameter(BaseObject):
             self._expression: str = self._name
         else:
             self._expression = str(expression)
-            if isinstance(expression, int | float):
-                self._value = expression
+
         self._description: str = description
         return
 
@@ -244,11 +243,13 @@ class Parameter(BaseObject):
         float
             如果表达式是整数或浮点数，那么返回其数值，否则抛出异常后返回NaN
         """
+
+        v: float = 0.0
         try:
-            return self._value
-        except NameError:
-            _logger.error("value does not exist.")
-        return float("nan")
+            v = float(self.expression)
+        except ValueError:
+            v = float("nan")
+        return v
 
     @property
     def description(self) -> str:
