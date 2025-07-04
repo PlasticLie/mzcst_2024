@@ -15,9 +15,10 @@ import sys
 import time
 
 import matplotlib.pyplot as plt
-import mzcst_2024 as mz
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+
+import mzcst_2024 as mz
 from mzcst_2024 import Parameter
 
 if __name__ == "__main__":

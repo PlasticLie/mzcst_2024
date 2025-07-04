@@ -23,8 +23,8 @@ from mzcst import profiles_to_shapes as p2s
 from mzcst import shape_operations as so
 from mzcst import solver
 from mzcst import transformations_and_picks as tp
-from mzcst.common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
 from mzcst._global import Parameter
+from mzcst.common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
 from mzcst.math_ import bracket
 from mzcst.plot import Plot
 from mzcst.shape_operations import Solid
