@@ -15,7 +15,6 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
-import surfaces
 from mpl_toolkits.mplot3d import Axes3D
 
 import mzcst_2024 as mz
@@ -32,6 +31,7 @@ from mzcst_2024.shape_operations import Solid
 from mzcst_2024.shapes import AnalyticalFace, Brick
 from mzcst_2024.sources_and_ports.hf import Port
 from mzcst_2024.transformations_and_picks import WCS
+from mzcst_2024.utils import surfaces
 
 if __name__ == "__main__":
     #######################################
