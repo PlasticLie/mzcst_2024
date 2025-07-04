@@ -11,14 +11,12 @@ STABLE_VERSION = [
 
 
 def version(tag: str = "test") -> str:
+    current_time = time.localtime()
     match tag:
         case "test":
-            current_time = time.localtime()
-            time_str_ = f"{current_time.tm_year:04d}.{current_time.tm_mon:02d}.{current_time.tm_mday:02d}.{current_time.tm_hour:02d}{current_time.tm_min:02d}"
-            version_name = time_str_
+            version_name = f"{current_time.tm_year:04d}.{current_time.tm_mon:02d}.{current_time.tm_mday:02d}pre{current_time.tm_hour:02d}{current_time.tm_min:02d}"
         case "stable":
-            current_time = time.localtime()
-            version_name = STABLE_VERSION[-1]
+            version_name = f"{current_time.tm_year:04d}.{current_time.tm_mon:02d}.{current_time.tm_mday:02d}"
         case _:
             raise ValueError(
                 f"Unknown tag: {tag}, expected 'test' or 'stable'."
