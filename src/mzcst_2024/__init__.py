@@ -45,5 +45,6 @@ from . import (  # cst.asymptotic; _global,
     solver,
     sources_and_ports,
     transformations_and_picks,
+    utils,
 )
 from ._global import BaseObject, Parameter, Units, VbaObject, change_solver_type

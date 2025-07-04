@@ -14,23 +14,24 @@ import sys
 import time
 
 import matplotlib.pyplot as plt
-import mzcst as mz
 import numpy as np
 import surfaces
 from mpl_toolkits.mplot3d import Axes3D
-from mzcst import _global, common, component, interface, material
-from mzcst import profiles_to_shapes as p2s
-from mzcst import shape_operations as so
-from mzcst import solver
-from mzcst import transformations_and_picks as tp
-from mzcst._global import Parameter
-from mzcst.common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
-from mzcst.math_ import bracket
-from mzcst.plot import Plot
-from mzcst.shape_operations import Solid
-from mzcst.shapes import AnalyticalFace, Brick
-from mzcst.sources_and_ports.hf import Port
-from mzcst.transformations_and_picks import WCS
+
+import mzcst_2024 as mz
+from mzcst_2024 import _global, common, component, interface, material
+from mzcst_2024 import profiles_to_shapes as p2s
+from mzcst_2024 import shape_operations as so
+from mzcst_2024 import solver
+from mzcst_2024 import transformations_and_picks as tp
+from mzcst_2024._global import Parameter
+from mzcst_2024.common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
+from mzcst_2024.math_ import bracket
+from mzcst_2024.plot import Plot
+from mzcst_2024.shape_operations import Solid
+from mzcst_2024.shapes import AnalyticalFace, Brick
+from mzcst_2024.sources_and_ports.hf import Port
+from mzcst_2024.transformations_and_picks import WCS
 
 if __name__ == "__main__":
     #######################################
