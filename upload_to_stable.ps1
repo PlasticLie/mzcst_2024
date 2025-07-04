@@ -1,4 +1,5 @@
 # 删除旧的安装包
+write-output "删除旧的安装包"
 Remove-Item dist/*
 
 

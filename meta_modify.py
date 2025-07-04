@@ -14,7 +14,7 @@ def version(tag: str = "test") -> str:
     current_time = time.localtime()
     match tag:
         case "test":
-            version_name = f"{current_time.tm_year:04d}.{current_time.tm_mon:02d}.{current_time.tm_mday:02d}pre{current_time.tm_hour:02d}{current_time.tm_min:02d}"
+            version_name = f"{current_time.tm_year:04d}.{current_time.tm_mon:02d}.{current_time.tm_mday:02d}.{current_time.tm_hour:02d}{current_time.tm_min:02d}"
         case "stable":
             version_name = f"{current_time.tm_year:04d}.{current_time.tm_mon:02d}.{current_time.tm_mday:02d}"
         case _:
