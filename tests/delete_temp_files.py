@@ -64,8 +64,11 @@ if __name__ == "__main__":
                 logger.info('skip directory "%s"', p)
                 continue
             logger.debug('__pycache__ path: "%s"', p)
-            shutil.rmtree(p)
-            logger.info('__pycache__ deleted: "%s"', p)
+            for p2 in p.glob("*.pyc"):
+                # logger.debug('deleting file "%s"', p2)
+                os.remove(p2)
+                logger.info('deleted file: "%s"', p2)
+            logger.info('__pycache__ cleared: "%s"', p)
     else:
         logger.info("不删除 __pycache__ 缓存")
 
