@@ -6,13 +6,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mzcst_2024"
-version = "2025.07.04.1713"
+version = "2025.07.04.1608"
 authors = [
     { name = "Li Mengzi", email = "limengzi96@outlook.com" },
 ]
 description = "An interface for Python 3.10 and CST Studio Suite 2024. It may work on newer versions, but it is not guaranteed."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10, <=3.11"
 classifiers = [
     "Programming Language :: Python :: 3.10",
     "Operating System :: Microsoft :: Windows",
