@@ -7,9 +7,10 @@ import sys
 import time
 
 import matplotlib.pyplot as plt
-import mzcst_2024 as mz
 import numpy as np
-from mzcst import common
+
+import mzcst_2024 as mz
+from mzcst_2024 import common
 
 if __name__ == "__main__":
 
