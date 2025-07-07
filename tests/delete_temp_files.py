@@ -53,53 +53,8 @@ if __name__ == "__main__":
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     #######################################
-    # region 删除日志文件
-    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    def delete_all_files_in_folder(path: str) -> None:
-        """删除文件夹内的所有文件。
-
-        Args:
-            ``path`` (``str``): 文件夹路径。
-
-        Returns:
-            None
-        """
-        abs_path = os.path.abspath(path)
-        file_list = os.listdir(abs_path)
-        for file in file_list:
-            file_path = os.path.join(abs_path, file)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-                logger.info('File "%s" deleted.', file_path)
-        return
-
-    LOG_PATH: str = os.path.join(TARGET_PATH, "logs")
-    logger.info('path of logs: "%s"', LOG_PATH)
-    log_confirm = input("是否删除日志? (y/[n])")
-
-    if log_confirm.lower() == "y":
-        # delete_all_files_in_folder(LOG_PATH)
-        # logger.info("Log files deleted.")
-        pass
-    else:
-        logger.info("不删除日志")
-
-    # endregion
-    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
-    #######################################
     # region 删除缓存文件
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    mypy_confirm = input("是否删除 mypy 缓存? (y/[n])")
-
-    if mypy_confirm.lower() == "y":
-        logger.info("删除 mypy 缓存")
-        for p in pathlib.Path(TARGET_PATH).rglob(".mypy_cache"):
-            logger.debug('Mypy cache path: "%s"', p)
-            shutil.rmtree(p)
-            logger.info('Mypy cache deleted: "%s"', p)
-    else:
-        logger.info("不删除 mypy 缓存")
 
     pycache_confirm = input("是否删除 __pycache__ 缓存? (y/[n])")
     if pycache_confirm.lower() == "y":
@@ -112,7 +67,6 @@ if __name__ == "__main__":
             shutil.rmtree(p)
             logger.info('__pycache__ deleted: "%s"', p)
     else:
-
         logger.info("不删除 __pycache__ 缓存")
 
     debug_log_confirm = input("是否删除 debug.log文件? (y/[n])")
