@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import sys
 import time
 
@@ -26,6 +27,16 @@ def version(tag: str = "test") -> str:
 
 if __name__ == "__main__":
 
+    LOG_LEVEL = logging.INFO
+    FMT = "%(asctime)s.%(msecs)-3d %(name)s: %(levelname)s: %(message)s"
+    DATEFMT = r"%Y-%m-%d %H:%M:%S"
+    LOG_FORMATTER = logging.Formatter(FMT, DATEFMT)
+    logging.basicConfig(
+        format=FMT, datefmt=DATEFMT, level=LOG_LEVEL, force=True
+    )
+
+    logger = logging.getLogger(__name__)
+
     argc = len(sys.argv)
     argv = sys.argv
 
@@ -38,5 +49,5 @@ if __name__ == "__main__":
     with open("pyproject.toml", "wb") as f2:
         tomli_w.dump(meta, f2)
 
-    print(f"Version updated to {current_version} in pyproject.toml")
+    logger.info("%s", f"Version updated to {current_version} in pyproject.toml")
     pass
