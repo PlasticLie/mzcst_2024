@@ -13,8 +13,7 @@ python -m build
 Write-Output "上传到测试服"
 python -m twine upload --repository testpypi dist/* --verbose
 
-# 删除本地打包文件
-Write-Output "删除本地打包文件"
+exit 0 # 提前退出脚本
 
 
 # 延迟一段时间
@@ -31,4 +30,5 @@ for ($i = 0; $i -lt $delay; $i ++) {
 
 # 更新测试包
 Write-Output "更新测试包"
+conda activate cst-2024
 pip install -i https://test.pypi.org/simple/ --upgrade mzcst-2024
