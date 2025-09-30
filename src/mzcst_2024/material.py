@@ -327,7 +327,7 @@ FR4_lossy = Material(
     },
 )
 
-F4B_substrate = Material(
+F4B_lossy = Material(
     "F4B",
     properties={
         "FrqType": '"all"',
