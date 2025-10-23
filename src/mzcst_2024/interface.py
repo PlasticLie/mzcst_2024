@@ -85,12 +85,45 @@ class Model3D:
         return self.model3d.is_solver_running(timeout=timeout)
 
     def pause_solver(self, *, timeout: int = None) -> None:
+        """Pause the currently running solver.
+
+        Parameters
+        ----------
+        timeout : int, optional
+            _description_, by default None
+
+        Returns
+        -------
+        None
+        """
         return self.model3d.pause_solver(timeout=timeout)
 
     def resume_solver(self, *, timeout: int = None) -> None:
+        """Resume the currently paused solver.
+
+        Parameters
+        ----------
+        timeout : int, optional
+            _description_, by default None
+
+        Returns
+        -------
+        None
+        """
         return self.model3d.resume_solver(timeout=timeout)
 
     def run_solver(self, *, timeout: int = None) -> None:
+        """Runs the currently selected solver until it finishes. In case of an error a RunTimeError exception will be thrown.
+
+        Parameters
+        ----------
+        timeout : int, optional
+            _description_, by default None
+
+        Returns
+        -------
+        None
+        """
         return self.model3d.run_solver(timeout=timeout)
 
     def start_solver(self, *, timeout: int = None) -> None:
@@ -104,6 +137,7 @@ class Model3D:
         Returns:
             None:
         """
+        _logger.info("Starting solver asynchronously.")
         return self.model3d.start_solver(timeout=timeout)
 
     def create_object(self, obj: _global.BaseObject) -> None:
