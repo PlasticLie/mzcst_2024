@@ -73,7 +73,7 @@ class Model3D:
         """
         return self.model3d.get_active_solver_name(timeout)
 
-    def is_solver_running(self, *, timeout: int = None) -> bool:
+    def is_solver_running(self, ) -> bool:
         """Queries whether the solver is currently running.
 
         Args:
@@ -82,7 +82,7 @@ class Model3D:
         Returns:
             bool: _description_
         """
-        return self.model3d.is_solver_running(timeout)
+        return self.model3d.is_solver_running()
 
     def pause_solver(self, *, timeout: int = None) -> None:
         return self.model3d.pause_solver(timeout)
