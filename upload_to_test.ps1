@@ -30,5 +30,6 @@ for ($i = 0; $i -lt $delay; $i ++) {
 
 # 更新测试包
 Write-Output "更新测试包"
-conda activate cst-2024
-pip install -i https://test.pypi.org/simple/ --upgrade mzcst-2024
+conda activate mzcst-test
+# pip install -i https://test.pypi.org/simple/ --upgrade mzcst-2024
+pip install -e .
