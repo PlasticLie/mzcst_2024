@@ -73,6 +73,18 @@ class Model3D:
         """
         return self.model3d.get_active_solver_name(timeout=timeout)
 
+
+    def get_solver_run_info(self, *, timeout: int = None) -> dict:
+        """Retrieves as dict containing information on the last or current solver run.
+
+        Args:
+            timeout (int, optional): _description_. Defaults to None.
+
+        Returns:
+            str: _description_
+        """
+        return self.model3d.get_solver_run_info(timeout=timeout)
+
     def is_solver_running(self, *, timeout: int = None) -> bool:
         """Queries whether the solver is currently running.
 
