@@ -31,11 +31,14 @@ class BaseObject(abc.ABC):
     def __init__(
         self,
         *,
-        attributes: dict[str, str] = None,
+        attributes: typing.Optional[dict[str, str]] = None,
         **kwargs,
     ):
         super().__init__()
-        self._attributes: dict[str, str] = attributes
+        if attributes is None:
+            attributes = {}
+        else:
+            self._attributes: dict[str, str] = attributes
         self._history_title: str = "create object: "
         self._kwargs = kwargs
         return
@@ -89,7 +92,7 @@ class BaseObject(abc.ABC):
         #     cmd3 = NEW_LINE.join(scmd3)
         #     cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
         #     modeler.add_to_history(self._history_title, cmd)
-        # return self
+        return self
 
     # @abc.abstractmethod
     def create_from_kwargs(self, modeler: "interface.Model3D") -> "BaseObject":
@@ -126,7 +129,7 @@ class BaseObject(abc.ABC):
         #     cmd3 = NEW_LINE.join(scmd3)
         #     cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
         #     modeler.add_to_history(self._history_title, cmd)
-        # return self
+        return self
 
 
 class VbaObject:
