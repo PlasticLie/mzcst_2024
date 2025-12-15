@@ -222,7 +222,7 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (13, 13)
+    ARRAY_SIZE = (50,50)  # (row, col)
     WCS.activate(m3d, "local")
     unit_WCS: list[WCS] = []
     unit_cells: list = []
