@@ -73,7 +73,6 @@ class Model3D:
         """
         return self.model3d.get_active_solver_name(timeout=timeout)
 
-
     def get_solver_run_info(self, *, timeout: int = None) -> dict:
         """Retrieves as dict containing information on the last or current solver run.
 
@@ -256,7 +255,7 @@ class Project:
 
     def save(
         self,
-        path: os.PathLike = "",
+        path: str = "",
         include_results: bool = True,
         allow_overwrite: bool = False,
     ) -> None:
