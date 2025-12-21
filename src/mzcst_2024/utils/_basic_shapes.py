@@ -16,7 +16,7 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D  # type:ignore
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
 
-from typing import Optional
+
 
 
 class BasicShape(abc.ABC):
