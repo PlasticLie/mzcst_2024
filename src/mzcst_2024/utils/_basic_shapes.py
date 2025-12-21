@@ -16,8 +16,6 @@ from mpl_toolkits.mplot3d import Axes3D  # type:ignore
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
 
 
-
-
 class BasicShape(abc.ABC):
     def __init__(self) -> None:
         pass
@@ -126,3 +124,92 @@ class Line2D(BasicShape):
         if self._b == 0:
             raise ValueError("Cannot compute y for vertical lines.")
         return (-self._a * x - self._c) / self._b
+
+    def __repr__(self) -> str:
+        return f"Line2D(a={self._a}, b={self._b}, c={self._c})"
+
+    def distance_to_point(self, point: np.ndarray) -> float:
+        """Calculate the perpendicular distance from a point to the line."""
+        numerator = abs(self._a * point[0] + self._b * point[1] + self._c)
+        denominator = math.sqrt(self._a**2 + self._b**2)
+        return numerator / denominator
+
+
+class Line3D(BasicShape):
+    """Represents a 3D line defined by a point and a direction vector."""
+
+    def __init__(self, point: np.ndarray, direction: np.ndarray) -> None:
+        super().__init__()
+        self._point = point
+        self._direction = direction / npl.norm(direction)
+        return
+
+    @property
+    def point(self):
+        return self._point
+
+    @property
+    def direction(self):
+        return self._direction
+
+    def __repr__(self) -> str:
+        return f"Line3D(point={self._point}, direction={self._direction})"
+
+    def distance_to_point(self, point: np.ndarray) -> float:
+        """Calculate the shortest distance from a point to the line."""
+        p0 = self._point
+        d = self._direction
+        p = point
+        cross_prod = npl.norm(np.cross(p - p0, d))
+        return float(cross_prod / npl.norm(d))
+
+
+class Plane(BasicShape):
+    """Represents a plane in 3D space defined by the equation ax + by + cz + d = 0."""
+
+    def __init__(self, a: float, b: float, c: float, d: float) -> None:
+        super().__init__()
+        self._a = a
+        self._b = b
+        self._c = c
+        self._d = d
+        return
+
+    @classmethod
+    def from_point_normal(
+        cls, point: np.ndarray, normal: np.ndarray
+    ) -> "Plane":
+        """Create a Plane instance from a point and a normal vector."""
+        a, b, c = normal
+        d = -(a * point[0] + b * point[1] + c * point[2])
+        return cls(a, b, c, d)
+
+    @property
+    def a(self):
+        return self._a
+
+    @property
+    def b(self):
+        return self._b
+
+    @property
+    def c(self):
+        return self._c
+
+    @property
+    def d(self):
+        return self._d
+
+    def __repr__(self) -> str:
+        return f"Plane(a={self._a}, b={self._b}, c={self._c}, d={self._d})"
+
+    def distance_to_point(self, point: np.ndarray) -> float:
+        """Calculate the perpendicular distance from a point to the plane."""
+        numerator = abs(
+            self._a * point[0]
+            + self._b * point[1]
+            + self._c * point[2]
+            + self._d
+        )
+        denominator = math.sqrt(self._a**2 + self._b**2 + self._c**2)
+        return numerator / denominator
