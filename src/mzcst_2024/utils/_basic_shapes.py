@@ -27,29 +27,25 @@ class BasicShape(abc.ABC):
 class Point(BasicShape):
     def __init__(
         self,
-        x: float | np.ndarray,
-        y: Optional[float] = None,
-        z: Optional[float] = None,
+        x: float,
+        y: float,
+        z: float = 0.0,
     ) -> None:
         super().__init__()
-        if isinstance(x, np.ndarray):
-            if x.shape == (2,):
-                self._x = x[0]
-                self._y = x[1]
-                self._z = 0.0
-            elif x.shape == (3,):
-                self._x = x[0]
-                self._y = x[1]
-                self._z = x[2]
-            else:
-                raise ValueError("Numpy array must be of shape (2,) or (3,).")
-        else:
-            if y is None or z is None:
-                raise ValueError("y and z must be provided when x is a float.")
-            self._x = x
-            self._y = y
-            self._z = z
+
+        self._x = x
+        self._y = y
+        self._z = z
         return
+
+    @classmethod
+    def from_array(cls, arr: np.ndarray) -> "Point":
+        """Create a Point instance from a numpy array."""
+        if arr.shape == (2,):
+            return cls(arr[0], arr[1], 0.0)
+        if arr.shape == (3,):
+            return cls(arr[0], arr[1], arr[2])
+        raise ValueError("Array must be of shape (2,) or (3,)")
 
     @property
     def x(self):
@@ -62,6 +58,20 @@ class Point(BasicShape):
     @property
     def z(self):
         return self._z
+
+    def __repr__(self) -> str:
+        return f"Point(x={self._x}, y={self._y}, z={self._z})"
+
+    def to_array(self) -> np.ndarray:
+        return np.array([self._x, self._y, self._z])
+
+    def distance_to(self, other: "Point") -> float:
+        """Calculate the Euclidean distance to another point."""
+        return math.sqrt(
+            (self._x - other.x) ** 2
+            + (self._y - other.y) ** 2
+            + (self._z - other.z) ** 2
+        )
 
 
 class Line2D(BasicShape):
