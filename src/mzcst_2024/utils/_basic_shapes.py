@@ -34,11 +34,13 @@ class Point(BasicShape):
 
 
 class Line(BasicShape):
+
     def __init__(self, start: np.ndarray, end: np.ndarray) -> None:
         super().__init__()
         self._start = start
         self._end = end
-
+        return
+    
     @property
     def start(self):
         return self._start
@@ -46,3 +48,14 @@ class Line(BasicShape):
     @property
     def end(self):
         return self._end
+    
+    @property
+    def slope(self) -> float:
+        dx = self._end[0] - self._start[0]
+        dy = self._end[1] - self._start[1]
+        if dx == 0:
+            return float('inf') if dy > 0 else float('-inf')
+        return dy / dx
+    
+
+
