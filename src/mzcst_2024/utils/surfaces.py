@@ -70,7 +70,7 @@ class BinarySurface(BaseSurfaceObject):
     def get_z(
         self, x: float | np.ndarray, y: float | np.ndarray
     ) -> float | np.ndarray:
-        return
+        return 0.0
 
 
 class EllipticalParaboloidDome(BinarySurface):
