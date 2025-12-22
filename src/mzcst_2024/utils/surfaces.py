@@ -319,14 +319,11 @@ class Plane(BaseSurfaceObject):
     def normal(self) -> np.ndarray:
         return np.array([self._a, self._b, self._c])
 
-    def get_z(self, x, y):
-        if self._c != 0:
-            z = -1 * (self._a * x + self._b * y + self._d) / self._c
-        else:
-            z = float("nan")
+    def get_z(self, x, y) -> float:
+        """返回给定x、y值对应的z值。"""
 
         try:
-            z = -1 * (self._a * x + self._b * y + self._d) / self._c
+            z = -1.0 * (self._a * x + self._b * y + self._d) / self._c
         except ZeroDivisionError:
             z = float("nan")
         return z
