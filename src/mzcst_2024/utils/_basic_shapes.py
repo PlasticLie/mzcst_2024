@@ -134,6 +134,15 @@ class Line2D(BasicShape):
         denominator = math.sqrt(self._a**2 + self._b**2)
         return numerator / denominator
 
+    def cross_point(self, other: "Line2D") -> np.ndarray:
+        """Calculate the intersection point with another Line2D."""
+        det = self._a * other.b - other.a * self._b
+        if det == 0:
+            raise ValueError("Lines are parallel and do not intersect.")
+        x = (self._b * other.c - other.b * self._c) / det
+        y = (other.a * self._c - self._a * other.c) / det
+        return np.array([x, y])
+
 
 class Line3D(BasicShape):
     """Represents a 3D line defined by a point and a direction vector."""
