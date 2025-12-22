@@ -283,7 +283,7 @@ class Plane(BaseSurfaceObject):
 
     @classmethod
     def define_from_point_normal(cls, p1: np.ndarray, normal: np.ndarray):
-        d: np.float64 = -1 * np.sum(p1 * normal)
+        d: np.float64 = -1.0 * np.sum(p1 * normal)
         return cls(normal.item(0), normal.item(1), normal.item(2), d.item())
 
     @classmethod
