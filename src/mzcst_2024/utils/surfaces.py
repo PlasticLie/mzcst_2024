@@ -319,7 +319,7 @@ class Plane(BaseSurfaceObject):
     def normal(self) -> np.ndarray:
         return np.array([self._a, self._b, self._c])
 
-    def get_z(self, x, y) -> float:
+    def get_z(self, x: float, y: float) -> float:
         """返回给定x、y值对应的z值。"""
 
         try:
