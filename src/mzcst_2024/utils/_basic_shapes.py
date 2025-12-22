@@ -136,12 +136,12 @@ class Line2D(BasicShape):
 
     def cross_point(self, other: "Line2D") -> np.ndarray:
         """Calculate the intersection point with another Line2D."""
-        det = self._a * other.b - other.a * self._b
-        if det == 0:
+        coe = np.array([[self._a, self._b], [other.a, other.b]])
+        b = np.array([-self._c, -other.c])
+        if npl.det(coe) < 1e-12:
             raise ValueError("Lines are parallel and do not intersect.")
-        x = (self._b * other.c - other.b * self._c) / det
-        y = (other.a * self._c - self._a * other.c) / det
-        return np.array([x, y])
+        result = npl.solve(coe, b)
+        return result
 
 
 class Line3D(BasicShape):
