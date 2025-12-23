@@ -116,9 +116,9 @@ class EllipticalParaboloidDome(BinarySurface):
 
     def __call__(
         self,
-        x: typing.Union[float, np.ndarray],
-        y: typing.Union[float, np.ndarray],
-    ) -> typing.Union[float, np.ndarray]:
+        x: float | np.ndarray,
+        y: float | np.ndarray,
+    ) -> float | np.ndarray:
         """作为函数调用时返回给定x、y值对应的z值。
 
         Args:
