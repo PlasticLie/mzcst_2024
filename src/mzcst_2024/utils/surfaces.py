@@ -395,11 +395,11 @@ def xy2gridIndex(
     Ny: int,
 ):
     """
-    将连续坐标 (x,y) 映射到离散网格索引 (iRow, jCol)
-    xMin..xMax, yMin..yMax: 网格覆盖区域
-    Nx, Ny: 网格维度 (sizeu, sizev)
+    将连续坐标 `(x,y)` 映射到离散网格索引 `(iRow, jCol)`
+    `xMin..xMax`, `yMin..yMax`: 网格覆盖区域
+    `Nx`, `Ny`: 网格维度 `(sizeu, sizev)`
 
-    思路：先把 x,y 线性映射到 [1..Nx], [1..Ny]，再 round()，最后 clamp。"""
+    思路：先把 `x`,`y` 线性映射到 `[1..Nx]`, `[1..Ny]`，再 `round()`，最后 clamp。"""
     # 防止分母为0
     TINY_FLOAT = 1e-12
     if xMax == xMin:
