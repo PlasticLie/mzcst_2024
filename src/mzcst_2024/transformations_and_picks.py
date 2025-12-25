@@ -53,7 +53,9 @@ class WCS:
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     @classmethod
-    def activate(cls, modeler: "interface.Model3D", c: typing.Literal["local","global"]) -> None:
+    def activate(
+        cls, modeler: "interface.Model3D", c: typing.Literal["local", "global"]
+    ) -> None:
         """激活全局或局部坐标系。
 
         Args:
@@ -225,8 +227,6 @@ class Pick(BaseObject):
     def __init__(self, vba=None):
         super().__init__(vba=vba)
         return
-
-
 
 
 def pick_face_from_id(
