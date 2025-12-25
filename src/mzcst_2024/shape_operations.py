@@ -294,7 +294,7 @@ def advanced_shell(
 def thicken_sheet_advanced(
     modeler: "interface.Model3D",
     solid: Solid,
-    key: str,
+    key: typing.Literal["Inside", "Outside", "Centered"],
     thickness: Parameter | float | int,
     clear_picks: bool = False,
 ) -> None:
