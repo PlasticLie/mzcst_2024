@@ -29,7 +29,7 @@ class Solid(BaseObject):
         material: str | Material = "Vacuum",
         *,
         properties: dict[str, str] = None,
-        vba: list[str] = None,
+        vba: list[str]  = None,
     ) -> None:
         super().__init__(vba=vba)
         self._name: str = name
