@@ -70,7 +70,7 @@ class BinarySurface(BaseSurfaceObject):
     def get_z(
         self, x: float | np.ndarray, y: float | np.ndarray
     ) -> float | np.ndarray:
-        return
+        return 0.0
 
 
 class EllipticalParaboloidDome(BinarySurface):
@@ -116,9 +116,9 @@ class EllipticalParaboloidDome(BinarySurface):
 
     def __call__(
         self,
-        x: typing.Union[float, np.ndarray],
-        y: typing.Union[float, np.ndarray],
-    ) -> typing.Union[float, np.ndarray]:
+        x: float | np.ndarray,
+        y: float | np.ndarray,
+    ) -> float | np.ndarray:
         """作为函数调用时返回给定x、y值对应的z值。
 
         Args:
@@ -283,7 +283,7 @@ class Plane(BaseSurfaceObject):
 
     @classmethod
     def define_from_point_normal(cls, p1: np.ndarray, normal: np.ndarray):
-        d: np.float64 = -1 * np.sum(p1 * normal)
+        d: np.float64 = -1.0 * np.sum(p1 * normal)
         return cls(normal.item(0), normal.item(1), normal.item(2), d.item())
 
     @classmethod
@@ -319,14 +319,11 @@ class Plane(BaseSurfaceObject):
     def normal(self) -> np.ndarray:
         return np.array([self._a, self._b, self._c])
 
-    def get_z(self, x, y):
-        if self._c != 0:
-            z = -1 * (self._a * x + self._b * y + self._d) / self._c
-        else:
-            z = float("nan")
+    def get_z(self, x: float, y: float) -> float:
+        """返回给定x、y值对应的z值。"""
 
         try:
-            z = -1 * (self._a * x + self._b * y + self._d) / self._c
+            z = -1.0 * (self._a * x + self._b * y + self._d) / self._c
         except ZeroDivisionError:
             z = float("nan")
         return z
@@ -398,11 +395,11 @@ def xy2gridIndex(
     Ny: int,
 ):
     """
-    将连续坐标 (x,y) 映射到离散网格索引 (iRow, jCol)
-    xMin..xMax, yMin..yMax: 网格覆盖区域
-    Nx, Ny: 网格维度 (sizeu, sizev)
+    将连续坐标 `(x,y)` 映射到离散网格索引 `(iRow, jCol)`
+    `xMin..xMax`, `yMin..yMax`: 网格覆盖区域
+    `Nx`, `Ny`: 网格维度 `(sizeu, sizev)`
 
-    思路：先把 x,y 线性映射到 [1..Nx], [1..Ny]，再 round()，最后 clamp。"""
+    思路：先把 `x`,`y` 线性映射到 `[1..Nx]`, `[1..Ny]`，再 `round()`，最后 clamp。"""
     # 防止分母为0
     TINY_FLOAT = 1e-12
     if xMax == xMin:

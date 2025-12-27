@@ -712,8 +712,8 @@ if __name__ == "__main__":
     # region 求解
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    # m3d.start_solver()
-    # proj.save()
+    m3d.start_solver()
+    proj.save()
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
