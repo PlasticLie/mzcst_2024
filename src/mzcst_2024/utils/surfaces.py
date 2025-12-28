@@ -58,6 +58,9 @@ class BaseSurfaceObject(abc.ABC):
     def __init__(self):
         pass
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"
+
 
 class BinarySurface(BaseSurfaceObject):
     """可以写成二元函数的曲面。"""
