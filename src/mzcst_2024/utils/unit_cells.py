@@ -16,6 +16,7 @@ from .. import Parameter, component, interface, material
 from .. import profiles_to_shapes as p2s
 from .. import shape_operations as so
 from .. import transformations_and_picks as tp
+from ..common import time_decorator
 from ..shapes import Brick
 from ..sources_and_ports.hf import Port
 
@@ -82,6 +83,7 @@ class JerusalemCross:
         self.center_y = w_sub / Parameter(2)
         return
 
+    @time_decorator
     def create_traces(self, modeler: "interface.Model3D") -> "Brick":
         """在给定的建模器中创建耶路撒冷十字结构。
 

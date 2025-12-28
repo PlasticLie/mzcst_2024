@@ -19,6 +19,7 @@ from .. import Parameter, component, interface, material
 from .. import profiles_to_shapes as p2s
 from .. import shape_operations as so
 from .. import transformations_and_picks as tp
+from ..common import time_decorator
 from ..shapes import Brick
 from ..sources_and_ports.hf import Port
 
@@ -43,6 +44,7 @@ class WR90:
         self.port = port_config
         return
 
+    @time_decorator
     def create_waveguide(self, modeler: "interface.Model3D") -> "WR90":
         """在给定的建模器中创建WR-90波导。
 
