@@ -221,7 +221,7 @@ class JerusalemCross:
         t1 = time.perf_counter()
         _logger.info(
             "%s",
-            f"Trace of {self.name} created, execution time: {common.time_to_string(t1-t0)}",
+            f"Trace of \"{self.name}\" created, execution time: {common.time_to_string(t1-t0)}",
         )
 
         return traces[0]
