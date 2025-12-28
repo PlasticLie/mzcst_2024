@@ -605,7 +605,7 @@ if __name__ == "__main__":
         "",
         2,
         properties={
-            "NumberOfModes": '"2"',
+            "NumberOfModes": '"1"',
             "AdjustPolarization": '"False"',
             "PolarizationAngle": ' "0.0"',
             "ReferencePlaneDistance": '"0"',
