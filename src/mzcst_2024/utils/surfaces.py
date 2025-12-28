@@ -113,6 +113,8 @@ class EllipticalParaboloidDome(BinarySurface):
         return self._height
 
     # 特殊方法
+    def __repr__(self) -> str:
+        return f"EllipticalParaboloidDome({self._semi_x}, {self._semi_y}, {self._height})"
 
     def __call__(
         self,
