@@ -1,11 +1,9 @@
-"""常用波导
-"""
-
-
+"""常用波导"""
 
 import abc
 import logging
 import math
+import time
 import typing
 
 import matplotlib.pyplot as plt
@@ -15,7 +13,7 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D  # type:ignore
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
 
-from .. import Parameter, component, interface, material
+from .. import Parameter, common, component, interface, material
 from .. import profiles_to_shapes as p2s
 from .. import shape_operations as so
 from .. import transformations_and_picks as tp
@@ -44,13 +42,13 @@ class WR90:
         self.port = port_config
         return
 
-    @time_decorator
     def create_waveguide(self, modeler: "interface.Model3D") -> "WR90":
         """在给定的建模器中创建WR-90波导。
 
         Args:
             modeler (interface.Model3D): 建模环境。
         """
+        t0 = time.perf_counter()
 
         taper_angle = Parameter("11.2")
         horn_length = Parameter("218.16")
@@ -105,4 +103,10 @@ class WR90:
 
         # clear picks
         tp.clear_all_picks(modeler)
+
+        t1 = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Waveguide "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
+        )
         return self

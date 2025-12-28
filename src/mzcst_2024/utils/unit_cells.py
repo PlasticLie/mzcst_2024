@@ -3,6 +3,7 @@
 import abc
 import logging
 import math
+import time
 import typing
 
 import matplotlib.pyplot as plt
@@ -12,11 +13,10 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D  # type:ignore
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
 
-from .. import Parameter, component, interface, material
+from .. import Parameter, common, component, interface, material
 from .. import profiles_to_shapes as p2s
 from .. import shape_operations as so
 from .. import transformations_and_picks as tp
-from ..common import time_decorator
 from ..shapes import Brick
 from ..sources_and_ports.hf import Port
 
@@ -83,7 +83,6 @@ class JerusalemCross:
         self.center_y = w_sub / Parameter(2)
         return
 
-    @time_decorator
     def create_traces(self, modeler: "interface.Model3D") -> "Brick":
         """在给定的建模器中创建耶路撒冷十字结构。
 
@@ -93,6 +92,7 @@ class JerusalemCross:
         Returns:
             self: 对象自身的引用。
         """
+        t0 = time.perf_counter()
         unit_comp = self.name
         TRACE_COMP: str = "traces"
         traces_info: list[list[str]] = [
@@ -217,5 +217,11 @@ class JerusalemCross:
 
         for j in range(len(traces_info) - 1, 0, -1):
             traces[j - 1].add(modeler, traces[j])
+
+        t1 = time.perf_counter()
+        _logger.info(
+            "%s",
+            f"Trace of {self.name} created, execution time: {common.time_to_string(t1-t0)}",
+        )
 
         return traces[0]

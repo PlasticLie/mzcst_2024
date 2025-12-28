@@ -162,9 +162,6 @@ def time_decorator(func):
             "%s",
             f"{func.__name__} execution time: {time_to_string(t_end-t_start)}",
         )
-        # print(
-        #     f"{func.__name__} execution time: {time_to_string(t_end-t_start)}",
-        # )
         return result
 
     return wrapper
