@@ -246,182 +246,198 @@ if __name__ == "__main__":
                 .store(m3d)
             )
             unit_comp: str = "unit" + "_" + str(row) + "_" + str(col)
-            substrate_comp: str = "substrate"
-            sub = Brick(
-                "substrate",  # 实体名
-                "0",  # xmin
-                l_sub.name,  # xmax
-                "0",  # ymin
-                w_sub.name,  # ymax
-                "0",  # zmin
-                h_sub.name,  # zmax
-                unit_comp + "/" + substrate_comp,  # 分组名
-                rogers_RT5880_lossy.name,  # 材料名
-            ).create(m3d)
+            # substrate_comp: str = "substrate"
+            # sub = Brick(
+            #     "substrate",  # 实体名
+            #     "0",  # xmin
+            #     l_sub.name,  # xmax
+            #     "0",  # ymin
+            #     w_sub.name,  # ymax
+            #     "0",  # zmin
+            #     h_sub.name,  # zmax
+            #     unit_comp + "/" + substrate_comp,  # 分组名
+            #     rogers_RT5880_lossy.name,  # 材料名
+            # ).create(m3d)
 
-            TRACE_COMP: str = "traces"
-            traces_info: list[list[str]] = [
-                [
-                    "trace_0",  # 横向十字
-                    (
-                        unit_base_x - bracket(l_unit / Parameter("2"))
-                    ).name,  # xmin
-                    (
-                        unit_base_x + bracket(l_unit / Parameter("2"))
-                    ).name,  # xmax
-                    (
-                        unit_base_y - bracket(w_cross / Parameter("2"))
-                    ).name,  # ymin
-                    (
-                        unit_base_y + bracket(w_cross / Parameter("2"))
-                    ).name,  # ymax
-                    h_sub.name,  # zmin
-                    (h_sub + h_trace).name,  # zmax
-                    unit_comp + "/" + TRACE_COMP,  # 分组名
-                    copper_annealed.name,  # 材料名
-                ],
-                [
-                    "trace_1",  # 纵向十字
-                    (
-                        unit_base_x - bracket(w_cross / Parameter("2"))
-                    ).name,  # xmin
-                    (
-                        unit_base_x + bracket(w_cross / Parameter("2"))
-                    ).name,  # xmax
-                    (
-                        unit_base_y - bracket(l_unit / Parameter("2"))
-                    ).name,  # ymin
-                    (
-                        unit_base_y + bracket(l_unit / Parameter("2"))
-                    ).name,  # ymax
-                    h_sub.name,  # zmin
-                    (h_sub + h_trace).name,  # zmax
-                    unit_comp + "/" + TRACE_COMP,  # 分组名
-                    copper_annealed.name,  # 材料名
-                ],
-                [
-                    "trace_2",  # 下部帽子
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub - l_hat) / Parameter("2")
-                    ).name,  # xmin
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub - l_hat) / Parameter("2")
-                        + l_hat
-                    ).name,  # xmax
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub - w_unit) / Parameter("2")
-                    ).name,  # ymin
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub - w_unit) / Parameter("2")
-                        + w_hat
-                    ).name,  # ymax
-                    h_sub.name,  # zmin
-                    (h_sub + h_trace).name,  # zmax
-                    unit_comp + "/" + TRACE_COMP,  # 分组名
-                    copper_annealed.name,  # 材料名
-                ],
-                [
-                    "trace_3",  # 上部帽子
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub - l_hat) / Parameter("2")
-                    ).name,  # xmin
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub - l_hat) / Parameter("2")
-                        + l_hat
-                    ).name,  # xmax
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub + w_unit) / Parameter("2")
-                        - w_hat
-                    ).name,  # ymin
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub + w_unit) / Parameter("2")
-                    ).name,  # ymax
-                    h_sub.name,  # zmin
-                    (h_sub + h_trace).name,  # zmax
-                    unit_comp + "/" + TRACE_COMP,  # 分组名
-                    copper_annealed.name,  # 材料名
-                ],
-                [
-                    "trace_4",  # 左侧帽子
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub - l_unit) / Parameter("2")
-                    ).name,  # xmin
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub - l_unit) / Parameter("2")
-                        + w_cross
-                    ).name,  # xmax
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub - l_hat) / Parameter("2")
-                    ).name,  # ymin
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub - l_hat) / Parameter("2")
-                        + l_hat
-                    ).name,  # ymax
-                    h_sub.name,  # zmin
-                    (h_sub + h_trace).name,  # zmax
-                    unit_comp + "/" + TRACE_COMP,  # 分组名
-                    copper_annealed.name,  # 材料名
-                ],
-                [
-                    "trace_5",  # 右侧帽子
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub + l_unit) / Parameter(2)
-                        - w_cross
-                    ).name,  # xmin
-                    (
-                        unit_base_x
-                        - center_x
-                        + bracket(l_sub + l_unit) / Parameter(2)
-                    ).name,  # xmax
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub - l_hat) / Parameter("2")
-                    ).name,  # ymin
-                    (
-                        unit_base_y
-                        - center_y
-                        + bracket(w_sub - l_hat) / Parameter("2")
-                        + l_hat
-                    ).name,  # ymax
-                    h_sub.name,  # zmin
-                    (h_sub + h_trace).name,  # zmax
-                    unit_comp + "/" + TRACE_COMP,  # 分组名
-                    copper_annealed.name,  # 材料名
-                ],
-            ]
-            traces: list[Brick] = []
-            for j in range(len(traces_info)):
-                traces.append(Brick(*traces_info[j]).create(m3d))
+            # TRACE_COMP: str = "traces"
+            # traces_info: list[list[str]] = [
+            #     [
+            #         "trace_0",  # 横向十字
+            #         (
+            #             unit_base_x - bracket(l_unit / Parameter("2"))
+            #         ).name,  # xmin
+            #         (
+            #             unit_base_x + bracket(l_unit / Parameter("2"))
+            #         ).name,  # xmax
+            #         (
+            #             unit_base_y - bracket(w_cross / Parameter("2"))
+            #         ).name,  # ymin
+            #         (
+            #             unit_base_y + bracket(w_cross / Parameter("2"))
+            #         ).name,  # ymax
+            #         h_sub.name,  # zmin
+            #         (h_sub + h_trace).name,  # zmax
+            #         unit_comp + "/" + TRACE_COMP,  # 分组名
+            #         copper_annealed.name,  # 材料名
+            #     ],
+            #     [
+            #         "trace_1",  # 纵向十字
+            #         (
+            #             unit_base_x - bracket(w_cross / Parameter("2"))
+            #         ).name,  # xmin
+            #         (
+            #             unit_base_x + bracket(w_cross / Parameter("2"))
+            #         ).name,  # xmax
+            #         (
+            #             unit_base_y - bracket(l_unit / Parameter("2"))
+            #         ).name,  # ymin
+            #         (
+            #             unit_base_y + bracket(l_unit / Parameter("2"))
+            #         ).name,  # ymax
+            #         h_sub.name,  # zmin
+            #         (h_sub + h_trace).name,  # zmax
+            #         unit_comp + "/" + TRACE_COMP,  # 分组名
+            #         copper_annealed.name,  # 材料名
+            #     ],
+            #     [
+            #         "trace_2",  # 下部帽子
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub - l_hat) / Parameter("2")
+            #         ).name,  # xmin
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub - l_hat) / Parameter("2")
+            #             + l_hat
+            #         ).name,  # xmax
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub - w_unit) / Parameter("2")
+            #         ).name,  # ymin
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub - w_unit) / Parameter("2")
+            #             + w_hat
+            #         ).name,  # ymax
+            #         h_sub.name,  # zmin
+            #         (h_sub + h_trace).name,  # zmax
+            #         unit_comp + "/" + TRACE_COMP,  # 分组名
+            #         copper_annealed.name,  # 材料名
+            #     ],
+            #     [
+            #         "trace_3",  # 上部帽子
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub - l_hat) / Parameter("2")
+            #         ).name,  # xmin
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub - l_hat) / Parameter("2")
+            #             + l_hat
+            #         ).name,  # xmax
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub + w_unit) / Parameter("2")
+            #             - w_hat
+            #         ).name,  # ymin
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub + w_unit) / Parameter("2")
+            #         ).name,  # ymax
+            #         h_sub.name,  # zmin
+            #         (h_sub + h_trace).name,  # zmax
+            #         unit_comp + "/" + TRACE_COMP,  # 分组名
+            #         copper_annealed.name,  # 材料名
+            #     ],
+            #     [
+            #         "trace_4",  # 左侧帽子
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub - l_unit) / Parameter("2")
+            #         ).name,  # xmin
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub - l_unit) / Parameter("2")
+            #             + w_cross
+            #         ).name,  # xmax
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub - l_hat) / Parameter("2")
+            #         ).name,  # ymin
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub - l_hat) / Parameter("2")
+            #             + l_hat
+            #         ).name,  # ymax
+            #         h_sub.name,  # zmin
+            #         (h_sub + h_trace).name,  # zmax
+            #         unit_comp + "/" + TRACE_COMP,  # 分组名
+            #         copper_annealed.name,  # 材料名
+            #     ],
+            #     [
+            #         "trace_5",  # 右侧帽子
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub + l_unit) / Parameter(2)
+            #             - w_cross
+            #         ).name,  # xmin
+            #         (
+            #             unit_base_x
+            #             - center_x
+            #             + bracket(l_sub + l_unit) / Parameter(2)
+            #         ).name,  # xmax
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub - l_hat) / Parameter("2")
+            #         ).name,  # ymin
+            #         (
+            #             unit_base_y
+            #             - center_y
+            #             + bracket(w_sub - l_hat) / Parameter("2")
+            #             + l_hat
+            #         ).name,  # ymax
+            #         h_sub.name,  # zmin
+            #         (h_sub + h_trace).name,  # zmax
+            #         unit_comp + "/" + TRACE_COMP,  # 分组名
+            #         copper_annealed.name,  # 材料名
+            #     ],
+            # ]
+            # traces: list[Brick] = []
+            # for j in range(len(traces_info)):
+            #     traces.append(Brick(*traces_info[j]).create(m3d))
 
-            for j in range(len(traces_info) - 1, 0, -1):
-                traces[j - 1].add(m3d, traces[j])
+            # for j in range(len(traces_info) - 1, 0, -1):
+            #     traces[j - 1].add(m3d, traces[j])
+
+
+            unit_temp = unit_cells.JerusalemCross(
+                f"unit_cell_{i}",
+                l_sub,
+                w_sub,
+                -h_sub,
+                l_cross,
+                w_cross,
+                l_hat,
+                w_hat,
+                h_sub * Parameter("2"),
+                rogers_RT5880_lossy,
+                copper_annealed,
+            )
+
 
             # 画两条辅助线帮助debug
             # guideline_length = float(l_sub.expression)
