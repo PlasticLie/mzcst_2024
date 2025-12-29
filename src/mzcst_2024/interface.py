@@ -177,6 +177,10 @@ class Model3D:
                 )
         return
 
+    @property
+    def solver_info(self) -> dict[str, str | None]:
+        return self.model3d.get_solver_run_info()
+
 
 class Schematic:
     def __init__(self):
@@ -284,7 +288,9 @@ class DesignEnvironment:
     Furthermore it allows to open or create `.cst` projects.
     """
 
-    def __init__(self, existing_env: Optional[cst.interface.DesignEnvironment] = None):
+    def __init__(
+        self, existing_env: Optional[cst.interface.DesignEnvironment] = None
+    ):
         """如果不指定已有的设计环境，那就新建一个。
 
         Args:

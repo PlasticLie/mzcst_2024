@@ -163,7 +163,7 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (20, 20)  # (row, col)
+    ARRAY_SIZE = (15, 15)  # (row, col)
     ARRAY_LENGTH = (
         l_sub * Parameter(ARRAY_SIZE[0]),
         w_sub * Parameter(ARRAY_SIZE[1]),
@@ -415,6 +415,9 @@ if __name__ == "__main__":
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     m3d.start_solver()
+    while m3d.is_solver_running():
+        logger.info("solver is running: %s", f"{m3d.solver_info}")
+        time.sleep(60)
     proj.save()
 
     # endregion
