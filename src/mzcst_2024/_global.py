@@ -200,7 +200,7 @@ def change_solver_type(modeler: "interface.Model3D", solver_type: str) -> None:
 # region Parameter Handling
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-ConvertableToParameter = typing.Union[str, int, float]
+ConvertableToParameterName = typing.Union[str, int, float]
 ConvertableToExpression = typing.Union[str, int, float]
 
 
@@ -215,7 +215,7 @@ class Parameter(BaseObject):
 
     def __init__(
         self,
-        name: ConvertableToParameter,
+        name: ConvertableToParameterName,
         expression: ConvertableToExpression = "",
         description: str = "",
     ) -> None:
