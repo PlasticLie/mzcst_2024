@@ -469,7 +469,7 @@ class Units(BaseObject):
     def __repr__(self) -> str:
         s: str = ", ".join(
             [
-                f"Unit({quoted(self.length)}",
+                f"{self.__class__.__name__}({quoted(self.length)}",
                 f"{quoted(self.time)}",
                 f"{quoted(self.frequency)}",
                 f"{quoted(self.temperture)}",

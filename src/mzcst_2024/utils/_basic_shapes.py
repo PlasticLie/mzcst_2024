@@ -57,7 +57,7 @@ class Point(BasicShape):
         return self._z
 
     def __repr__(self) -> str:
-        return f"Point(x={self._x}, y={self._y}, z={self._z})"
+        return f"{self.__class__.__name__}(x={self._x}, y={self._y}, z={self._z})"
 
     def to_array(self) -> np.ndarray:
         return np.array([self._x, self._y, self._z])
@@ -126,7 +126,7 @@ class Line2D(BasicShape):
         return (-self._a * x - self._c) / self._b
 
     def __repr__(self) -> str:
-        return f"Line2D(a={self._a}, b={self._b}, c={self._c})"
+        return f"{self.__class__.__name__}(a={self._a}, b={self._b}, c={self._c})"
 
     def distance_to_point(self, point: np.ndarray) -> float:
         """Calculate the perpendicular distance from a point to the line."""
@@ -162,7 +162,7 @@ class Line3D(BasicShape):
         return self._direction
 
     def __repr__(self) -> str:
-        return f"Line3D(point={self._point}, direction={self._direction})"
+        return f"{self.__class__.__name__}(point={self._point}, direction={self._direction})"
 
     def distance_to_point(self, point: np.ndarray) -> float:
         """Calculate the shortest distance from a point to the line."""
@@ -210,7 +210,7 @@ class Plane(BasicShape):
         return self._d
 
     def __repr__(self) -> str:
-        return f"Plane(a={self._a}, b={self._b}, c={self._c}, d={self._d})"
+        return f"{self.__class__.__name__}(a={self._a}, b={self._b}, c={self._c}, d={self._d})"
 
     def distance_to_point(self, point: np.ndarray) -> float:
         """Calculate the perpendicular distance from a point to the plane."""
