@@ -405,7 +405,7 @@ if __name__ == "__main__":
     ).create_from_attributes(m3d)
 
     # 求解前保存
-    # proj.save(fullname)
+    proj.save(fullname)
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -414,8 +414,8 @@ if __name__ == "__main__":
     # region 求解
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    # m3d.start_solver()
-    # proj.save()
+    m3d.start_solver()
+    proj.save()
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
