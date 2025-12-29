@@ -31,7 +31,7 @@ from mzcst_2024.shape_operations import Solid
 from mzcst_2024.shapes import AnalyticalFace, Brick
 from mzcst_2024.sources_and_ports.hf import Port
 from mzcst_2024.transformations_and_picks import WCS
-from mzcst_2024.utils import unit_cells
+from mzcst_2024.utils.unit_cells import JerusalemCross
 
 if __name__ == "__main__":
     #######################################
@@ -222,7 +222,7 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (50,50)  # (row, col)
+    ARRAY_SIZE = (50, 50)  # (row, col)
     WCS.activate(m3d, "local")
     unit_WCS: list[WCS] = []
     unit_cells: list = []
@@ -423,21 +423,19 @@ if __name__ == "__main__":
             # for j in range(len(traces_info) - 1, 0, -1):
             #     traces[j - 1].add(m3d, traces[j])
 
-
-            unit_temp = unit_cells.JerusalemCross(
-                f"unit_cell_{i}",
+            unit_temp = JerusalemCross(
+                unit_comp,
                 l_sub,
                 w_sub,
-                -h_sub,
+                h_sub,
                 l_cross,
                 w_cross,
                 l_hat,
                 w_hat,
-                h_sub * Parameter("2"),
+                h_trace,
                 rogers_RT5880_lossy,
                 copper_annealed,
-            )
-
+            ).create(m3d)
 
             # 画两条辅助线帮助debug
             # guideline_length = float(l_sub.expression)

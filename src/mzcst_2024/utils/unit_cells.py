@@ -249,3 +249,8 @@ class JerusalemCross:
             f'Trace of "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
         )
         return sub
+
+    def create(self, modeler: "interface.Model3D")-> "JerusalemCross":
+        self.create_traces(modeler)
+        self.create_substrate(modeler)
+        return self
