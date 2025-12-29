@@ -163,7 +163,7 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (10, 10)  # (row, col)
+    ARRAY_SIZE = (20, 20)  # (row, col)
     ARRAY_LENGTH = (
         l_sub * Parameter(ARRAY_SIZE[0]),
         w_sub * Parameter(ARRAY_SIZE[1]),
