@@ -22,8 +22,8 @@ class SolverHF(BaseObject):
     This object controls the Wakefield solver.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         self._history_title = "define HF Solver:"
         return
 
@@ -86,8 +86,8 @@ class FDSolver(BaseObject):
     to run the solver.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         self._history_title = "define FD Solver:"
         return
 

@@ -23,8 +23,8 @@ class Plot(BaseObject):
         WireFrame (False)
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
     @staticmethod
@@ -70,48 +70,48 @@ class Plot(BaseObject):
 
 
 class Plot1D(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class Plot2D3D(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class ScalarPlot2D(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class VectorPlot2D(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class ScalarPlot3D(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class VectorPlot3D(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class ColourMapPlot(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class FarfieldPlot(BaseObject):
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return

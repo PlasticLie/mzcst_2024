@@ -74,8 +74,8 @@ class Background(BaseObject):
         ApplyInAllDirections (False)
     """
 
-    def __init__(self, *, attributes: dict[str, str] = None, **kwargs):
-        super().__init__(attributes=attributes, **kwargs)
+    def __init__(self, *, attributes: dict[str, str] = None):
+        super().__init__(attributes=attributes)
         self._history_title = "define background"
         return
 
@@ -347,8 +347,8 @@ class Boundary(BaseObject):
 
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None,  ):
+        super().__init__(attributes=attributes, vba=vba )
         return
 
     def create_from_attributes(self, modeler):
@@ -389,8 +389,8 @@ class LayerStacking(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         return
 
 
@@ -404,8 +404,8 @@ class Optimizer(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         return
 
 
@@ -417,8 +417,8 @@ class ParameterSweep(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         return
 
 
@@ -429,8 +429,8 @@ class SolverParameter(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         return
 
 
@@ -460,8 +460,8 @@ class ADSCosimulation(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         return
 
 
@@ -473,6 +473,6 @@ class SimuliaCSE(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None, **kwargs):
-        super().__init__(attributes=attributes, vba=vba, **kwargs)
+    def __init__(self, *, attributes=None, vba=None ):
+        super().__init__(attributes=attributes, vba=vba )
         return
