@@ -28,13 +28,13 @@ class Solid(BaseObject):
         component: str | Component = "",
         material: str | Material = "Vacuum",
         *,
-        properties: dict[str, str] = None,
-        vba: list[str]  = None,
+        properties: dict[str, str] | None = None,
+        vba: list[str] | None = None,
     ) -> None:
         super().__init__(vba=vba)
         self._name: str = name
         self._component: str = str(component)
-        self._properties: dict[str, str] = properties
+        self._properties = properties
 
         self._material: str = ""
         if isinstance(material, str):
