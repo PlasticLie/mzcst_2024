@@ -432,7 +432,7 @@ if __name__ == "__main__":
                 h_trace,
                 rogers_RT5880_lossy,
                 copper_annealed,
-            ).create(m3d)
+            ).create_flat_unit(m3d)
 
             # 画两条辅助线帮助debug
             # guideline_length = float(l_sub.expression)

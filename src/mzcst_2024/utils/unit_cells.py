@@ -250,8 +250,170 @@ class JerusalemCross:
         )
         return sub
 
-    def create(self, modeler: "interface.Model3D")-> "JerusalemCross":
-        self.create_traces(modeler)
-        self.create_substrate(modeler)
+    def create_flat_unit(
+        self, modeler: "interface.Model3D"
+    ) -> "JerusalemCross":
+        unit_comp: str = self.name
+        substrate_comp: str = "substrate"
+        sub = Brick(
+            "substrate",  # 实体名
+            "0",  # xmin
+            self.l_sub.name,  # xmax
+            "0",  # ymin
+            self.w_sub.name,  # ymax
+            "0",  # zmin
+            self.h_sub.name,  # zmax
+            unit_comp + "/" + substrate_comp,  # 分组名
+            self.substrate_material.name,  # 材料名
+        ).create(modeler)
+
+        unit_base_x = self.center_x
+        unit_base_y = self.center_y
+        TRACE_COMP: str = "traces"
+        traces_info: list[list[str]] = [
+            [
+                "trace_0",  # 横向十字
+                (unit_base_x - (self.l_unit / Parameter("2"))).name,  # xmin
+                (unit_base_x + (self.l_unit / Parameter("2"))).name,  # xmax
+                (unit_base_y - (self.w_cross / Parameter("2"))).name,  # ymin
+                (unit_base_y + (self.w_cross / Parameter("2"))).name,  # ymax
+                self.h_sub.name,  # zmin
+                (self.h_sub + self.h_trace).name,  # zmax
+                unit_comp + "/" + TRACE_COMP,  # 分组名
+                self.trace_material.name,  # 材料名
+            ],
+            [
+                "trace_1",  # 纵向十字
+                (unit_base_x - (self.w_cross / Parameter("2"))).name,  # xmin
+                (unit_base_x + (self.w_cross / Parameter("2"))).name,  # xmax
+                (unit_base_y - (self.l_unit / Parameter("2"))).name,  # ymin
+                (unit_base_y + (self.l_unit / Parameter("2"))).name,  # ymax
+                self.h_sub.name,  # zmin
+                (self.h_sub + self.h_trace).name,  # zmax
+                unit_comp + "/" + TRACE_COMP,  # 分组名
+                self.trace_material.name,  # 材料名
+            ],
+            [
+                "trace_2",  # 下部帽子
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub - self.l_hat) / Parameter("2")
+                ).name,  # xmin
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub - self.l_hat) / Parameter("2")
+                    + self.l_hat
+                ).name,  # xmax
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub - self.w_unit) / Parameter("2")
+                ).name,  # ymin
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub - self.w_unit) / Parameter("2")
+                    + self.w_hat
+                ).name,  # ymax
+                self.h_sub.name,  # zmin
+                (self.h_sub + self.h_trace).name,  # zmax
+                unit_comp + "/" + TRACE_COMP,  # 分组名
+                self.trace_material.name,  # 材料名
+            ],
+            [
+                "trace_3",  # 上部帽子
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub - self.l_hat) / Parameter("2")
+                ).name,  # xmin
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub - self.l_hat) / Parameter("2")
+                    + self.l_hat
+                ).name,  # xmax
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub + self.w_unit) / Parameter("2")
+                    - self.w_hat
+                ).name,  # ymin
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub + self.w_unit) / Parameter("2")
+                ).name,  # ymax
+                self.h_sub.name,  # zmin
+                (self.h_sub + self.h_trace).name,  # zmax
+                unit_comp + "/" + TRACE_COMP,  # 分组名
+                self.trace_material.name,  # 材料名
+            ],
+            [
+                "trace_4",  # 左侧帽子
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub - self.l_unit) / Parameter("2")
+                ).name,  # xmin
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub - self.l_unit) / Parameter("2")
+                    + self.w_cross
+                ).name,  # xmax
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub - self.l_hat) / Parameter("2")
+                ).name,  # ymin
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub - self.l_hat) / Parameter("2")
+                    + self.l_hat
+                ).name,  # ymax
+                self.h_sub.name,  # zmin
+                (self.h_sub + self.h_trace).name,  # zmax
+                unit_comp + "/" + TRACE_COMP,  # 分组名
+                self.trace_material.name,  # 材料名
+            ],
+            [
+                "trace_5",  # 右侧帽子
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub + self.l_unit) / Parameter(2)
+                    - self.w_cross
+                ).name,  # xmin
+                (
+                    unit_base_x
+                    - self.center_x
+                    + (self.l_sub + self.l_unit) / Parameter(2)
+                ).name,  # xmax
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub - self.l_hat) / Parameter("2")
+                ).name,  # ymin
+                (
+                    unit_base_y
+                    - self.center_y
+                    + (self.w_sub - self.l_hat) / Parameter("2")
+                    + self.l_hat
+                ).name,  # ymax
+                self.h_sub.name,  # zmin
+                (self.h_sub + self.h_trace).name,  # zmax
+                unit_comp + "/" + TRACE_COMP,  # 分组名
+                self.trace_material.name,  # 材料名
+            ],
+        ]
+        traces: list[Brick] = []
+        for j in range(len(traces_info)):
+            traces.append(Brick(*traces_info[j]).create(modeler))
+
+        for j in range(len(traces_info) - 1, 0, -1):
+            traces[j - 1].add(modeler, traces[j])
         return self
-        
