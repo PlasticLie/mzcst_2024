@@ -169,7 +169,7 @@ class Model3D:
                 obj.__class__.__name__,
             )
             try:
-                obj.create_from_kwargs(self.model3d)
+                obj.create_from_vba(self.model3d)
             except AttributeError:
                 _logger.error(
                     "Object %s does not have create_from_attributes or create_from_kwargs method.",

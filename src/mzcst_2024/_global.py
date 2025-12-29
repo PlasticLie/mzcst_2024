@@ -32,7 +32,7 @@ class BaseObject(abc.ABC):
         self,
         *,
         attributes: typing.Optional[dict[str, str]] = None,
-        **kwargs,
+        vba: list[str] | None = None,
     ):
         super().__init__()
         if attributes is None:
@@ -40,8 +40,11 @@ class BaseObject(abc.ABC):
         else:
             self._attributes: dict[str, str] = attributes
         self._history_title: str = "create object: "
-        self._kwargs = kwargs
+        self._vba = vba
         return
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(attributes={self.attributes}, vba={self._vba})"
 
     @property
     def history_title(self) -> str:
@@ -94,8 +97,7 @@ class BaseObject(abc.ABC):
         #     modeler.add_to_history(self._history_title, cmd)
         return self
 
-    # @abc.abstractmethod
-    def create_from_kwargs(self, modeler: "interface.Model3D") -> "BaseObject":
+    def create_from_vba(self, modeler: "interface.Model3D") -> "BaseObject":
         """从关键字参数新建对象。下面的实现给出了一个通用的范式。
 
         本基类不能直接用于创建实例，直接调用本方法不会得到你想要的对象，CST会直
@@ -109,26 +111,13 @@ class BaseObject(abc.ABC):
         Returns:
             self (BaseObject): self
         """
-        pass
-        # if not self._kwargs:
-        #     _logger.error("No valid properties.")
-        # else:
-        #     scmd1 = [
-        #         "With xxx ",
-        #         ".Reset ",
-        #     ]
-        #     cmd1 = NEW_LINE.join(scmd1)
-        #     scmd2 = []
-        #     for k, v in self._kwargs.items():
-        #         scmd2.append(f".{k} {v}")
-        #     cmd2 = NEW_LINE.join(scmd2)
-        #     scmd3 = [
-        #         ".Create",
-        #         "End With",
-        #     ]
-        #     cmd3 = NEW_LINE.join(scmd3)
-        #     cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-        #     modeler.add_to_history(self._history_title, cmd)
+        if self._vba is None:
+            raise ValueError("invalid VBA code")
+        else:
+            modeler.add_to_history(
+                self._history_title, NEW_LINE.join(self._vba)
+            )
+            _logger.info(self._history_title)
         return self
 
 
