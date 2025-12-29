@@ -234,7 +234,7 @@ class JerusalemCross:
         sub = Brick(
             "substrate",  # 实体名
             "0",  # xmin
-            self.l_sub.name,  # xmax
+            (self.l_sub/Parameter(2)).name,  # xmax
             "0",  # ymin
             self.w_sub.name,  # ymax
             "0",  # zmin
