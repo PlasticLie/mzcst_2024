@@ -501,6 +501,8 @@ if __name__ == "__main__":
         },
     )
 
+    horn_up = WR90("horn_up", port_up).create_waveguide(m3d)
+
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
