@@ -98,26 +98,24 @@ class BaseObject(abc.ABC):
         return self
 
     def create_from_vba(self, modeler: "interface.Model3D") -> "BaseObject":
-        """从关键字参数新建对象。下面的实现给出了一个通用的范式。
+        """直接执行【完整的vba代码】。
+        （注：本方法不会修改vba代码。）
 
-        本基类不能直接用于创建实例，直接调用本方法不会得到你想要的对象，CST会直
-        接报错停止运行。
-
-        请务必在子类中重载该方法。
+        在CST的历史记录中，标题固定为：create object:。
+        建议在子类中根据不同对象的需求重载该方法。
 
         Args:
             modeler (interface.Model3D): 建模环境。
 
         Returns:
-            self (BaseObject): self
+            self: 对象自身的引用。
         """
         if self._vba is None:
             raise ValueError("invalid VBA code")
-        else:
-            modeler.add_to_history(
-                self._history_title, NEW_LINE.join(self._vba)
-            )
-            _logger.info(self._history_title)
+        modeler.add_to_history(
+            self._history_title, NEW_LINE.join(self._vba)
+        )
+        _logger.info(self._history_title)
         return self
 
 
