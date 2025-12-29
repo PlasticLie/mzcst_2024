@@ -201,7 +201,7 @@ def change_solver_type(modeler: "interface.Model3D", solver_type: str) -> None:
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 ConvertableToParameter = typing.Union[str, int, float]
-
+ConvertableToExpression = typing.Union[str, int, float]
 
 class Parameter(BaseObject):
     """创建和管理CST内部的参数
@@ -215,7 +215,7 @@ class Parameter(BaseObject):
     def __init__(
         self,
         name: ConvertableToParameter,
-        expression: typing.Union[str, int, float] = "",
+        expression: ConvertableToExpression = "",
         description: str = "",
     ) -> None:
         super().__init__()
