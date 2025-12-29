@@ -52,6 +52,7 @@ if __name__ == "__main__":
 
     LOG_PATH: str = os.path.join(PARENT_PATH, "logs")
     LOG_FILE_NAME: str = "flat-Rumpf-demo-" + current_time + ".log"
+    LOG_FILE_FULL_PATH = os.path.join(LOG_PATH, LOG_FILE_NAME)
     LOG_LEVEL = logging.INFO
     FMT = "%(asctime)s.%(msecs)-3d %(name)s - %(levelname)s - %(message)s"
     DATEFMT = r"%Y-%m-%d %H:%M:%S"
@@ -64,11 +65,12 @@ if __name__ == "__main__":
     root_logger.setLevel(LOG_LEVEL)
     logger = logging.getLogger(__name__)
     logger.setLevel(LOG_LEVEL)
-    file_handler = logging.FileHandler(os.path.join(LOG_PATH, LOG_FILE_NAME))
+    file_handler = logging.FileHandler(LOG_FILE_FULL_PATH)
     file_handler.setFormatter(LOG_FORMATTER)
     file_handler.setLevel(LOG_LEVEL)
     root_logger.addHandler(file_handler)
     logger.info("Start logging.")
+    logger.info("path to log file: %s", LOG_FILE_FULL_PATH)
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -162,6 +164,15 @@ if __name__ == "__main__":
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     ARRAY_SIZE = (10, 10)  # (row, col)
+    ARRAY_LENGTH = (
+        l_sub * Parameter(ARRAY_SIZE[0]),
+        w_sub * Parameter(ARRAY_SIZE[1]),
+    )
+    ARRAY_BASE = (
+        -(ARRAY_LENGTH[0] / Parameter(2)),
+        -(ARRAY_LENGTH[1] / Parameter(2)),
+        Parameter(0),
+    )
     WCS.activate(m3d, "local")
     unit_WCS: list[WCS] = []
     unit_cells: list = []
@@ -174,8 +185,8 @@ if __name__ == "__main__":
                     "0",  # normal_x
                     "0",  # normal_y
                     "1",  # normal_z
-                    (l_sub * Parameter(row)).name,  # origin_x
-                    (w_sub * Parameter(col)).name,  # origin_y
+                    f"{ARRAY_BASE[0] + l_sub * Parameter(row + 0.5)}",  # origin_x
+                    f"{ARRAY_BASE[1] + w_sub * Parameter(col+ 0.5)}",  # origin_y
                     "0",  # origin_z
                     "1",  # uVector_x
                     "0",  # uVector_y
