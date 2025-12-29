@@ -221,7 +221,31 @@ class JerusalemCross:
         t1 = time.perf_counter()
         _logger.info(
             "%s",
-            f"Trace of \"{self.name}\" created, execution time: {common.time_to_string(t1-t0)}",
+            f'Trace of "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
         )
 
         return traces[0]
+
+    def create_substrate(self, modeler: "interface.Model3D") -> "Brick":
+        t0 = time.perf_counter()
+        unit_comp = self.name
+
+        substrate_comp: str = "substrate"
+        sub = Brick(
+            "substrate",  # 实体名
+            "0",  # xmin
+            self.l_sub.name,  # xmax
+            "0",  # ymin
+            self.w_sub.name,  # ymax
+            "0",  # zmin
+            self.h_sub.name,  # zmax
+            unit_comp + "/" + substrate_comp,  # 分组名
+            self.substrate_material.name,  # 材料名
+        ).create(modeler)
+
+        t1 = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Trace of "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
+        )
+        return sub

@@ -31,7 +31,7 @@ from mzcst_2024.shape_operations import Solid
 from mzcst_2024.shapes import AnalyticalFace, Brick
 from mzcst_2024.sources_and_ports.hf import Port
 from mzcst_2024.transformations_and_picks import WCS
-from mzcst_2024.utils import surfaces
+from mzcst_2024.utils import unit_cells
 
 if __name__ == "__main__":
     #######################################
