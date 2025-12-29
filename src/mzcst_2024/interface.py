@@ -178,8 +178,12 @@ class Model3D:
         return
 
     @property
-    def solver_info(self) -> dict[str, str | None]:
-        return self.model3d.get_solver_run_info()
+    def solver_info(self) -> dict[str, Optional[str]]:
+        r: dict[str, Optional[str]] = {
+            "name": self.model3d.get_active_solver_name()
+        }
+        r.update(self.model3d.get_solver_run_info())
+        return r
 
 
 class Schematic:
