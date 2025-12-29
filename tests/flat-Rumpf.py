@@ -24,14 +24,11 @@ from mzcst_2024 import shape_operations as so
 from mzcst_2024 import solver
 from mzcst_2024 import transformations_and_picks as tp
 from mzcst_2024._global import Parameter
-from mzcst_2024.common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
-from mzcst_2024.math_ import bracket
 from mzcst_2024.plot import Plot
-from mzcst_2024.shape_operations import Solid
-from mzcst_2024.shapes import AnalyticalFace, Brick
 from mzcst_2024.sources_and_ports.hf import Port
 from mzcst_2024.transformations_and_picks import WCS
 from mzcst_2024.utils.unit_cells import JerusalemCross
+from mzcst_2024.utils.waveguides import WR90
 
 if __name__ == "__main__":
     #######################################
@@ -103,7 +100,7 @@ if __name__ == "__main__":
     eps_sub: Parameter = Parameter("eps_sub", "2.25", "基板介电常数").store(m3d)
     fmin: Parameter = Parameter("fmin", "8.2", "频带下限(GHz)").store(m3d)
     fmax: Parameter = Parameter("fmax", "12.4", "频带上限(GHz)").store(m3d)
-    fcenter = (bracket(fmin + fmax) / Parameter(2)).rename("fcenter").store(m3d)
+    fcenter = ((fmin + fmax) / Parameter(2)).rename("fcenter").store(m3d)
     wavelength = (
         (Parameter("3e8") / fcenter / Parameter("1e6"))
         .rename("wavelength")
@@ -121,13 +118,13 @@ if __name__ == "__main__":
     w_hat: Parameter = Parameter("w_hat", "0.9").store(m3d)
     h_trace = Parameter("h_trace", "0.035", "铜厚").store(m3d)
     l_unit: Parameter = (
-        (Parameter(2) * bracket(w_hat + l_cross) + w_cross)
+        (Parameter(2) * (w_hat + l_cross) + w_cross)
         .rename("l_unit")
         .re_describe("十字结构的长度")
         .store(m3d)
     )
     w_unit: Parameter = (
-        (Parameter(2) * bracket(w_hat + l_cross) + w_cross)
+        (Parameter(2) * (w_hat + l_cross) + w_cross)
         .rename("w_unit")
         .re_describe("十字结构的宽度")
         .store(m3d)
@@ -222,7 +219,7 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (50, 50)  # (row, col)
+    ARRAY_SIZE = (5, 5)  # (row, col)
     WCS.activate(m3d, "local")
     unit_WCS: list[WCS] = []
     unit_cells: list = []
@@ -470,14 +467,15 @@ if __name__ == "__main__":
     #######################################
     # region 上方喇叭天线建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    WCS.activate(m3d, "local")
     horn_up_WCS = (
         WCS(
             "horn_up_WCS",  # 坐标系名称
             "0",  # normal_x
             "0",  # normal_y
             "-1",  # normal_z
-            (l_sub * Parameter(ARRAY_SIZE[0] / 2)).name,  # origin_x
-            (w_sub * Parameter(ARRAY_SIZE[1] / 2)).name,  # origin_y
+            "0",  # origin_x
+            "0",  # origin_y
             (waveguide_height + horn_length + horn_gap).name,  # origin_z
             "1",  # uVector_x
             "0",  # uVector_y
@@ -486,51 +484,8 @@ if __name__ == "__main__":
         .set_to_current(m3d)
         .store(m3d)
     )
-    horn_up_comp = "horn_up"
 
-    solid1 = Brick(
-        "solid1",  # 实体名
-        (waveguide_width / Parameter(-2)).name,  # xmin
-        (waveguide_width / Parameter(2)).name,  # xmax
-        (waveguide_height / Parameter(-2)).name,  # ymin
-        (waveguide_height / Parameter(2)).name,  # ymax
-        "0",  # zmin
-        "10.92",  # zmax
-        horn_up_comp,  # 分组名
-        material.PEC_,  # 材料名
-    ).create(m3d)
-
-    # 选择顶面
-    tp.pick_face_from_id(m3d, solid1, 1)
-
-    solid2 = p2s.Extrude(
-        "solid2",
-        horn_up_comp,
-        "PEC",
-        properties={
-            "Mode": ' "Picks"',
-            "Height": ' "horn_length"',
-            "Twist": ' "0.0"',
-            "Taper": ' "taper_angle"',
-            "UsePicksForHeight": ' "False"',
-            "DeleteBaseFaceSolid": ' "False"',
-            "ClearPickedFace": ' "True"',
-        },
-    ).create_from_attributes(m3d)
-    solid1.add(m3d, solid2)
-
-    # pick face
-    tp.pick_face_from_id(m3d, solid1, 5)
-    tp.pick_face_from_id(m3d, solid1, 8)
-    so.advanced_shell(m3d, solid1, "Outside", wall_thickness)
-
-    # pick end point
-    tp.clear_all_picks(m3d)
-    tp.pick_end_point_from_id(m3d, solid1, 16)
-    tp.pick_end_point_from_id(m3d, solid1, 15)
-    tp.pick_end_point_from_id(m3d, solid1, 14)
-
-    port1 = Port(
+    port_up = Port(
         "",
         1,
         properties={
@@ -544,10 +499,7 @@ if __name__ == "__main__":
             "PortOnBound": '"True"',
             "ClipPickedPortToBound": ' "False"',
         },
-    ).create_from_attributes(m3d)
-
-    # clear picks
-    tp.clear_all_picks(m3d)
+    )
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -562,8 +514,8 @@ if __name__ == "__main__":
             "0",  # normal_x
             "0",  # normal_y
             "1",  # normal_z
-            (l_sub * Parameter(ARRAY_SIZE[0] / 2)).name,  # origin_x
-            (w_sub * Parameter(ARRAY_SIZE[1] / 2)).name,  # origin_y
+            "0",  # origin_x
+            "0",  # origin_y
             (-waveguide_height - horn_length - horn_gap).name,  # origin_z
             "1",  # uVector_x
             "0",  # uVector_y
@@ -572,50 +524,8 @@ if __name__ == "__main__":
         .set_to_current(m3d)
         .store(m3d)
     )
-    horn_down_comp = component.Component("horn_down")
 
-    solid1_down = Brick(
-        "solid1",  # 实体名
-        (waveguide_width / Parameter(-2)).name,  # xmin
-        (waveguide_width / Parameter(2)).name,  # xmax
-        (waveguide_height / Parameter(-2)).name,  # ymin
-        (waveguide_height / Parameter(2)).name,  # ymax
-        "0",  # zmin
-        "10.92",  # zmax
-        horn_down_comp.name,  # 分组名
-        material.PEC_,  # 材料名
-    ).create(m3d)
-
-    # 选择顶面
-    tp.pick_face_from_id(m3d, solid1_down, 1)
-    solid2_down = p2s.Extrude(
-        "solid2",
-        horn_down_comp.name,
-        "PEC",
-        properties={
-            "Mode": ' "Picks"',
-            "Height": ' "horn_length"',
-            "Twist": ' "0.0"',
-            "Taper": ' "taper_angle"',
-            "UsePicksForHeight": ' "False"',
-            "DeleteBaseFaceSolid": ' "False"',
-            "ClearPickedFace": ' "True"',
-        },
-    ).create_from_attributes(m3d)
-    solid1_down.add(m3d, solid2_down)
-
-    # pick face
-    tp.pick_face_from_id(m3d, solid1_down, 5)
-    tp.pick_face_from_id(m3d, solid1_down, 8)
-    so.advanced_shell(m3d, solid1_down, "Outside", wall_thickness)
-
-    # pick end point
-    tp.pick_end_point_from_id(m3d, solid1_down, 16)
-    tp.pick_end_point_from_id(m3d, solid1_down, 15)
-    tp.pick_end_point_from_id(m3d, solid1_down, 13)
-
-    # define port:
-    port2 = Port(
+    port_down = Port(
         "",
         2,
         properties={
@@ -629,10 +539,9 @@ if __name__ == "__main__":
             "PortOnBound": '"True"',
             "ClipPickedPortToBound": ' "False"',
         },
-    ).create_from_attributes(m3d)
+    )
 
-    # clear picks
-    tp.clear_all_picks(m3d)
+    horn_down = WR90("horn_down", port_down).create_waveguide(m3d)
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
