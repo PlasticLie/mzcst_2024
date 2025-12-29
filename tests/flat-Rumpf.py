@@ -150,67 +150,9 @@ if __name__ == "__main__":
     #######################################
     # region 材料定义
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    copper_annealed = material.Material(
-        "Copper (annealed)",
-        properties={
-            "FrqType": ' "all"',
-            "Type": ' "Lossy metal"',
-            "SetMaterialUnit": ' "GHz", "mm"',
-            "Mu": ' "1.0"',
-            "Kappa": ' "5.8e+007"',
-            "Rho": ' "8930.0"',
-            "ThermalType": ' "Normal"',
-            "ThermalConductivity": ' "401.0"',
-            "SpecificHeat": ' "390", "J/K/kg"',
-            "MetabolicRate": ' "0"',
-            "BloodFlow": ' "0"',
-            "VoxelConvection": ' "0"',
-            "MechanicsType": ' "Isotropic"',
-            "YoungsModulus": ' "120"',
-            "PoissonsRatio": ' "0.33"',
-            "ThermalExpansionRate": ' "17"',
-            "Colour": ' "1", "1", "0"',
-            "Wireframe": ' "False"',
-            "Reflection": ' "False"',
-            "Allowoutline": ' "True"',
-            "Transparentoutline": ' "False"',
-            "Transparency": ' "0"',
-        },
-    ).create(m3d)
+    copper_annealed = material.copper_annealed.create(m3d)
 
-    rogers_RT5880_lossy = material.Material(
-        "Rogers RT5880 (lossy)",
-        properties={
-            "FrqType": '"all"',
-            "Type": '"Normal"',
-            "SetMaterialUnit": '"GHz", "mm"',
-            "Epsilon": '"2.2"',
-            "Mu": '"1.0"',
-            "Kappa": '"0.0"',
-            "TanD": '"0.0009"',
-            "TanDFreq": '"10.0"',
-            "TanDGiven": '"True"',
-            "TanDModel": '"ConstTanD"',
-            "KappaM": '"0.0"',
-            "TanDM": '"0.0"',
-            "TanDMFreq": ' "0.0"',
-            "TanDMGiven": '"False"',
-            "TanDMModel": '"ConstKappa"',
-            "DispModelEps": '"None"',
-            "DispModelMu": '"None"',
-            "DispersiveFittingSchemeEps": '"General 1st"',
-            "DispersiveFittingSchemeMu": '"General 1st"',
-            "UseGeneralDispersionEps": '"False"',
-            "UseGeneralDispersionMu": '"False"',
-            "Rho": '"0.0"',
-            "ThermalType": '"Normal"',
-            "ThermalConductivity": '"0.20"',
-            "SetActiveMaterial": '"all"',
-            "Colour": '"0.94", "0.82", "0.76"',
-            "Wireframe": '"False"',
-            "Transparency": '"0"',
-        },
-    ).create(m3d)
+    rogers_RT5880_lossy = material.rogers_RT5880_lossy.create(m3d)
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -219,7 +161,7 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (5, 5)  # (row, col)
+    ARRAY_SIZE = (10, 10)  # (row, col)
     WCS.activate(m3d, "local")
     unit_WCS: list[WCS] = []
     unit_cells: list = []
