@@ -339,7 +339,7 @@ if __name__ == "__main__":
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     bg = solver.Background(
-        attributes={"Type": '"normal"'}, Type='"normal"'
+        attributes={"Type": '"normal"'}
     ).create_from_attributes(m3d)
 
     bd = solver.Boundary(
