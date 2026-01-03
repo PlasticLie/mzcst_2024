@@ -6,6 +6,8 @@
 *.pyc
 token.txt
 **/__pycache__/
+.DS_Store
+*.DS_Store
 ​
 # log 不需要提交的任意包含后缀名为log的文件
 *.log

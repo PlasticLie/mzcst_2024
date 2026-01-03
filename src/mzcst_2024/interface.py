@@ -10,7 +10,7 @@ the associated applications (`prj.model3d`)."""
 
 import logging
 import os
-from typing import Dict, List, Union
+from typing import Optional
 
 import cst
 import cst.interface
@@ -35,7 +35,7 @@ class Model3D:
         self.model3d = modeler
         return
 
-    def abort_solver(self, *, timeout: int = None) -> None:
+    def abort_solver(self, *, timeout: Optional[int] = None) -> None:
         """Aborts the currently running (or paused) solver.
 
         Args:
@@ -47,7 +47,7 @@ class Model3D:
         return self.model3d.abort_solver(timeout)
 
     def add_to_history(
-        self, header: str, vba_code: str, *, timeout: int = None
+        self, header: str, vba_code: str, *, timeout: Optional[int] = None
     ) -> None:
         """AddToHistory creates a new history block in the modeler with the
         given header-name and executes the `vba_code`
@@ -62,7 +62,7 @@ class Model3D:
         """
         return self.model3d.add_to_history(header, vba_code, timeout=timeout)
 
-    def get_active_solver_name(self, *, timeout: int = None) -> str:
+    def get_active_solver_name(self, *, timeout: Optional[int] = None) -> str:
         """Returns the currently active solver name.
 
         Args:
@@ -73,7 +73,7 @@ class Model3D:
         """
         return self.model3d.get_active_solver_name(timeout=timeout)
 
-    def get_solver_run_info(self, *, timeout: int = None) -> dict:
+    def get_solver_run_info(self, *, timeout: Optional[int] = None) -> dict:
         """Retrieves as dict containing information on the last or current solver run.
 
         Args:
@@ -84,7 +84,7 @@ class Model3D:
         """
         return self.model3d.get_solver_run_info(timeout=timeout)
 
-    def is_solver_running(self, *, timeout: int = None) -> bool:
+    def is_solver_running(self, *, timeout: Optional[int] = None) -> bool:
         """Queries whether the solver is currently running.
 
         Args:
@@ -95,7 +95,7 @@ class Model3D:
         """
         return self.model3d.is_solver_running(timeout=timeout)
 
-    def pause_solver(self, *, timeout: int = None) -> None:
+    def pause_solver(self, *, timeout: Optional[int] = None) -> None:
         """Pause the currently running solver.
 
         Parameters
@@ -109,7 +109,7 @@ class Model3D:
         """
         return self.model3d.pause_solver(timeout=timeout)
 
-    def resume_solver(self, *, timeout: int = None) -> None:
+    def resume_solver(self, *, timeout: Optional[int] = None) -> None:
         """Resume the currently paused solver.
 
         Parameters
@@ -123,7 +123,7 @@ class Model3D:
         """
         return self.model3d.resume_solver(timeout=timeout)
 
-    def run_solver(self, *, timeout: int = None) -> None:
+    def run_solver(self, *, timeout: Optional[int] = None) -> None:
         """Runs the currently selected solver until it finishes. In case of an error a RunTimeError exception will be thrown.
 
         Parameters
@@ -137,7 +137,7 @@ class Model3D:
         """
         return self.model3d.run_solver(timeout=timeout)
 
-    def start_solver(self, *, timeout: int = None) -> None:
+    def start_solver(self, *, timeout: Optional[int] = None) -> None:
         """Starts the currently selected solver asynchronously and gives back
         control to the calling script. It does not wait for the solver to
         finish, use in combination with `is_solver_running()`.
@@ -169,13 +169,21 @@ class Model3D:
                 obj.__class__.__name__,
             )
             try:
-                obj.create_from_kwargs(self.model3d)
+                obj.create_from_vba(self.model3d)
             except AttributeError:
                 _logger.error(
                     "Object %s does not have create_from_attributes or create_from_kwargs method.",
                     obj.__class__.__name__,
                 )
         return
+
+    @property
+    def solver_info(self) -> dict[str, Optional[str]]:
+        r: dict[str, Optional[str]] = {
+            "name": self.model3d.get_active_solver_name()
+        }
+        r.update(self.model3d.get_solver_run_info())
+        return r
 
 
 class Schematic:
@@ -284,7 +292,9 @@ class DesignEnvironment:
     Furthermore it allows to open or create `.cst` projects.
     """
 
-    def __init__(self, existing_env: cst.interface.DesignEnvironment = None):
+    def __init__(
+        self, existing_env: Optional[cst.interface.DesignEnvironment] = None
+    ):
         """如果不指定已有的设计环境，那就新建一个。
 
         Args:

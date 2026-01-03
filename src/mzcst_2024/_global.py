@@ -32,7 +32,7 @@ class BaseObject(abc.ABC):
         self,
         *,
         attributes: typing.Optional[dict[str, str]] = None,
-        **kwargs,
+        vba: list[str] | None = None,
     ):
         super().__init__()
         if attributes is None:
@@ -40,8 +40,11 @@ class BaseObject(abc.ABC):
         else:
             self._attributes: dict[str, str] = attributes
         self._history_title: str = "create object: "
-        self._kwargs = kwargs
+        self._vba = vba
         return
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(attributes={self.attributes}, vba={self._vba})"
 
     @property
     def history_title(self) -> str:
@@ -94,41 +97,25 @@ class BaseObject(abc.ABC):
         #     modeler.add_to_history(self._history_title, cmd)
         return self
 
-    # @abc.abstractmethod
-    def create_from_kwargs(self, modeler: "interface.Model3D") -> "BaseObject":
-        """从关键字参数新建对象。下面的实现给出了一个通用的范式。
+    def create_from_vba(self, modeler: "interface.Model3D") -> "BaseObject":
+        """直接执行【完整的vba代码】。
+        （注：本方法不会修改vba代码。）
 
-        本基类不能直接用于创建实例，直接调用本方法不会得到你想要的对象，CST会直
-        接报错停止运行。
-
-        请务必在子类中重载该方法。
+        在CST的历史记录中，标题固定为：create object:。
+        建议在子类中根据不同对象的需求重载该方法。
 
         Args:
             modeler (interface.Model3D): 建模环境。
 
         Returns:
-            self (BaseObject): self
+            self: 对象自身的引用。
         """
-        pass
-        # if not self._kwargs:
-        #     _logger.error("No valid properties.")
-        # else:
-        #     scmd1 = [
-        #         "With xxx ",
-        #         ".Reset ",
-        #     ]
-        #     cmd1 = NEW_LINE.join(scmd1)
-        #     scmd2 = []
-        #     for k, v in self._kwargs.items():
-        #         scmd2.append(f".{k} {v}")
-        #     cmd2 = NEW_LINE.join(scmd2)
-        #     scmd3 = [
-        #         ".Create",
-        #         "End With",
-        #     ]
-        #     cmd3 = NEW_LINE.join(scmd3)
-        #     cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-        #     modeler.add_to_history(self._history_title, cmd)
+        if self._vba is None:
+            raise ValueError("invalid VBA code")
+        modeler.add_to_history(
+            self._history_title, NEW_LINE.join(self._vba)
+        )
+        _logger.info(self._history_title)
         return self
 
 
@@ -200,6 +187,9 @@ def change_solver_type(modeler: "interface.Model3D", solver_type: str) -> None:
 # region Parameter Handling
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
+ConvertableToParameterName = typing.Union[str, int, float]
+ConvertableToExpression = typing.Union[str, int, float]
+
 
 class Parameter(BaseObject):
     """创建和管理CST内部的参数
@@ -212,8 +202,8 @@ class Parameter(BaseObject):
 
     def __init__(
         self,
-        name: typing.Union[str, int, float],
-        expression: typing.Union[str, int, float] = "",
+        name: ConvertableToParameterName,
+        expression: ConvertableToExpression = "",
         description: str = "",
     ) -> None:
         super().__init__()
@@ -259,8 +249,7 @@ class Parameter(BaseObject):
         return self._description
 
     def __repr__(self) -> str:
-
-        return f"Parameter({quoted(self.name)}, {quoted(self.expression)}, {quoted(self.description)})"
+        return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)}, {quoted(self.description)})"
 
     def __str__(self) -> str:
         return self.name
@@ -467,7 +456,7 @@ class Units(BaseObject):
     def __repr__(self) -> str:
         s: str = ", ".join(
             [
-                f"Unit({quoted(self.length)}",
+                f"{self.__class__.__name__}({quoted(self.length)}",
                 f"{quoted(self.time)}",
                 f"{quoted(self.frequency)}",
                 f"{quoted(self.temperture)}",
