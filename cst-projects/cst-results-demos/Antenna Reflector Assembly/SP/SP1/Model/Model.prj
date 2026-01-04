@@ -1,0 +1,13 @@
+{
+   "Author": "Dassault Systèmes",
+   "Comment": "",
+   "Last Problem Type": "High Frequency",
+   "Last Solver Type": "HF Time Domain",
+   "Last Solver Type Abb": "t",
+   "Mesh Cells": "3,592,204",
+   "Mesh Type": "Hexahedral",
+   "Modeler Unique ID": "5:sp1.cst?5d386ec08c0d0ad74ea8792638d9bd1c?14277:numberofparameters=0:port=1>mode=1>zre=0>zim=0::reflector dish^3d.sab>2c35ed802f6d4b0d8c9ccbf204ceb4c3>4307?horn antenna^3d.sab>48ecaec7cd374995c18229b290ea28b7>32570",
+   "ProjectVersion": "'# MWS Version: Version 2024.5 - Jun 14 2024 - ACIS 33.0.1 -",
+   "Results": "Time Domain: S-Parameter",
+   "Version": "3"
+}

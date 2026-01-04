@@ -1,0 +1,30 @@
+{
+    "parameters": [
+        {
+            "expr": "40",
+            "name": "waveguide_width",
+            "value": "40"
+        },
+        {
+            "expr": "20",
+            "name": "waveguide_height",
+            "value": "20"
+        },
+        {
+            "expr": "10",
+            "name": "wall_thickness",
+            "value": "10"
+        },
+        {
+            "expr": "20",
+            "name": "taper_angle",
+            "value": "20"
+        },
+        {
+            "expr": "100",
+            "name": "horn_length",
+            "value": "100"
+        }
+    ],
+    "version": 1
+}

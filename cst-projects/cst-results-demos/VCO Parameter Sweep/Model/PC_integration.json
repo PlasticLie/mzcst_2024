@@ -1,0 +1,74 @@
+{
+   "execution": {
+      "classname": "SMAPowerByEmagHPCFrame",
+      "libname": "SMAPowerByEmagUI"
+   },
+   "inputVariables": [
+      {
+         "name": "VTUNE",
+         "type": "float",
+         "value": 2.5
+      },
+      {
+         "name": "VBIAS",
+         "type": "float",
+         "value": 2.7
+      },
+      {
+         "name": "LE",
+         "type": "float",
+         "value": 0.25
+      },
+      {
+         "name": "LC",
+         "type": "float",
+         "value": 1.1
+      },
+      {
+         "name": "LB",
+         "type": "float",
+         "value": 1.1
+      },
+      {
+         "name": "CPCE",
+         "type": "float",
+         "value": 80.0
+      },
+      {
+         "name": "CPBE",
+         "type": "float",
+         "value": 80.0
+      },
+      {
+         "name": "CPBC",
+         "type": "float",
+         "value": 2.0
+      }
+   ],
+   "outputVariables": [
+      {
+         "len": 1,
+         "name": "Schematic\\Sweep Tuning Voltage\\Tran1\\PP1\\Oscillation Frequency",
+         "type": "float",
+         "value": 1.01916666666667
+      },
+      {
+         "len": 1,
+         "name": "Schematic\\Sweep Tuning Voltage\\Tran1\\PP1\\V(Out) Maximum",
+         "type": "float",
+         "value": 0.203861469591803
+      },
+      {
+         "len": 1,
+         "name": "Schematic\\Sweep Tuning Voltage\\Tran1\\PP1\\V(Out) Minimum",
+         "type": "float",
+         "value": -0.122762217872192
+      },
+      {
+         "len": 1,
+         "name": "Schematic\\Sweep Tuning Voltage\\Tran1\\PP1\\Oscillation Amplitude in V",
+         "type": "float",
+         "value": 0.163311843731998
+      }
+   ]
+}

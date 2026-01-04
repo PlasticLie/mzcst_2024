@@ -1,0 +1,15 @@
+{
+    "parameters": [
+        {
+            "expr": "0.5*D",
+            "name": "focus",
+            "value": "0.3"
+        },
+        {
+            "expr": "0.6",
+            "name": "D",
+            "value": "0.6"
+        }
+    ],
+    "version": 1
+}

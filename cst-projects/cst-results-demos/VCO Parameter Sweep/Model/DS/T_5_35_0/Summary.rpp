@@ -1,0 +1,72 @@
+11
+0
+0
+5
+V(Out) Fourier Transform
+Fourier Transform
+1
+1DC
+General 1D
+P
+EP10
+Fourier Transform.rtp
+VBA
+1
+V(Out) Fourier Transform
+Oscillation Frequency
+0D or 1D Result from 1D Result (Rescale, Derivation, etc)
+1
+0D
+General 1D
+P
+EP10
+0D or 1D Result from 1D Result (Rescale, Derivation, etc).rtp
+VBA
+1
+Oscillation Frequency
+V(Out) Maximum
+0D or 1D Result from 1D Result (Rescale, Derivation, etc)
+1
+0D
+General 1D
+P
+EP10
+0D or 1D Result from 1D Result (Rescale, Derivation, etc).rtp
+VBA
+1
+V(Out) Maximum
+V(Out) Minimum
+0D or 1D Result from 1D Result (Rescale, Derivation, etc)
+1
+0D
+General 1D
+P
+EP10
+0D or 1D Result from 1D Result (Rescale, Derivation, etc).rtp
+VBA
+1
+V(Out) Minimum
+Oscillation Amplitude in V
+Mix Template Results
+1
+0D
+General 1D
+P
+EP10
+Mix Template Results.rtp
+VBA
+1
+Oscillation Amplitude in V
+12
+1:aR1dTemplateA
+2:aR1dTemplateB
+3:aAbBcCzZ
+4:Tasks\V(Out) Fourier Transform
+5:Tasks\Sweep Tuning Voltage\Tran1\TD Voltages\Out
+6:Tasks\Out Fourier Transform
+7:Tasks\Unselected
+8:Unselected
+9:Tasks\V(Out) Maximum
+10:Tasks\V(Out) Minimum
+11:VOID
+12:Tasks\Sweep Tuning Voltage\Tran1\PP1\0D\Oscillation Amplitude in V

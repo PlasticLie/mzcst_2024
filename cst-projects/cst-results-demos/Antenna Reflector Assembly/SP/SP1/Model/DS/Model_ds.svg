@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="1e+08 1e+08 -2e+08 -2e+08">
+<!-- Source code to generate this instance:
+#include "libavoid/libavoid.h"
+using namespace Avoid;
+int main(void) {
+    Router *router = new Router(OrthogonalRouting);
+    router->setRoutingParameter((RoutingParameter)0, 50);
+    router->setRoutingParameter((RoutingParameter)1, 0);
+    router->setRoutingParameter((RoutingParameter)2, 200);
+    router->setRoutingParameter((RoutingParameter)3, 4000);
+    router->setRoutingParameter((RoutingParameter)4, 9000);
+    router->setRoutingParameter((RoutingParameter)5, 100);
+    router->setRoutingParameter((RoutingParameter)6, 0);
+    router->setRoutingParameter((RoutingParameter)7, 25);
+    router->setRoutingParameter((RoutingParameter)8, 0);
+    router->setRoutingOption((RoutingOption)0, false);
+    router->setRoutingOption((RoutingOption)1, false);
+    router->setRoutingOption((RoutingOption)2, true);
+    router->setRoutingOption((RoutingOption)3, false);
+    router->setRoutingOption((RoutingOption)4, true);
+    router->setRoutingOption((RoutingOption)5, true);
+    router->setRoutingOption((RoutingOption)6, true);
+    Polygon polygon;
+    ConnRef *connRef = NULL;
+    ConnEnd srcPt;
+    ConnEnd dstPt;
+    ConnEnd heConnPt;
+    PolyLine newRoute;
+    ShapeConnectionPin *connPin = NULL;
+
+    router->processTransaction();
+    router->outputInstanceToSVG();
+    delete router;
+    return 0;
+};
+-->
+<g inkscape:groupmode="layer" inkscape:label="Clusters">
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="ShapePolygons">
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="ObstaclePolygons">
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="IdealJunctions">
+</g>
+<g inkscape:groupmode="layer" inkscape:label="ObstacleRects">
+</g>
+<g inkscape:groupmode="layer" inkscape:label="VisGraph">
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="VisGraph-shape">
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="VisGraph-conn">
+</g>
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="OrthogVisGraph">
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="RawConnectors">
+</g>
+<g inkscape:groupmode="layer" style="display: none;" inkscape:label="CurvedDisplayConnectors">
+</g>
+<g inkscape:groupmode="layer" inkscape:label="DisplayConnectors">
+</g>
+<g inkscape:groupmode="layer" inkscape:label="ConnectorCheckpoints">
+</g>
+</svg>

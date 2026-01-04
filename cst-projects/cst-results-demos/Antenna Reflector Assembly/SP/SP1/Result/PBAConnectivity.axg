@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CSTAuxiliaryGeometry version="20170928">
+  <Objects>
+    <Object name="Components\Horn Antenna_1/component1:solid1" id="1"/>
+    <Object name="Components\Reflector Dish_1/component1:solid1" id="2"/>
+  </Objects>
+  <Materials/>
+  <Groups>
+    <Group name="Isolators" type="Isolator" ID="1"/>
+    <Group name="Unconsidered" type="Isolator" ID="1">
+      <Item name="Components\Horn Antenna_1/component1:solid1" type="solid" id="1"/>
+      <Item name="Components\Reflector Dish_1/component1:solid1" type="solid" id="2"/>
+    </Group>
+  </Groups>
+</CSTAuxiliaryGeometry>

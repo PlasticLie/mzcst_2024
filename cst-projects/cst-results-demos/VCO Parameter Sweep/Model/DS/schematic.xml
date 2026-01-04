@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SchematicTopology Version="2.5" Seed="200" Grid="25">
+    <Block Id="1" ForeignId="345343428" Class="MSLINE">
+        <Size Height="150" Width="150"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="1100" Y="1325"/>
+        <ToolTip>Microstrip line MSLINE1</ToolTip>
+    </Block>
+    <Block Id="2" ForeignId="660567249" Class="MSREF">
+        <Size Height="150" Width="150"/>
+        <Pos X="1100" Y="1000"/>
+        <ToolTip>Microstrip reference block MSREF1</ToolTip>
+    </Block>
+    <Block Id="3" ForeignId="592512174" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="1100" Y="1500"/>
+        <ToolTip>Ground GND1</ToolTip>
+    </Block>
+    <Block Id="4" ForeignId="848590338" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Pos X="850" Y="1150"/>
+        <Label>3.6 p</Label>
+        <ToolTip>Capacitor CAP1</ToolTip>
+    </Block>
+    <Block Id="6" ForeignId="618088020" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Pos X="1375" Y="1150"/>
+        <Label>56 p</Label>
+        <ToolTip>Capacitor CAP1_1</ToolTip>
+    </Block>
+    <Block Id="8" ForeignId="661403511" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="1250" Y="1325"/>
+        <Label>4.3 p</Label>
+        <ToolTip>Capacitor CAP1_1_1</ToolTip>
+    </Block>
+    <Block Id="10" ForeignId="794799870" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="1250" Y="1500"/>
+        <ToolTip>Ground GND2</ToolTip>
+    </Block>
+    <Block Id="11" ForeignId="365154867" Class="RES">
+        <Size Height="50" Width="100"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="1600" Y="975"/>
+        <Label>8.2 k</Label>
+        <ToolTip>Resistor RES1</ToolTip>
+    </Block>
+    <Block Id="13" ForeignId="78782880" Class="RES">
+        <Size Height="50" Width="100"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="1600" Y="1350"/>
+        <Label>22 k</Label>
+        <ToolTip>Resistor RES1_1</ToolTip>
+    </Block>
+    <Block Id="15" ForeignId="12982396" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="1775" Y="1375"/>
+        <Label>1.2 p</Label>
+        <ToolTip>Capacitor CAP1_1_1_1</ToolTip>
+    </Block>
+    <Block Id="17" ForeignId="670766125" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="1775" Y="1650"/>
+        <Label>3 p</Label>
+        <ToolTip>Capacitor CAP1_1_1_1_1</ToolTip>
+    </Block>
+    <Block Id="19" ForeignId="126021938" Class="IND" Flags="NotResizable">
+        <Size Height="50" Width="100"/>
+        <Pos X="525" Y="1150"/>
+        <Label>82 n</Label>
+        <ToolTip>Inductor IND1</ToolTip>
+    </Block>
+    <Block Id="21" ForeignId="687373973" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="350" Y="1325"/>
+        <Label>47 n</Label>
+        <ToolTip>Capacitor CAP1_1_1_2</ToolTip>
+    </Block>
+    <Block Id="23" ForeignId="625799424" Class="VOLTDC">
+        <Size Height="100" Width="50"/>
+        <Pos X="100" Y="1150"/>
+        <Label>VTUNE V</Label>
+        <ToolTip>Voltage DC Source VOLT1</ToolTip>
+    </Block>
+    <Block Id="25" ForeignId="135585127" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="350" Y="1500"/>
+        <ToolTip>Ground GND3</ToolTip>
+    </Block>
+    <Block Id="26" ForeignId="103029570" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="675" Y="1500"/>
+        <ToolTip>Ground GND4</ToolTip>
+    </Block>
+    <Block Id="27" ForeignId="186347364" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="-25" Y="1150"/>
+        <ToolTip>Ground GND5</ToolTip>
+    </Block>
+    <Block Id="28" ForeignId="530052894" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="1600" Y="625"/>
+        <Label>47 n</Label>
+        <ToolTip>Capacitor CAP1_1_1_2_1</ToolTip>
+    </Block>
+    <Block Id="30" ForeignId="74316400" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Transform m22="-1" m11="-1"/>
+        <Pos X="1600" Y="500"/>
+        <ToolTip>Ground GND6</ToolTip>
+    </Block>
+    <Block Id="31" ForeignId="240983669" Class="VOLTDC">
+        <Size Height="100" Width="50"/>
+        <Pos X="1275" Y="725"/>
+        <Label>VBIAS V</Label>
+        <ToolTip>Voltage DC Source VOLT2</ToolTip>
+    </Block>
+    <Block Id="33" ForeignId="145896936" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="1150" Y="725"/>
+        <ToolTip>Ground GND7</ToolTip>
+    </Block>
+    <Block Id="34" ForeignId="249788000" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="1600" Y="1500"/>
+        <ToolTip>Ground GND8</ToolTip>
+    </Block>
+    <Block Id="35" ForeignId="737196219" Class="RES">
+        <Size Height="50" Width="100"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="2350" Y="1675"/>
+        <Label>390</Label>
+        <ToolTip>Resistor RES2</ToolTip>
+    </Block>
+    <Block Id="37" ForeignId="943736230" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Pos X="2450" Y="1525"/>
+        <Label>47 p</Label>
+        <ToolTip>Capacitor CAP1_2</ToolTip>
+    </Block>
+    <Block Id="39" ForeignId="326454216" Class="EXTPORT" Flags="NotResizable">
+        <Size Height="50" Width="100"/>
+        <Pins Distribution="Custom">
+            <Pin Index="0" Port="0" BlockPosition="Center">
+                <Label>
+                    <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="">
+                        <Font PointSize="16"/>
+                    </LabelAppearance>
+                </Label>
+            </Pin>
+            <Ports>
+                <Port Name="" Label=""/>
+            </Ports>
+        </Pins>
+        <Pos X="1775" Y="1025"/>
+        <Label>1</Label>
+        <ToolTip>External Port 1</ToolTip>
+    </Block>
+    <Block Id="40" ForeignId="19290345" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="1775" Y="1800"/>
+        <ToolTip>Ground GND9</ToolTip>
+    </Block>
+    <Block Id="41" ForeignId="267635097" Class="DIODE">
+        <Size Height="50" Width="100"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="675" Y="1325"/>
+        <Label>BBY53</Label>
+        <ToolTip>BBY53 DIODE1</ToolTip>
+    </Block>
+    <Block Id="43" ForeignId="760590" Class="BJTNPN">
+        <Size Height="150" Width="150"/>
+        <Pos X="2300" Y="1150"/>
+        <Label>BFG425W</Label>
+        <ToolTip>BFG425W BJT1</ToolTip>
+    </Block>
+    <Block Id="45" ForeignId="7771148" Class="IND" Flags="NotResizable">
+        <Size Height="50" Width="100"/>
+        <Pos X="1900" Y="1150"/>
+        <Label>LB n</Label>
+        <ToolTip>Inductor IND2</ToolTip>
+    </Block>
+    <Block Id="47" ForeignId="468720620" Class="IND" Flags="NotResizable">
+        <Size Height="50" Width="100"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="2350" Y="825"/>
+        <Label>LC n</Label>
+        <ToolTip>Inductor IND2_1</ToolTip>
+    </Block>
+    <Block Id="49" ForeignId="338118942" Class="IND" Flags="NotResizable">
+        <Size Height="50" Width="100"/>
+        <Transform m12="-1" m21="1" m22="0" m11="0"/>
+        <Pos X="2350" Y="1400"/>
+        <Label>LE n</Label>
+        <ToolTip>Inductor IND2_1_1</ToolTip>
+    </Block>
+    <Block Id="51" ForeignId="20582988" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Transform m12="1" m21="-1" m22="0" m11="0"/>
+        <Pos X="2575" Y="1150"/>
+        <Label>CPCE f</Label>
+        <ToolTip>Capacitor CAP1_1_1_1_2</ToolTip>
+    </Block>
+    <Block Id="53" ForeignId="23646304" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Pos X="2100" Y="950"/>
+        <Label>CPBC f</Label>
+        <ToolTip>Capacitor CAP2</ToolTip>
+    </Block>
+    <Block Id="55" ForeignId="41123862" Class="CAP" Flags="NotResizable">
+        <Size Height="60" Width="50"/>
+        <Pos X="2125" Y="1300"/>
+        <Label>CPBE f</Label>
+        <ToolTip>Capacitor CAP2_1</ToolTip>
+    </Block>
+    <Block Id="57" ForeignId="40558035" Class="GND">
+        <Size Height="50" Width="50"/>
+        <Pos X="2350" Y="1825"/>
+        <ToolTip>Ground GND12</ToolTip>
+    </Block>
+    <Block Id="58" ForeignId="6761265" Class="EXTPORT" Flags="NotResizable">
+        <Size Height="50" Width="100"/>
+        <Pins Distribution="Custom">
+            <Pin Index="0" Port="0" BlockPosition="Center">
+                <Label>
+                    <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="">
+                        <Font PointSize="16"/>
+                    </LabelAppearance>
+                </Label>
+            </Pin>
+            <Ports>
+                <Port Name="" Label=""/>
+            </Ports>
+        </Pins>
+        <Pos X="2750" Y="1525"/>
+        <Label>2</Label>
+        <ToolTip>External Port 2</ToolTip>
+    </Block>
+    <Text Id="59" TextFlags="" Flags="Local">
+        <Size Height="207" Width="525"/>
+        <Pos X="425" Y="1575"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:55pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:48pt; color:#000000;">Varactor diode    (see &amp;quot;BBY53.txt&amp;quot;)&lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="55" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Text Id="60" TextFlags="" Flags="Local">
+        <Size Height="171" Width="249"/>
+        <Pos X="0" Y="900"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:55pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:48pt; color:#000000;">Tuning voltage&lt;/span>&lt;span style=" color:#000000;"> &lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="55" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Text Id="61" TextFlags="" Flags="Local">
+        <Size Height="207" Width="600"/>
+        <Pos X="2625" Y="825"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:55pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:48pt; color:#000000;">Bipolar transistor with package parasitics &lt;br />(see &amp;quot;BFG425W.txt&amp;quot;)&lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="55" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Text Id="62" TextFlags="" Flags="Local">
+        <Size Height="138.28163146972659" Width="531.7376708984375"/>
+        <Pos X="1675" Y="750"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:55pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:36pt; color:#000000;">Injection current source to trigger oscillation&lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="55" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Text Id="63" TextFlags="" Flags="Local">
+        <Size Height="140" Width="350"/>
+        <Pos X="2825" Y="1455"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:55pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:48pt; color:#000000;">Output port&lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="55" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Text Id="64" TextFlags="" Flags="Local">
+        <Size Height="171" Width="249"/>
+        <Pos X="1175" Y="475"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:55pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:48pt; color:#000000;">Bias voltage &lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="55" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Text Id="65" TextFlags="" Flags="Local">
+        <Size Height="163.9256896972656" Width="1379.32666015625"/>
+        <Pos X="1425" Y="202.0743103027344"/>
+        <Label>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Times New Roman'; font-size:84pt; font-weight:400; font-style:normal;">
+&lt;p align="center" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" color:#000000;">Voltage Controlled Oscillator&lt;/span>&lt;/p>&lt;/body>&lt;/html></Label>
+        <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="HCenter VCenter Wrap">
+            <Font PointSize="84" Family="Times New Roman"/>
+        </LabelAppearance>
+    </Text>
+    <Block Id="79" ForeignId="31460827" UserData="Probe" Class="PROBE" ImageIndex="1" Flags="NotResizable">
+        <Size Height="25" Width="50"/>
+        <Pins Distribution="Custom">
+            <Pin Index="0" Port="0" BlockPosition="Left">
+                <Label>
+                    <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="Right Top">
+                        <Font PointSize="16"/>
+                    </LabelAppearance>
+                </Label>
+            </Pin>
+            <Pin Index="0" Port="1" BlockPosition="Right">
+                <Label>
+                    <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="Left Top">
+                        <Font PointSize="16"/>
+                    </LabelAppearance>
+                </Label>
+            </Pin>
+            <Ports>
+                <Port Name="" Label=""/>
+                <Port Name="" Label=""/>
+            </Ports>
+        </Pins>
+        <Transform m22="-1" m11="-1"/>
+        <Pos X="2600" Y="1525"/>
+        <Label>Out</Label>
+        <ToolTip>Current Probe Out</ToolTip>
+    </Block>
+    <Block Id="80" ForeignId="276850350" UserData="Probe" Class="PROBE" ImageIndex="1" Flags="NotResizable">
+        <Size Height="25" Width="50"/>
+        <Pins Distribution="Custom">
+            <Pin Index="0" Port="0" BlockPosition="Left">
+                <Label>
+                    <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="Right Top">
+                        <Font PointSize="16"/>
+                    </LabelAppearance>
+                </Label>
+            </Pin>
+            <Pin Index="0" Port="1" BlockPosition="Right">
+                <Label>
+                    <LabelAppearance VerticalMargin="0" RightMargin="0" Color="#000000" LeftMargin="0" Placement="Inside" HorizontalMargin="0" Flags="Left Top">
+                        <Font PointSize="16"/>
+                    </LabelAppearance>
+                </Label>
+            </Pin>
+            <Ports>
+                <Port Name="" Label=""/>
+                <Port Name="" Label=""/>
+            </Ports>
+        </Pins>
+        <Transform m22="-1" m11="-1"/>
+        <Pos X="1925" Y="1025"/>
+        <Label>Inject</Label>
+        <ToolTip>Current Probe Inject</ToolTip>
+    </Block>
+    <Link Id="81">
+        <Connection Pin="0" Ref="3" Type="Pin"/>
+        <Connection Pin="0" Ref="1" Type="Pin"/>
+        <Route>
+            <Pos X="1100" Y="1480"/>
+            <Pos X="1100" Y="1420"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="82">
+        <Connection Pin="0" Ref="10" Type="Pin"/>
+        <Connection Pin="1" Ref="8" Type="Pin"/>
+        <Route>
+            <Pos X="1250" Y="1480"/>
+            <Pos X="1250" Y="1370"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="83">
+        <Connection Pin="0" Ref="25" Type="Pin"/>
+        <Connection Pin="1" Ref="21" Type="Pin"/>
+        <Route>
+            <Pos X="350" Y="1480"/>
+            <Pos X="350" Y="1370"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="84">
+        <Connection Pin="0" Ref="27" Type="Pin"/>
+        <Connection Pin="1" Ref="23" Type="Pin"/>
+        <Route>
+            <Pos X="-5" Y="1150"/>
+            <Pos X="55" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="85">
+        <Connection Pin="0" Ref="30" Type="Pin"/>
+        <Connection Pin="0" Ref="28" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="520"/>
+            <Pos X="1600" Y="580"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="86">
+        <Connection Pin="0" Ref="33" Type="Pin"/>
+        <Connection Pin="1" Ref="31" Type="Pin"/>
+        <Route>
+            <Pos X="1170" Y="725"/>
+            <Pos X="1230" Y="725"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="87">
+        <Connection Pin="0" Ref="34" Type="Pin"/>
+        <Connection Pin="0" Ref="13" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="1480"/>
+            <Pos X="1600" Y="1420"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="88">
+        <Connection Pin="0" Ref="40" Type="Pin"/>
+        <Connection Pin="1" Ref="17" Type="Pin"/>
+        <Route>
+            <Pos X="1775" Y="1780"/>
+            <Pos X="1775" Y="1695"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="89">
+        <Connection Pin="0" Ref="41" Type="Pin"/>
+        <Connection Pin="0" Ref="26" Type="Pin"/>
+        <Route>
+            <Pos X="675" Y="1395"/>
+            <Pos X="675" Y="1480"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="90">
+        <Connection Pin="0" Ref="57" Type="Pin"/>
+        <Connection Pin="0" Ref="35" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1805"/>
+            <Pos X="2350" Y="1745"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="91">
+        <Connection Pin="0" Ref="58" Type="Pin"/>
+        <Connection Pin="0" Ref="79" Type="Pin"/>
+        <Route>
+            <Pos X="2700" Y="1525"/>
+            <Pos X="2620" Y="1525"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="133">
+        <Connection Pin="1" Ref="37" Type="Pin"/>
+        <Connection Pin="1" Ref="79" Type="Pin"/>
+        <Route>
+            <Pos X="2495" Y="1525"/>
+            <Pos X="2580" Y="1525"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="134">
+        <Connection Pin="0" Ref="39" Type="Pin"/>
+        <Connection Pin="1" Ref="80" Type="Pin"/>
+        <Route>
+            <Pos X="1825" Y="1025"/>
+            <Pos X="1905" Y="1025"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="135" Fixed="0">
+        <Pos X="2350" Y="1300"/>
+    </Junction>
+    <Link Id="137">
+        <Connection Id="135" Type="Junction"/>
+        <Connection Pin="2" Ref="43" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1300"/>
+            <Pos X="2350" Y="1245"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="138">
+        <Connection Id="135" Type="Junction"/>
+        <Connection Pin="1" Ref="49" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1300"/>
+            <Pos X="2350" Y="1330"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="140">
+        <Connection Id="135" Type="Junction"/>
+        <Connection Pin="1" Ref="55" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1300"/>
+            <Pos X="2170" Y="1300"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="141">
+        <Connection Id="135" Type="Junction"/>
+        <Connection Pin="1" Ref="51" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1300"/>
+            <Pos X="2575" Y="1300"/>
+            <Pos X="2575" Y="1195"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="142" Fixed="0">
+        <Pos X="2075" Y="1150"/>
+    </Junction>
+    <Junction Id="144" Fixed="0">
+        <Pos X="2050" Y="1025"/>
+    </Junction>
+    <Link Id="145">
+        <Connection Id="142" Type="Junction"/>
+        <Connection Pin="1" Ref="45" Type="Pin"/>
+        <Route>
+            <Pos X="2075" Y="1150"/>
+            <Pos X="1970" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="146">
+        <Connection Id="142" Type="Junction"/>
+        <Connection Pin="1" Ref="43" Type="Pin"/>
+        <Route>
+            <Pos X="2075" Y="1150"/>
+            <Pos X="2205" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="148">
+        <Connection Id="142" Type="Junction"/>
+        <Connection Pin="0" Ref="55" Type="Pin"/>
+        <Route>
+            <Pos X="2075" Y="1150"/>
+            <Pos X="2075" Y="1300"/>
+            <Pos X="2080" Y="1300"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="149">
+        <Connection Id="142" Type="Junction"/>
+        <Connection Id="144" Type="Junction"/>
+        <Route>
+            <Pos X="2075" Y="1150"/>
+            <Pos X="2075" Y="1025"/>
+            <Pos X="2050" Y="1025"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="150">
+        <Connection Id="144" Type="Junction"/>
+        <Connection Pin="0" Ref="80" Type="Pin"/>
+        <Route>
+            <Pos X="2050" Y="1025"/>
+            <Pos X="1945" Y="1025"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="151">
+        <Connection Id="144" Type="Junction"/>
+        <Connection Pin="0" Ref="53" Type="Pin"/>
+        <Route>
+            <Pos X="2050" Y="1025"/>
+            <Pos X="2050" Y="950"/>
+            <Pos X="2055" Y="950"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="152" Fixed="0">
+        <Pos X="1100" Y="1150"/>
+    </Junction>
+    <Junction Id="153" Fixed="0">
+        <Pos X="1250" Y="1150"/>
+    </Junction>
+    <Link Id="154">
+        <Connection Id="152" Type="Junction"/>
+        <Connection Id="153" Type="Junction"/>
+        <Route>
+            <Pos X="1100" Y="1150"/>
+            <Pos X="1250" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="155">
+        <Connection Id="153" Type="Junction"/>
+        <Connection Pin="0" Ref="6" Type="Pin"/>
+        <Route>
+            <Pos X="1250" Y="1150"/>
+            <Pos X="1330" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="156">
+        <Connection Id="153" Type="Junction"/>
+        <Connection Pin="0" Ref="8" Type="Pin"/>
+        <Route>
+            <Pos X="1250" Y="1150"/>
+            <Pos X="1250" Y="1280"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="157">
+        <Connection Id="152" Type="Junction"/>
+        <Connection Pin="1" Ref="4" Type="Pin"/>
+        <Route>
+            <Pos X="1100" Y="1150"/>
+            <Pos X="895" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="158">
+        <Connection Id="152" Type="Junction"/>
+        <Connection Pin="1" Ref="1" Type="Pin"/>
+        <Route>
+            <Pos X="1100" Y="1150"/>
+            <Pos X="1100" Y="1230"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="159" Fixed="0">
+        <Pos X="350" Y="1150"/>
+    </Junction>
+    <Link Id="160">
+        <Connection Id="159" Type="Junction"/>
+        <Connection Pin="0" Ref="23" Type="Pin"/>
+        <Route>
+            <Pos X="350" Y="1150"/>
+            <Pos X="145" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="161">
+        <Connection Id="159" Type="Junction"/>
+        <Connection Pin="0" Ref="19" Type="Pin"/>
+        <Route>
+            <Pos X="350" Y="1150"/>
+            <Pos X="455" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="162">
+        <Connection Id="159" Type="Junction"/>
+        <Connection Pin="0" Ref="21" Type="Pin"/>
+        <Route>
+            <Pos X="350" Y="1150"/>
+            <Pos X="350" Y="1280"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="163" Fixed="0">
+        <Pos X="1600" Y="1150"/>
+    </Junction>
+    <Junction Id="164" Fixed="0">
+        <Pos X="1600" Y="1151"/>
+    </Junction>
+    <Junction Id="165" Fixed="0">
+        <Pos X="1775" Y="1150"/>
+    </Junction>
+    <Link Id="166">
+        <Connection Id="163" Type="Junction"/>
+        <Connection Id="165" Type="Junction"/>
+        <Route>
+            <Pos X="1600" Y="1150"/>
+            <Pos X="1775" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="167">
+        <Connection Id="165" Type="Junction"/>
+        <Connection Pin="0" Ref="45" Type="Pin"/>
+        <Route>
+            <Pos X="1775" Y="1150"/>
+            <Pos X="1830" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="168">
+        <Connection Id="165" Type="Junction"/>
+        <Connection Pin="0" Ref="15" Type="Pin"/>
+        <Route>
+            <Pos X="1775" Y="1150"/>
+            <Pos X="1775" Y="1330"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="169">
+        <Connection Id="163" Type="Junction"/>
+        <Connection Pin="1" Ref="6" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="1150"/>
+            <Pos X="1420" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="170">
+        <Connection Id="163" Type="Junction"/>
+        <Connection Id="164" Type="Junction"/>
+        <Route>
+            <Pos X="1600" Y="1150"/>
+            <Pos X="1600" Y="1151"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="171">
+        <Connection Id="164" Type="Junction"/>
+        <Connection Pin="0" Ref="11" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="1151"/>
+            <Pos X="1600" Y="1045"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="172">
+        <Connection Id="164" Type="Junction"/>
+        <Connection Pin="1" Ref="13" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="1151"/>
+            <Pos X="1600" Y="1280"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="174" Fixed="0">
+        <Pos X="1600" Y="725"/>
+    </Junction>
+    <Link Id="175">
+        <Connection Id="174" Type="Junction"/>
+        <Connection Pin="1" Ref="11" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="725"/>
+            <Pos X="1600" Y="905"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="176">
+        <Connection Id="174" Type="Junction"/>
+        <Connection Pin="1" Ref="28" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="725"/>
+            <Pos X="1600" Y="670"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="178">
+        <Connection Id="174" Type="Junction"/>
+        <Connection Pin="0" Ref="31" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="725"/>
+            <Pos X="1320" Y="725"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="179">
+        <Connection Id="174" Type="Junction"/>
+        <Connection Pin="1" Ref="47" Type="Pin"/>
+        <Route>
+            <Pos X="1600" Y="725"/>
+            <Pos X="2350" Y="725"/>
+            <Pos X="2350" Y="755"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="180" Fixed="0">
+        <Pos X="675" Y="1150"/>
+    </Junction>
+    <Link Id="181">
+        <Connection Id="180" Type="Junction"/>
+        <Connection Pin="0" Ref="4" Type="Pin"/>
+        <Route>
+            <Pos X="675" Y="1150"/>
+            <Pos X="805" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="182">
+        <Connection Id="180" Type="Junction"/>
+        <Connection Pin="1" Ref="19" Type="Pin"/>
+        <Route>
+            <Pos X="675" Y="1150"/>
+            <Pos X="595" Y="1150"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="183">
+        <Connection Id="180" Type="Junction"/>
+        <Connection Pin="1" Ref="41" Type="Pin"/>
+        <Route>
+            <Pos X="675" Y="1150"/>
+            <Pos X="675" Y="1255"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="185" Fixed="0">
+        <Pos X="2350" Y="950"/>
+    </Junction>
+    <Link Id="186">
+        <Connection Id="185" Type="Junction"/>
+        <Connection Pin="0" Ref="43" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="950"/>
+            <Pos X="2350" Y="1055"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="187">
+        <Connection Id="185" Type="Junction"/>
+        <Connection Pin="0" Ref="47" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="950"/>
+            <Pos X="2350" Y="895"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="189">
+        <Connection Id="185" Type="Junction"/>
+        <Connection Pin="1" Ref="53" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="950"/>
+            <Pos X="2145" Y="950"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="190">
+        <Connection Id="185" Type="Junction"/>
+        <Connection Pin="0" Ref="51" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="950"/>
+            <Pos X="2575" Y="950"/>
+            <Pos X="2575" Y="1105"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Junction Id="191" Fixed="0">
+        <Pos X="2350" Y="1525"/>
+    </Junction>
+    <Junction Id="192" Fixed="0">
+        <Pos X="1775" Y="1525"/>
+    </Junction>
+    <Link Id="194">
+        <Connection Id="191" Type="Junction"/>
+        <Connection Pin="0" Ref="49" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1525"/>
+            <Pos X="2350" Y="1470"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="196">
+        <Connection Id="191" Type="Junction"/>
+        <Connection Pin="0" Ref="37" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1525"/>
+            <Pos X="2405" Y="1525"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="197">
+        <Connection Id="191" Type="Junction"/>
+        <Connection Id="192" Type="Junction"/>
+        <Route>
+            <Pos X="2350" Y="1525"/>
+            <Pos X="1775" Y="1525"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="198">
+        <Connection Id="192" Type="Junction"/>
+        <Connection Pin="1" Ref="15" Type="Pin"/>
+        <Route>
+            <Pos X="1775" Y="1525"/>
+            <Pos X="1775" Y="1420"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="199">
+        <Connection Id="192" Type="Junction"/>
+        <Connection Pin="0" Ref="17" Type="Pin"/>
+        <Route>
+            <Pos X="1775" Y="1525"/>
+            <Pos X="1775" Y="1605"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+    <Link Id="200">
+        <Connection Id="191" Type="Junction"/>
+        <Connection Pin="1" Ref="35" Type="Pin"/>
+        <Route>
+            <Pos X="2350" Y="1525"/>
+            <Pos X="2350" Y="1605"/>
+        </Route>
+        <Pos X="0" Y="0"/>
+    </Link>
+</SchematicTopology>

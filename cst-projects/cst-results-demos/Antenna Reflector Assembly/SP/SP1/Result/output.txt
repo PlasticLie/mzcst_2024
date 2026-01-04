@@ -1,0 +1,98 @@
+_______________________________________________________________________________________________________________________
+    Message output from E:\users\dde9\docs\DES_general\EUH\DS\Workflow\Assemblies\Reflector Antenna Assembly\SP\SP1
+    Build: 2024.0 Beta from 2023-07-09 (change 1141825)
+_______________________________________________________________________________________________________________________
+
+_______________________________________________________________________________________________________________________
+CAD processing via DLL
+_______________________________________________________________________________________________________________________
+CAD Processing Version Info
+	ACIS version installed:	33.0.1
+	ACIS version used:	33.0.1
+_______________________________________________________________________________________________________________________
+Matrix computation (PBA)
+	[Perfect Boundary Approximation (PBA), version: default]
+	[GPU acceleration: off (by user)]
+<a href="1485;2377.htm">More...</a>
+_______________________________________________________________________________________________________________________
+WARNING:
+120 mesh edges are represented in staircase mode and have been filled with PEC.
+309 mesh edges are partially filled with PEC.
+ <a href="2102;2371.htm">More...</a>
+_______________________________________________________________________________________________________________________
+Using Generalized port mode solver.
+_______________________________________________________________________________________________________________________
+Solver Settings:
+Excited port mode: 1 (1) 
+[Frequency domain results normalized to default signal]
+Excitation duration: 7.10909750e+000 ns 
+Steady state accuracy limit: -40 dB 
+Maximum number of time steps: 40273 
+Time step width:
+     without subcycles: 3.530399232e-003 ns
+     used: 3.530399232e-003 ns
+Number of threads used: 4
+_______________________________________________________________________________________________________________________
+Steady state energy criterion met, solver finished successfully.
+_______________________________________________________________________________________________________________________
+The Z and Y matrices have been successfully calculated.
+The VSWR results have been successfully calculated.
+
+_______________________________________________________________________________________________________________________
+Creating parametric 1D results for Run ID 1
+_______________________________________________________________________________________________________________________
+WARNING:
+1 warning occurred.
+_______________________________________________________________________________________________________________________
+CAD processing via DLL
+_______________________________________________________________________________________________________________________
+CAD Processing Version Info
+	ACIS version installed:	33.0.1
+	ACIS version used:	33.0.1
+_______________________________________________________________________________________________________________________
+Matrix computation (PBA)
+	[Perfect Boundary Approximation (PBA), version: default]
+	[GPU acceleration: off (by user)]
+<a href="1485;2377.htm">More...</a>
+_______________________________________________________________________________________________________________________
+Using Generalized port mode solver.
+_______________________________________________________________________________________________________________________
+Solver Settings:
+Excited port mode: 1 (1) 
+[Frequency domain results normalized to default signal]
+Excitation duration: 7.10909750e+000 ns 
+Steady state accuracy limit: -40 dB 
+Maximum number of time steps: 41436 
+Time step width:
+     without subcycles: 3.431296105e-003 ns
+     used: 3.431296105e-003 ns
+Number of threads used: 4
+_______________________________________________________________________________________________________________________
+Steady state energy criterion met, solver finished successfully.
+_______________________________________________________________________________________________________________________
+The Z and Y matrices have been successfully calculated.
+The VSWR results have been successfully calculated.
+
+_______________________________________________________________________________________________________________________
+Creating parametric 1D results for Run ID 2
+_______________________________________________________________________________________________________________________
+Using Generalized port mode solver.
+_______________________________________________________________________________________________________________________
+Solver Settings:
+Excited port mode: 1 (1) 
+[Frequency domain results normalized to default signal]
+Excitation duration: 7.10909750e+000 ns 
+Steady state accuracy limit: -40 dB 
+Maximum number of time steps: 41436 
+Time step width:
+     without subcycles: 3.431296105e-003 ns
+     used: 3.431296105e-003 ns
+Number of threads used: 4
+_______________________________________________________________________________________________________________________
+Steady state energy criterion met, solver finished successfully.
+_______________________________________________________________________________________________________________________
+The Z and Y matrices have been successfully calculated.
+The VSWR results have been successfully calculated.
+
+_______________________________________________________________________________________________________________________
+Creating parametric 1D results for Run ID 2

@@ -43,7 +43,7 @@ if __name__ == "__main__":
     time_stamps.append(time.perf_counter())
 
     LOG_PATH: str = os.path.join(PARENT_PATH, "logs")
-    LOG_FILE_NAME: str = f"conformal-Rumpf-demo-{current_time}.log"
+    LOG_FILE_NAME: str = f"read-results-demo-{current_time}.log"
     LOG_LEVEL = logging.INFO
     FMT = "%(asctime)s.%(msecs)-3d %(name)s - %(levelname)s - %(message)s"
     DATEFMT = r"%Y-%m-%d %H:%M:%S"

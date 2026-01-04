@@ -1,0 +1,14 @@
+{
+   "execution": {
+      "classname": "SMAPowerByEmagHPCFrame",
+      "libname": "SMAPowerByEmagUI"
+   },
+   "inputVariables": [
+      {
+         "name": "slant_angle",
+         "type": "float",
+         "value": 45.0
+      }
+   ],
+   "outputVariables": []
+}
