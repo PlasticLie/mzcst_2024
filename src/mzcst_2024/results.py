@@ -110,7 +110,7 @@ class ProjectFile:
         """
         return self._pf.list_subprojects()
 
-    def load_subproject(self) -> "ProjectFile":
+    def load_subproject(self, subproject_path: str) -> "ProjectFile":
         """Load a subproject from a tree path.
 
         Returns
@@ -118,7 +118,7 @@ class ProjectFile:
         ProjectFile
             project file object of subproject
         """
-        ls = self._pf.load_subproject()
+        ls = self._pf.load_subproject(subproject_path)
         return ProjectFile.init(ls)
 
 
