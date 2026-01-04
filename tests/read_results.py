@@ -6,26 +6,35 @@ Examples
 Introduction
 ========
 
-The CST Studio Suite installation comes with a Python interpreter, so there is no need to additionally install Python to follow the examples.
+The CST Studio Suite installation comes with a Python interpreter, so there is 
+no need to additionally install Python to follow the examples.
 
-Note: For simplicity, the following examples assume a Windows OS. However, Linux is supported as well.
+Note: For simplicity, the following examples assume a Windows OS. However, Linux 
+is supported as well.
 
-To open a Python console, browse for the `\AMD64\python` subfolder of the CST Studio Suite installation (e.g. `C:\Program Files (x86)\CST STUDIO SUITE 2024\AMD64\python`) and run `python`(`.bat`).
+To open a Python console, browse for the `/AMD64/python` subfolder of the CST 
+Studio Suite installation (e.g. `C:/Program Files (x86)/CST STUDIO SUITE 2024/AMD64/python`) 
+and run `python`(`.bat`).
 
 Example 1 - Access S-Parameter data
 ----------------------------
 
 The following code loads S-Parameter data of a 3D project.
 
-For this example, take any 3D project which contains an S-Parameter S1,1, or create one from scratch. Open the project in CST Studio Suite, save it to an appropriate path (e.g. `C:\demo\project.cst`) and close CST Studio Suite.
+For this example, take any 3D project which contains an S-Parameter S1,1, or 
+create one from scratch. Open the project in CST Studio Suite, save it to an 
+appropriate path (e.g. `C:/demo/project.cst`) and close CST Studio Suite.
 
 Then load the project and address S1,1 via its navigation tree path:
 
 >>> import cst.results
->>> project = cst.results.ProjectFile(r"C:\demo\project.cst")
->>> s11 = project.get_3d().get_result_item(r"1D Results\S-Parameters\S1,1")
+>>> project = cst.results.ProjectFile(r"C:/demo/project.cst")
+>>> s11 = project.get_3d().get_result_item(r"1D Results/S-Parameters/S1,1")
 
-The returned object is of the class ResultItem, which offers a variety of functions and properties to have a fine-grained data access to a 0D/1D Result. To get the x-axis data, use get_xdata() and xlabel. The function get_data() returns the data as list of tuples with varying number of entries, or a double value.
+The returned object is of the class ResultItem, which offers a variety of 
+functions and properties to have a fine-grained data access to a 0D/1D Result. 
+To get the x-axis data, use `get_xdata()` and xlabel. The function `get_data()` 
+returns the data as list of tuples with varying number of entries, or a double value.
 
 >>> s11.get_xdata()
 [8.0, 9.0, 10.0]
@@ -36,32 +45,56 @@ The returned object is of the class ResultItem, which offers a variety of functi
 (9.0, (0.10851031541824341-0.052459076046943665j), (678.7112974398144+0j)),
 (10.0, (-0.007742199115455151-0.06290644407272339j), (568.406116209625+0j))]
 
-In this case, the first tuple entry in the list represents the frequency of the S-Parameter, the second tuple entry represents the complex-valued S-Parameter and the third entry represents the complex-valued Reference Impedance of the S-Parameter.
+In this case, the first tuple entry in the list represents the frequency of the 
+S-Parameter, the second tuple entry represents the complex-valued S-Parameter 
+and the third entry represents the complex-valued Reference Impedance of the 
+S-Parameter.
 
-The returned object type of `get_data()` depends on the type of the loaded result. For 1D Results without Reference Impedance, this will be a list of tuples with two entries, where the second tuple entry may be complex-valued or not. For 0D Results, the method’s return value will not be a list, but a single double value.
+The returned object type of `get_data()` depends on the type of the loaded 
+result. For 1D Results without Reference Impedance, this will be a list of 
+tuples with two entries, where the second tuple entry may be complex-valued or 
+not. For 0D Results, the method’s return value will not be a list, but a single 
+double value.
 
-In case you want to set up a demo example project from scratch, open an empty CST Studio Suite and select the New and Recent tab. From the `Modules/Tools` section, pick `3D Simulation-> High Frequency`. This will open an empty 3D project. From the Home Ribbon, select `Macros->Construct->Demo Examples->Waveguide T Splitter`. This will run a construction VBA macro. Start the simulation run to obtain 0D/1D Results. Save it and close CST Studio Suite.
+In case you want to set up a demo example project from scratch, open an empty 
+CST Studio Suite and select the New and Recent tab. From the `Modules/Tools` 
+section, pick `3D Simulation-> High Frequency`. This will open an empty 3D 
+project. From the Home Ribbon, select `Macros->Construct->Demo Examples->Waveguide T Splitter`. 
+This will run a construction VBA macro. Start the simulation run to obtain 0D/1D 
+Results. Save it and close CST Studio Suite.
 
 Example 2 - Access subproject data
 ----------------------------
 
-The following example shows how subproject data of a Schematic Task can be accessed.
+The following example shows how subproject data of a Schematic Task can be 
+accessed.
 
-To set up the example project, please open CST Studio Suite, go to the Component Library and use the search bar in the top right corner to find the “Antenna Reflector Assembly” example. Open it, save it to an appropriate path (e.g. “C:\demo\Antenna Reflector Assembly.cst”) and close CST Studio Suite.
+To set up the example project, please open CST Studio Suite, go to the Component 
+Library and use the search bar in the top right corner to find the “Antenna 
+Reflector Assembly” example. Open it, save it to an appropriate path (e.g. 
+`C:/demo/Antenna Reflector Assembly.cst`) and close CST Studio Suite.
 
-To get the treepaths of all existing 0D/1D Results, the method get_tree_items() of the project’s Schematic ResultModule can be used.
+To get the treepaths of all existing 0D/1D Results, the method `get_tree_items()` 
+of the project’s Schematic ResultModule can be used.
 
 >>> import cst.results
->>> project = cst.results.ProjectFile(r"C:\demo\Antenna Reflector Assembly.cst")
+>>> project = cst.results.ProjectFile(r"C:/demo/Antenna Reflector Assembly.cst")
 >>> project.get_schematic().get_tree_items()
 
-However, you may notice that the project has more tree items which are not listed here, e.g. below Tasks\\SP1. These results are part of subprojects and need to be opened explicitly. Subprojects are represented by some Generalized Simulation Tasks in the Schematic, e.g. Simulation Project Tasks, Electrical Machine Tasks, Block Simulation Tasks or Hybrid Solver Tasks.
+However, you may notice that the project has more tree items which are not listed 
+here, e.g. below Tasks//SP1. These results are part of subprojects and need to 
+be opened explicitly. Subprojects are represented by some Generalized Simulation 
+Tasks in the Schematic, e.g. Simulation Project Tasks, Electrical Machine Tasks, 
+Block Simulation Tasks or Hybrid Solver Tasks.
 
-To get the treepaths of all existing subprojects, use the command list_subprojects().
+To get the treepaths of all existing subprojects, use the command `list_subprojects()`.
 
 >>> project.list_subprojects()
 
-Using one of the obtained tree paths, the data of the corresponding subproject can be loaded by via load_subproject(). The returned object is again a ProjectFile which can be accessed like any other CST project. To show the tree items of the subproject, call get_tree_items() of the project’s 3D ResultModule.
+Using one of the obtained tree paths, the data of the corresponding subproject 
+can be loaded by via load_subproject(). The returned object is again a 
+`ProjectFile` which can be accessed like any other CST project. To show the tree 
+items of the subproject, call get_tree_items() of the project’s 3D `ResultModule`.
 
 >>> sub_project = project.load_subproject("Tasks\\SP1")
 >>> sub_project.get_3d().get_tree_items()
@@ -72,30 +105,47 @@ Example 3 - Access parametric data
 
 The following example shows how existing parametric 0D/1D Results can be accessed.
 
-To set up the example project, please open CST Studio Suite, go to the Component Library and use the search bar in the top right corner to find the “VCO Parameter Sweep” example. Open it, save it to an appropriate path (e.g. `C:/demo/VCO Parameter Sweep.cst`) and close CST Studio Suite.
+To set up the example project, please open CST Studio Suite, go to the Component 
+Library and use the search bar in the top right corner to find the “VCO 
+Parameter Sweep” example. Open it, save it to an appropriate path (e.g. 
+`C:/demo/VCO Parameter Sweep.cst`) and close CST Studio Suite.
 
-Typically, CST Studio Suite stores all 0D/1D Results which are calculated during a parameter sweep of simulation runs. This allows studying the relationship of parameters and results. In CST Studio Suite, a parameter combination is represented by an identifier called run id. A detailed description about parametric data handling can be found in the Parametric Results Overview.
+Typically, CST Studio Suite stores all 0D/1D Results which are calculated during 
+a parameter sweep of simulation runs. This allows studying the relationship of 
+parameters and results. In CST Studio Suite, a parameter combination is 
+represented by an identifier called run id. A detailed description about 
+parametric data handling can be found in the Parametric Results Overview.
 
 In Python, the run id is depicted by an integer.
 
-Note that this is a Circuits & Systems project, therefore the Schematic `ResultModule` needs to be queried. To list all existing run ids, use `get_all_run_ids()`.
+Note that this is a Circuits & Systems project, therefore the Schematic 
+`ResultModule` needs to be queried. To list all existing run ids, use 
+`get_all_run_ids()`.
 
 >>> import cst.results
 >>> project = cst.results.ProjectFile(r"C:/demo/VCO Parameter Sweep.cst")
 >>> schematic = project.get_schematic()
 >>> schematic.get_all_run_ids()
 
-This show all run ids which were created in the Schematic submodule of the project. However, not all tree entries necessarily have results for all existing run ids, since the project setup allows a fine-grained control about which results are stored during a parameter sweep.
+This show all run ids which were created in the Schematic submodule of the 
+project. However, not all tree entries necessarily have results for all existing 
+run ids, since the project setup allows a fine-grained control about which 
+results are stored during a parameter sweep.
 
-Let’s first query the existing run ids of a Postprocessing Task result item via `get_run_ids()`.
+Let’s first query the existing run ids of a Postprocessing Task result item via 
+`get_run_ids()`.
 
 >>> schematic.get_run_ids('Tasks\\Sweep Tuning Voltage\\Tran1\\PP1\\0D\\Oscillation Frequency')
 
-In this case, for all runs there is also a result. Now let’s query the existing runs of the Port1 item in the Transient Task.
+In this case, for all runs there is also a result. Now let’s query the existing 
+runs of the Port1 item in the Transient Task.
 
 >>> schematic.get_run_ids('Tasks\\Sweep Tuning Voltage\\Tran1\\TD Currents\\Port1')
 
-For this tree item, only results are stored which correspond to run id=0. If we try to get the ResultItem for a non-existing run id, we get an error. Note that the method get_result_item() has an argument for the queried run id which defaults to 0.
+For this tree item, only results are stored which correspond to run id=0. If we 
+try to get the ResultItem for a non-existing run id, we get an error. Note that 
+the method get_result_item() has an argument for the queried run id which 
+defaults to 0.
 
 >>> port1 = schematic.get_result_item('Tasks\\Sweep Tuning Voltage\\Tran1\\TD Currents\\Port1',5)
 
@@ -104,19 +154,23 @@ Querying the existing result with run id=0 works.
 >>> port1 = schematic.get_result_item('Tasks\\Sweep Tuning Voltage\\Tran1\\TD Currents\\Port1',0)
 >>> port1.length
 
-To resolve a run id to its parameter combination, use `get_parameter_combination()`. This method returns a dictionary which contains the parameter names and values.
+To resolve a run id to its parameter combination, use 
+`get_parameter_combination()`. This method returns a dictionary which contains 
+the parameter names and values.
 
 >>> schematic.get_parameter_combination(4)
 >>> schematic.get_parameter_combination(5)
 
 
-For convenience, a loaded ResultItem also has a notion about its parameter combination. It offers `run_id` and `get_parameter_combination()`.
+For convenience, a loaded ResultItem also has a notion about its parameter 
+combination. It offers `run_id` and `get_parameter_combination()`.
 
 >>> f = schematic.get_result_item('Tasks\\Sweep Tuning Voltage\\Tran1\\PP1\\0D\\Oscillation Frequency',5)
 >>> f.run_id
 >>> f.get_parameter_combination()
 
-In case one is interested in the relationship of parameter “VTUNE” to the result value “Oscillation Frequency”, one can read the data as follows:
+In case one is interested in the relationship of parameter “VTUNE” to the result 
+value “Oscillation Frequency”, one can read the data as follows:
 
 >>> tree_item = 'Tasks\\Sweep Tuning Voltage\\Tran1\\PP1\\0D\\Oscillation Frequency'
 >>> x = []
@@ -130,7 +184,13 @@ In case one is interested in the relationship of parameter “VTUNE” to the re
 >>> for i in range(len(x)):
 >>>     print (x[i], y[i])
 
-Note that the loaded result “Oscillation Frequency” is a 0D Result, therefore the function `get_ydata()` returns a single double value. Since `run id=0` plays a special role (in particular, a copy of its results may exist with a different run id), we use the function `get_run_ids()` with the argument `skip_nonparametric=True` to exclude it from the list to avoid a potential result duplicate. The obtained x-y data now can be used for further processing or plotting.
+Note that the loaded result “Oscillation Frequency” is a 0D Result, therefore 
+the function `get_ydata()` returns a single double value. Since `run id=0` plays 
+a special role (in particular, a copy of its results may exist with a different 
+run id), we use the function `get_run_ids()` with the argument 
+`skip_nonparametric=True` to exclude it from the list to avoid a potential 
+result duplicate. The obtained x-y data now can be used for further processing 
+or plotting.
 
 """
 
