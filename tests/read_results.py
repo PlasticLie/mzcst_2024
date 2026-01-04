@@ -35,9 +35,7 @@ if __name__ == "__main__":
     )  # 获取当前py文件所在文件夹
     PARENT_PATH: str = os.path.dirname(CURRENT_PATH)
 
-    results_demo_path = os.path.join(
-        PARENT_PATH, "cst-projects\\cst-results-demos"
-    )
+    results_demo_path = "D:/CST-2024-local/cst-results-demos"
 
     # 阶段计时
     time_stamps.append(time.perf_counter())
