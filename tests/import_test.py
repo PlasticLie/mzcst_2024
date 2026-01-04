@@ -14,5 +14,6 @@ if __name__ == "__main__":
 
     print(mz.__version__)
     print(mz.__file__)
+    import read_results
 
     pass
