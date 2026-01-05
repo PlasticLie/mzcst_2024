@@ -16,4 +16,7 @@ if __name__ == "__main__":
     print(mz.__file__)
     import read_results
 
+    print(read_results.__file__)
+    
+
     pass
