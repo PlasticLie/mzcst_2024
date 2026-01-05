@@ -13,9 +13,13 @@ import os
 import pathlib
 import shutil
 import sys
+import time
 import zipfile
 
+from mzcst_2024.common import time_to_string
+
 if __name__ == "__main__":
+    timestamps: list[float] = [time.perf_counter()]
 
     #######################################
     # region 日志设置
@@ -81,8 +85,19 @@ if __name__ == "__main__":
     else:
         logger.info("不删除 debug.log 日志。")
 
+    log_files_confirm = input("是否删除 *.log文件? (y/[n])")
+    if log_files_confirm == "y":
+        logger.info("删除 *.log文件")
+        for p in pathlib.Path(TARGET_PATH).rglob("*.log"):
+            os.remove(p)
+            logger.info('log file deleted: "%s"', p)
+    else:
+        logger.info("不删除 *.log 日志。")
+
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
     logger.info("脚本运行完毕.")
+    timestamps.append(time.perf_counter())
+    logger.info("脚本运行时间: %s", time_to_string(timestamps[-1] - timestamps[0]))
 
     pass
