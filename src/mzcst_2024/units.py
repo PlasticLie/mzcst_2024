@@ -1,7 +1,11 @@
 """提供与`cst.units`交互的接口。
 
+在理想情况下，这些接口允许用户在Python环境中处理和转换物理单位。但是CST 2024中的
+`cst.units`模块目前存在一些问题，限制了其功能。因此，这些接口目前仅作为占位符存在，未来
+可能会扩展以提供更全面的功能。
 
-The `cst.units` package offers methods and classes to work with units supported by CST Studio Suite
+
+The `cst.units` package offers methods and classes to work with units supported by CST Studio Suite.
 
 """
 
