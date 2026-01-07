@@ -8,6 +8,8 @@ functional or documented. Therefore, this test script demonstrates how to use
 the `cst.units` module in CST 2026, where it appears to be more complete.
 """
 
+import random
+
 from cst.units import A, Unit, V, W, mil, mm, um
 
 # Create quantities with units
@@ -48,7 +50,7 @@ print(l3.value)  # prints "5"
 print(l6.value)  # prints "127"
 print(i1.value)  # prints "5"
 
-import random
+
 
 l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
 print(l7.value)  # prints value with unknown/random unit
