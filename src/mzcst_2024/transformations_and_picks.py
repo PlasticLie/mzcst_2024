@@ -53,7 +53,9 @@ class WCS:
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     @classmethod
-    def activate(cls, modeler: "interface.Model3D", c: str) -> None:
+    def activate(
+        cls, modeler: "interface.Model3D", c: typing.Literal["local", "global"]
+    ) -> None:
         """激活全局或局部坐标系。
 
         Args:
@@ -147,7 +149,7 @@ class WCS:
 
     def __repr__(self):
         return (
-            f"WCS({quoted(self._name)}, "
+            f"{self.__class__.__name__}({quoted(self._name)}, "
             + f"{quoted(self._normal_x)}, {quoted(self._normal_y)}, {quoted(self._normal_z)}, "
             + f"{quoted(self._origin_x)}, {quoted(self._origin_y)}, {quoted(self._origin_z)}, "
             + f"{quoted(self._uVector_x)}, {quoted(self._uVector_y)}, {quoted(self._uVector_z)})"
@@ -225,8 +227,6 @@ class Pick(BaseObject):
     def __init__(self, vba=None):
         super().__init__(vba=vba)
         return
-
-
 
 
 def pick_face_from_id(

@@ -42,7 +42,9 @@ class ProjectFile:
     This class allows loading a CST file to access its results."""
 
     def __init__(
-        self, filepath: os.PathLike = None, allow_interactive: bool = False
+        self,
+        filepath: os.PathLike | str | None = None,
+        allow_interactive: bool = False,
     ):
         """
 
@@ -80,8 +82,8 @@ class ProjectFile:
         ResultModule
             mzcst 库的接口对象
         """
-        _new = cls()
-        _new._pf = pf
+        _new = cls(pf.filename)
+        # _new._pf = pf
         return _new
 
     @property
@@ -110,7 +112,7 @@ class ProjectFile:
         """
         return self._pf.list_subprojects()
 
-    def load_subproject(self) -> "ProjectFile":
+    def load_subproject(self, subproject_path: str) -> "ProjectFile":
         """Load a subproject from a tree path.
 
         Returns
@@ -118,7 +120,7 @@ class ProjectFile:
         ProjectFile
             project file object of subproject
         """
-        ls = self._pf.load_subproject()
+        ls = self._pf.load_subproject(subproject_path)
         return ProjectFile.init(ls)
 
 
