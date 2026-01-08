@@ -1,11 +1,14 @@
 # dir 不需要提交的目录
-/dist/
+**/dist/
+**/.venv
+**/*.venv
+**/.conda
+**/*.conda
+**/__pycache__/
 ​
 # file 不需要提交的文件
-# /src/*/__pycache__/*.pyc
 *.pyc
 token.txt
-**/__pycache__/
 .DS_Store
 *.DS_Store
 ​
