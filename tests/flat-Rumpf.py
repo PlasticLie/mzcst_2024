@@ -18,12 +18,12 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 import mzcst_2024 as mz
-from mzcst_2024 import _global, common, component, interface, material
+from mzcst_2024 import common, component, global_, interface, material
 from mzcst_2024 import profiles_to_shapes as p2s
 from mzcst_2024 import shape_operations as so
 from mzcst_2024 import solver
 from mzcst_2024 import transformations_and_picks as tp
-from mzcst_2024._global import Parameter
+from mzcst_2024.global_ import Parameter
 from mzcst_2024.plot import Plot
 from mzcst_2024.sources_and_ports.hf import Port
 from mzcst_2024.transformations_and_picks import WCS
@@ -367,9 +367,9 @@ if __name__ == "__main__":
     # region 求解器设置
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    units = _global.Units().define(m3d)
+    units = global_.Units().define(m3d)
     solver.hf.define_frequency_range(m3d, fmin, fmax)
-    _global.change_solver_type(m3d, "HF Time Domain")
+    global_.change_solver_type(m3d, "HF Time Domain")
 
     solver.hf.SolverHF(
         attributes={
@@ -403,6 +403,8 @@ if __name__ == "__main__":
             "MaximumNumberOfGPUs": ' "1"',
         }
     ).create_from_attributes(m3d)
+
+    mz.global_.use_distributed_computing_for_parameters(m3d, True   )
     
 
     # 求解前保存

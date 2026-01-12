@@ -22,8 +22,8 @@ class SolverHF(BaseObject):
     This object controls the Wakefield solver.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         self._history_title = "define HF Solver:"
         return
 
@@ -86,8 +86,8 @@ class FDSolver(BaseObject):
     to run the solver.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         self._history_title = "define FD Solver:"
         return
 
@@ -118,3 +118,42 @@ class FDSolver(BaseObject):
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
             modeler.add_to_history(self._history_title, cmd)
         return self
+
+
+def define_time_domain_solver_acceleration(
+    modeler: "interface.Model3D",
+) -> None:
+    """启用时域求解器的加速功能。并给出一系列默认设置。
+
+    Args:
+        modeler (cst.interface.Model3D): 建模环境。
+
+    Returns:
+        None:
+    """
+
+    scmd = [
+        "With Solver",
+        '    .UseParallelization "True"',
+        '    .MaximumNumberOfThreads "64"',
+        '    .MaximumNumberOfCPUDevices "2"',
+        '    .RemoteCalculation "False"',
+        '    .UseDistributedComputing "True"',
+        '    .MaxNumberOfDistributedComputingPorts "64"',
+        '    .DistributeMatrixCalculation "True"',
+        '    .MPIParallelization "False"',
+        '    .AutomaticMPI "False"',
+        '    .ConsiderOnly0D1DResultsForMPI "False"',
+        '    .HardwareAcceleration "True"',
+        '    .MaximumNumberOfGPUs "1"',
+        "End With",
+        'UseDistributedComputingForParameters "True"',
+        'MaxNumberOfDistributedComputingParameters "2"',
+        'UseDistributedComputingMemorySetting "True"',
+        'MinDistributedComputingMemoryLimit "1"',
+        'UseDistributedComputingSharedDirectory "False"',
+        'OnlyConsider0D1DResultsForDC "False"',
+    ]
+    cmd = NEW_LINE.join(scmd)
+    modeler.add_to_history("define time domain solver acceleration", cmd)
+    return
