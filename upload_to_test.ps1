@@ -29,7 +29,7 @@ python -m twine upload --repository testpypi dist/* --verbose
 # }
 
 # 更新测试包
-Write-Output "更新测试包"
-conda activate mzcst-test
+# Write-Output "更新测试包"
+# conda activate mzcst-test
 # pip install -i https://test.pypi.org/simple/ --upgrade mzcst-2024
-pip install -e .
+# pip install -e .
