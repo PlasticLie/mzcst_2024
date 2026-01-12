@@ -270,7 +270,7 @@ def min_distributed_computing_memory_limit(
     )
     return
 
-def OnlyConsider0D1DResultsForDC(
+def only_consider_0D_1D_results_for_DC(
     modeler: "interface.Model3D", flag: bool = False
 ) -> None:
     modeler.add_to_history(
