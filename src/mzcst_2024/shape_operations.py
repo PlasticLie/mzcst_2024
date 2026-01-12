@@ -4,9 +4,9 @@ import logging
 import typing
 
 from . import interface
-from ._global import BaseObject, Parameter
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
 from .component import Component
+from .global_ import BaseObject, Parameter
 from .material import Material
 
 _logger = logging.getLogger(__name__)

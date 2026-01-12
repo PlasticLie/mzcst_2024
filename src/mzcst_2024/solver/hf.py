@@ -2,8 +2,8 @@ import logging
 import typing
 
 from .. import interface
-from .._global import BaseObject, Parameter
 from ..common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
+from ..global_ import BaseObject, Parameter
 
 _logger = logging.getLogger(__name__)
 

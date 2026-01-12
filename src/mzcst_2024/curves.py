@@ -10,7 +10,7 @@ from cst import interface  # type:ignore
 
 # 自己的库
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
-from ._global import BaseObject, Parameter
+from .global_ import BaseObject, Parameter
 from .shape_operations import Solid
 
 _logger = logging.getLogger(__name__)

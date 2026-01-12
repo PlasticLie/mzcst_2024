@@ -15,7 +15,7 @@ from typing import Optional
 import cst
 import cst.interface
 
-from . import _global
+from . import global_
 
 _logger = logging.getLogger(__name__)
 
@@ -151,7 +151,7 @@ class Model3D:
         _logger.info("Starting solver asynchronously.")
         return self.model3d.start_solver(timeout=timeout)
 
-    def create_object(self, obj: _global.BaseObject) -> None:
+    def create_object(self, obj: global_.BaseObject) -> None:
         """Creates a new object in the 3D modeler.
 
         Args:

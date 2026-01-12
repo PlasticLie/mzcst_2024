@@ -393,7 +393,7 @@ if __name__ == "__main__":
             "MaximumNumberOfThreads": ' "64"',
             "MaximumNumberOfCPUDevices": ' "1"',
             "RemoteCalculation": ' "False"',
-            "UseDistributedComputing": ' "False"',
+            "UseDistributedComputing": ' "True"',
             "MaxNumberOfDistributedComputingPorts": ' "64"',
             "DistributeMatrixCalculation": ' "True"',
             "MPIParallelization": ' "False"',
@@ -403,6 +403,7 @@ if __name__ == "__main__":
             "MaximumNumberOfGPUs": ' "1"',
         }
     ).create_from_attributes(m3d)
+    
 
     # 求解前保存
     proj.save(fullname)

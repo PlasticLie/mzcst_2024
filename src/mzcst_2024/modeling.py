@@ -16,10 +16,9 @@ import types
 import cst  # type:ignore
 from cst import interface  # type:ignore
 
-from ._global import Parameter
-
 # 自己的库
 from .common import NEW_LINE, quoted
+from .global_ import Parameter
 
 __all__: list[str] = []
 

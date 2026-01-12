@@ -112,9 +112,7 @@ class BaseObject(abc.ABC):
         """
         if self._vba is None:
             raise ValueError("invalid VBA code")
-        modeler.add_to_history(
-            self._history_title, NEW_LINE.join(self._vba)
-        )
+        modeler.add_to_history(self._history_title, NEW_LINE.join(self._vba))
         _logger.info(self._history_title)
         return self
 
@@ -178,6 +176,108 @@ def change_solver_type(modeler: "interface.Model3D", solver_type: str) -> None:
     )
     return
 
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region Distributed Computing Setup
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+
+def use_distributed_computing_for_parameters(
+    modeler: "interface.Model3D", flag: bool = False
+) -> None:
+    """Enables distributed computing for parameter sweep or optimizer runs.
+
+    Parameters
+    ----------
+    modeler : interface.Model3D
+        specified modeler instance.
+    flag : bool
+        True to enable distributed computing, False to disable.
+
+    Returns
+    -------
+    None
+
+    """
+    modeler.add_to_history(
+        f"Set UseDistributedComputing to {flag}",
+        f'UseDistributedComputingForParameters "{flag}"',
+    )
+    return
+
+
+def max_number_of_distributed_computing_parameters(
+    modeler: "interface.Model3D", number: int = 2
+) -> None:
+    """Sets the number of CST DC Solver Servers which should be used in parallel
+    during a distribute parameter sweep / optimizer run. This is also the number
+    of required acceleration tokens.
+
+    Parameters
+    ----------
+    modeler : interface.Model3D
+        specified modeler instance.
+    number : int
+        The maximum number of distributed computing parameters.
+    """
+    modeler.add_to_history(
+        f"Set MaxNumberOfDistributedComputingParameters to {number}",
+        f'MaxNumberOfDistributedComputingParameters  "{number}"',
+    )
+    return
+
+
+def use_distributed_computing_memory_setting(
+    modeler: "interface.Model3D", flag: bool = False
+) -> None:
+    """Enables the lower memory limit for a distributed computing run.
+
+    Parameters
+    ----------
+    modeler : interface.Model3D
+        specified modeler instance.
+    flag : bool, optional
+        specified flag, by default False
+    """
+    modeler.add_to_history(
+        f"Set UseDistributedComputingMemorySetting to {flag}",
+        f'UseDistributedComputingMemorySetting  "{flag}"',
+    )
+    return
+
+
+def MinDistributedComputingMemoryLimit(
+    modeler: "interface.Model3D", lower_limit_in_GB: int = 0
+) -> None:
+    """Sets the lower limit of required memory for a distributed computing run. 
+    A CST DC Solver Server with at least `lower_limit_in_GB` GB available memory 
+    will be used for the job.
+
+    Parameters
+    ----------
+    modeler : interface.Model3D
+        specified modeler instance.
+    memory_in_GB : int, optional
+        lower limit, by default 0
+    """
+    modeler.add_to_history(
+        f"Set MinDistributedComputingMemoryLimit to {lower_limit_in_GB}",
+        f'MinDistributedComputingMemoryLimit  "{lower_limit_in_GB}"',
+    )
+    return
+
+def OnlyConsider0D1DResultsForDC(
+    modeler: "interface.Model3D", flag: bool = False
+) -> None:
+    modeler.add_to_history(
+        f"Set OnlyConsider0D1DResultsForDC to {flag}",
+        f'OnlyConsider0D1DResultsForDC  "{flag}"',
+    )
+    return
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

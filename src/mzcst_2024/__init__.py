@@ -35,6 +35,7 @@ from . import (  # cst.asymptotic; _global,
     construction_curve,
     construction_face,
     curves,
+    global_,
     group,
     material,
     math_,
@@ -47,4 +48,3 @@ from . import (  # cst.asymptotic; _global,
     transformations_and_picks,
     utils,
 )
-from ._global import BaseObject, Parameter, Units, VbaObject, change_solver_type

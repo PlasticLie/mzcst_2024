@@ -4,8 +4,8 @@ import logging
 import typing
 
 from . import interface
-from ._global import BaseObject, Parameter
 from .common import NEW_LINE, quoted
+from .global_ import BaseObject, Parameter
 
 __all__: list[str] = []
 

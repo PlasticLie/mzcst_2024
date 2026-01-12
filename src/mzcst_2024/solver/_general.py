@@ -2,8 +2,8 @@
 import logging
 
 from .. import interface
-from .._global import BaseObject, Parameter
 from ..common import NEW_LINE, quoted
+from ..global_ import BaseObject, Parameter
 from ..shape_operations import Solid
 
 _logger = logging.getLogger(__name__)
