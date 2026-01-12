@@ -250,7 +250,7 @@ def use_distributed_computing_memory_setting(
     return
 
 
-def MinDistributedComputingMemoryLimit(
+def min_distributed_computing_memory_limit(
     modeler: "interface.Model3D", lower_limit_in_GB: int = 0
 ) -> None:
     """Sets the lower limit of required memory for a distributed computing run. 

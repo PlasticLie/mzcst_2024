@@ -123,7 +123,8 @@ class FDSolver(BaseObject):
 def define_time_domain_solver_acceleration(
     modeler: "interface.Model3D",
 ) -> None:
-    """启用时域求解器的加速功能。并给出一系列默认设置。
+    """启用时域求解器的加速功能。并给出一系列预设。
+    如需修改参数，请使用`SolverHF`对象和全局函数自行定义。
 
     Args:
         modeler (cst.interface.Model3D): 建模环境。
