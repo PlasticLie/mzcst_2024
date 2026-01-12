@@ -48,3 +48,4 @@ from . import (  # cst.asymptotic; _global,
     transformations_and_picks,
     utils,
 )
+from .global_ import BaseObject, Parameter, VbaObject

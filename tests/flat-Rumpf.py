@@ -389,18 +389,18 @@ if __name__ == "__main__":
             "SuperimposePLWExcitation": ' "False"',
             "UseSensitivityAnalysis": ' "False"',
             # 以下是硬件加速设置
-            "UseParallelization": ' "True"',
-            "MaximumNumberOfThreads": ' "64"',
-            "MaximumNumberOfCPUDevices": ' "1"',
+            "UseParallelization": ' "True"',  #  开启多线程
+            "MaximumNumberOfThreads": ' "64"',  # 设置使用的CPU核心数
+            "MaximumNumberOfCPUDevices": ' "1"',  # 设置使用的CPU设备数
             "RemoteCalculation": ' "False"',
-            "UseDistributedComputing": ' "True"',
+            "UseDistributedComputing": ' "True"',  # 开启分布式计算
             "MaxNumberOfDistributedComputingPorts": ' "64"',
             "DistributeMatrixCalculation": ' "True"',
             "MPIParallelization": ' "False"',
             "AutomaticMPI": ' "False"',
             "ConsiderOnly0D1DResultsForMPI": ' "False"',
-            "HardwareAcceleration": ' "True"',
-            "MaximumNumberOfGPUs": ' "1"',
+            "HardwareAcceleration": ' "True"',  # 开启硬件加速
+            "MaximumNumberOfGPUs": ' "1"',  # 设置使用的GPU数
         }
     ).create_from_attributes(m3d)
 

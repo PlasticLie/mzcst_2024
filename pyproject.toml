@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mzcst_2024"
-version = "2026.01.12.1724"
+version = "2026.01.12.1733"
 authors = [
     { name = "Li Mengzi", email = "limengzi96@outlook.com" },
 ]
