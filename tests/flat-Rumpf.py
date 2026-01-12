@@ -405,7 +405,7 @@ if __name__ == "__main__":
     ).create_from_attributes(m3d)
 
     mz.global_.use_distributed_computing_for_parameters(m3d, True)
-    mz.global_.max_number_of_distributed_computing_parameters(m3d, 64)
+    mz.global_.max_number_of_distributed_computing_parameters(m3d, 2)
     mz.global_.use_distributed_computing_memory_setting(m3d, True)
     mz.global_.min_distributed_computing_memory_limit(m3d, 4)
     mz.global_.only_consider_0D_1D_results_for_DC(m3d, False)
