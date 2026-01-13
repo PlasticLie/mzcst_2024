@@ -253,8 +253,8 @@ def use_distributed_computing_memory_setting(
 def min_distributed_computing_memory_limit(
     modeler: "interface.Model3D", lower_limit_in_GB: int = 0
 ) -> None:
-    """Sets the lower limit of required memory for a distributed computing run. 
-    A CST DC Solver Server with at least `lower_limit_in_GB` GB available memory 
+    """Sets the lower limit of required memory for a distributed computing run.
+    A CST DC Solver Server with at least `lower_limit_in_GB` GB available memory
     will be used for the job.
 
     Parameters
@@ -270,6 +270,7 @@ def min_distributed_computing_memory_limit(
     )
     return
 
+
 def only_consider_0D_1D_results_for_DC(
     modeler: "interface.Model3D", flag: bool = False
 ) -> None:
@@ -279,6 +280,7 @@ def only_consider_0D_1D_results_for_DC(
     )
     return
 
+
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -287,7 +289,7 @@ def only_consider_0D_1D_results_for_DC(
 # region Parameter Handling
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-ConvertableToParameterName = typing.Union[str, int, float]
+ConvertableToParameter = typing.Union[str, int, float]
 ConvertableToExpression = typing.Union[str, int, float]
 
 
@@ -302,13 +304,19 @@ class Parameter(BaseObject):
 
     def __init__(
         self,
-        name: ConvertableToParameterName,
+        name: ConvertableToParameter | "Parameter",
         expression: ConvertableToExpression = "",
         description: str = "",
     ) -> None:
         super().__init__()
-        self._name: str = str(name)
 
+        if isinstance(name, Parameter):
+            self._name: str = name.name
+            self._expression: str = name.expression
+            self._description: str = name.description
+            return
+
+        self._name: str = str(name)
         if expression == "":
             self._expression: str = self._name
         else:

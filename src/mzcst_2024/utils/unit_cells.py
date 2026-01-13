@@ -25,7 +25,7 @@ _logger = logging.getLogger(__name__)
 
 class JerusalemCross:
     """
-    JerusalemCross 的 Docstring
+    耶路撒冷十字结构单元。
 
     Parameters
     ----------
@@ -234,7 +234,7 @@ class JerusalemCross:
         sub = Brick(
             "substrate",  # 实体名
             "0",  # xmin
-            (self.l_sub/Parameter(2)).name,  # xmax
+            (self.l_sub / Parameter(2)).name,  # xmax
             "0",  # ymin
             self.w_sub.name,  # ymax
             "0",  # zmin
@@ -253,6 +253,19 @@ class JerusalemCross:
     def create_flat_unit(
         self, modeler: "interface.Model3D"
     ) -> "JerusalemCross":
+        """Create Jerusalem Cross unit cell in the given modeler.
+
+        Parameters
+        ----------
+        modeler : interface.Model3D
+            The specified modeler.
+
+        Returns
+        -------
+        JerusalemCross
+            The instance itself.
+        """
+        time_start = time.perf_counter()
         unit_comp: str = self.name
         substrate_comp: str = "substrate"
         sub = Brick(
@@ -416,4 +429,10 @@ class JerusalemCross:
 
         for j in range(len(traces_info) - 1, 0, -1):
             traces[j - 1].add(modeler, traces[j])
+
+        time_end = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Flat unit cell of "{self.name}" created, execution time: {common.time_to_string(time_end - time_start)}',
+        )
         return self

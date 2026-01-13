@@ -79,6 +79,9 @@ if __name__ == "__main__":
     # region 仿真环境
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
+    SAVE_AFTER_MODELING: bool = False  # 建模后是否保存
+    RUN_SOLVER: bool = False  # 是否运行求解器
+
     # PROJECT_PATH: str = "cst_projects"
     # create_folder(PROJECT_PATH)
     # PROJECT_ABSOLUTE_PATH: str = os.path.join(PARENT_PATH, PROJECT_PATH)
@@ -185,8 +188,8 @@ if __name__ == "__main__":
                     "0",  # normal_x
                     "0",  # normal_y
                     "1",  # normal_z
-                    f"{ARRAY_BASE[0] + l_sub * Parameter(row + 0.5)}",  # origin_x
-                    f"{ARRAY_BASE[1] + w_sub * Parameter(col+ 0.5)}",  # origin_y
+                    f"{ARRAY_BASE[0] + l_sub * (row + 0.5)}",  # origin_x
+                    f"{ARRAY_BASE[1] + w_sub * (col+ 0.5)}",  # origin_y
                     "0",  # origin_z
                     "1",  # uVector_x
                     "0",  # uVector_y
@@ -411,7 +414,8 @@ if __name__ == "__main__":
     mz.global_.only_consider_0D_1D_results_for_DC(m3d, False)
 
     # 求解前保存
-    proj.save(fullname)
+    if SAVE_AFTER_MODELING:
+        proj.save(fullname)
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -419,12 +423,12 @@ if __name__ == "__main__":
     #######################################
     # region 求解
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
-    m3d.start_solver()
-    while m3d.is_solver_running():
-        logger.info("solver is running: %s", f"{m3d.solver_info}")
-        time.sleep(60)
-    proj.save()
+    if RUN_SOLVER:
+        m3d.start_solver()
+        while m3d.is_solver_running():
+            logger.info("solver is running: %s", f"{m3d.solver_info}")
+            time.sleep(60)
+        proj.save()
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

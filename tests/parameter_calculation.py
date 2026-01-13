@@ -11,4 +11,6 @@ if __name__ == "__main__":
     print(repr(d))
     print(repr(e))
     print(repr(f))
+
+    print(math_.sqrt(2))
     pass
