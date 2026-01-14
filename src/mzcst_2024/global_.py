@@ -358,9 +358,9 @@ class Parameter(BaseObject):
 
     def __repr__(self) -> str:
         if self.description == "":
+            if self._expression == self._name:
+                return f"{self.__class__.__name__}({quoted(self.name)})"
             return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)})"
-        if self.description == self.name:
-            return f"{self.__class__.__name__}({quoted(self.name)})"
         return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)}, {quoted(self.description)})"
 
     def __str__(self) -> str:
