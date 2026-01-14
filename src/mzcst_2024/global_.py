@@ -585,7 +585,7 @@ class Parameter(BaseObject):
     ) -> "Parameter":
         """按位关联操作。
 
-        Bitwise implication of the integer value of n1 with the integer value n2 (same as (Not n1) Or n2).
+        Bitwise implicate of the integer value of n1 with the integer value n2 (same as (Not n1) Or n2).
 
         Parameters
         ----------
