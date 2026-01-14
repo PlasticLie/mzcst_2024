@@ -357,6 +357,8 @@ class Parameter(BaseObject):
         return self._description
 
     def __repr__(self) -> str:
+        if self.description == "":
+            return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)})"
         return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)}, {quoted(self.description)})"
 
     def __str__(self) -> str:
@@ -365,21 +367,31 @@ class Parameter(BaseObject):
     def __format__(self, format_spec: str):
         return super().__format__(format_spec)
 
-    def __add__(self, other: "Parameter") -> "Parameter":
+    #######################################
+    # region 算数运算符重载
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    def __add__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         if isinstance(other, Parameter):
             temp = f"({self.name} + {other.name})"
         else:
             temp = f"({self.name} + {other})"
         return Parameter(temp)
 
-    def __sub__(self, other: "Parameter") -> "Parameter":
+    def __sub__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         if isinstance(other, Parameter):
             temp = f"({self.name} - {other.name})"
         else:
             temp = f"({self.name} - {other})"
         return Parameter(temp)
 
-    def __mul__(self, other: "Parameter") -> "Parameter":
+    def __mul__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         if isinstance(other, Parameter):
             temp = f"({self.name} * {other.name})"
         else:
@@ -387,12 +399,168 @@ class Parameter(BaseObject):
 
         return Parameter(temp)
 
-    def __truediv__(self, other: "Parameter") -> "Parameter":
+    def __truediv__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         if isinstance(other, Parameter):
             temp = f"({self.name} / {other.name})"
         else:
             temp = f"({self.name} / {other})"
         return Parameter(temp)
+
+    def __floordiv__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({self.name} \\ {other.name})"
+        else:
+            temp = f"({self.name} \\ {other})"
+        return Parameter(temp)
+
+    def __mod__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({self.name} Mod {other.name})"
+        else:
+            temp = f"({self.name} Mod {other})"
+        return Parameter(temp)
+
+    def __pow__(self, power: "Parameter") -> "Parameter":
+        temp = f"({self.name} ^ {power.name})"
+        return Parameter(temp)
+
+    def __radd__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} + {self.name})"
+        else:
+            temp = f"({other} + {self.name})"
+        return Parameter(temp)
+
+    def __rsub__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} - {self.name})"
+        else:
+            temp = f"({other} - {self.name})"
+        return Parameter(temp)
+
+    def __rmul__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} * {self.name})"
+        else:
+            temp = f"({other} * {self.name})"
+
+        return Parameter(temp)
+
+    def __rtruediv__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} / {self.name})"
+        else:
+            temp = f"({other} / {self.name})"
+        return Parameter(temp)
+
+    def __rfloordiv__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} \\ {self.name})"
+        else:
+            temp = f"({other} \\ {self.name})"
+        return Parameter(temp)
+
+    def __rmod__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} Mod {self.name})"
+        else:
+            temp = f"({other} Mod {self.name})"
+        return Parameter(temp)
+
+    def __rpow__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} ^ {self.name})"
+        else:
+            temp = f"({other} ^ {self.name})"
+        return Parameter(temp)
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    #######################################
+    # region 位运算符重载
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    def __and__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({self.name} And {other.name})"
+        else:
+            temp = f"({self.name} And {other})"
+        return Parameter(temp)
+
+    def __or__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({self.name} Or {other.name})"
+        else:
+            temp = f"({self.name} Or {other})"
+        return Parameter(temp)
+
+    def __xor__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({self.name} Xor {other.name})"
+        else:
+            temp = f"({self.name} Xor {other})"
+        return Parameter(temp)
+
+    def __rand__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} And {self.name})"
+        else:
+            temp = f"({other} And {self.name})"
+        return Parameter(temp)
+
+    def __ror__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} Or {self.name})"
+        else:
+            temp = f"({other} Or {self.name})"
+        return Parameter(temp)
+
+    def __rxor__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        if isinstance(other, Parameter):
+            temp = f"({other.name} Xor {self.name})"
+        else:
+            temp = f"({other} Xor {self.name})"
+        return Parameter(temp)
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    #######################################
+    # region 一元运算符重载
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     def __abs__(self) -> "Parameter":
         temp: str = "Abs(" + self.name + ")"
@@ -406,9 +574,43 @@ class Parameter(BaseObject):
         temp = f"(-{self.name})"
         return Parameter(temp)
 
-    def __pow__(self, power: "Parameter") -> "Parameter":
-        temp = f"({self.name} ^ {power.name})"
+    def __invert__(self) -> "Parameter":
+        temp = f"(Not {self.name})"
         return Parameter(temp)
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    #######################################
+    # region 比较运算符重载
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    def __eq__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+        x = Parameter(other) if not isinstance(other, Parameter) else other
+        return f"({self.name} = {x.name})"
+
+    def __ne__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+        x = Parameter(other) if not isinstance(other, Parameter) else other
+        return f"({self.name} <> {x.name})"
+
+    def __lt__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+        x = Parameter(other) if not isinstance(other, Parameter) else other
+        return f"({self.name} < {x.name})"
+
+    def __le__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+        x = Parameter(other) if not isinstance(other, Parameter) else other
+        return f"({self.name} <= {x.name})"
+
+    def __gt__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+        x = Parameter(other) if not isinstance(other, Parameter) else other
+        return f"({self.name} > {x.name})"
+
+    def __ge__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+        x = Parameter(other) if not isinstance(other, Parameter) else other
+        return f"({self.name} >= {x.name})"
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     def rename(self, n: str) -> "Parameter":
         """重命名参数。
