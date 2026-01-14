@@ -359,6 +359,8 @@ class Parameter(BaseObject):
     def __repr__(self) -> str:
         if self.description == "":
             return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)})"
+        elif self.description == self.name:
+            return f"{self.__class__.__name__}({quoted(self.name)})"
         return f"{self.__class__.__name__}({quoted(self.name)}, {quoted(self.expression)}, {quoted(self.description)})"
 
     def __str__(self) -> str:
@@ -585,29 +587,41 @@ class Parameter(BaseObject):
     # region 比较运算符重载
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    def __eq__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+    def __eq__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         x = Parameter(other) if not isinstance(other, Parameter) else other
-        return f"({self.name} = {x.name})"
+        return Parameter(f"({self.name} = {x.name})")
 
-    def __ne__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+    def __ne__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         x = Parameter(other) if not isinstance(other, Parameter) else other
-        return f"({self.name} <> {x.name})"
+        return Parameter(f"({self.name} <> {x.name})")
 
-    def __lt__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+    def __lt__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         x = Parameter(other) if not isinstance(other, Parameter) else other
-        return f"({self.name} < {x.name})"
+        return Parameter(f"({self.name} < {x.name})")
 
-    def __le__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+    def __le__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         x = Parameter(other) if not isinstance(other, Parameter) else other
-        return f"({self.name} <= {x.name})"
+        return Parameter(f"({self.name} <= {x.name})")
 
-    def __gt__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+    def __gt__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         x = Parameter(other) if not isinstance(other, Parameter) else other
-        return f"({self.name} > {x.name})"
+        return Parameter(f"({self.name} > {x.name})")
 
-    def __ge__(self, other: "Parameter" | ConvertableToParameter) -> bool:
+    def __ge__(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
         x = Parameter(other) if not isinstance(other, Parameter) else other
-        return f"({self.name} >= {x.name})"
+        return Parameter(f"({self.name} >= {x.name})")
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
