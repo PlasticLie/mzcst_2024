@@ -557,6 +557,52 @@ class Parameter(BaseObject):
             temp = f"({other} Xor {self.name})"
         return Parameter(temp)
 
+    def equivalence_to(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        """同或判断。
+
+        Bitwise equivalence the integer value of n1 with the integer value n2 (same as Not (n1 Xor n2)).
+
+        Parameters
+        ----------
+        other : Parameter | ConvertableToParameter
+            the other parameter
+
+        Returns
+        -------
+        Parameter
+            `Parameter(f"({self.name} Eqv {other.name})")`
+        """
+        if isinstance(other, Parameter):
+            temp = f"({self.name} Eqv {other.name})"
+        else:
+            temp = f"({self.name} Eqv {other})"
+        return Parameter(temp)
+
+    def implicate(
+        self, other: "Parameter" | ConvertableToParameter
+    ) -> "Parameter":
+        """按位蕴含操作。
+        
+        Bitwise implication of the integer value of n1 with the integer value n2 (same as (Not n1) Or n2).
+
+        Parameters
+        ----------
+        other : Parameter | ConvertableToParameter
+            the other parameter
+
+        Returns
+        -------
+        Parameter
+            `Parameter(f"({self.name} Imp {other.name})")`
+        """
+        if isinstance(other, Parameter):
+            temp = f"({self.name} Imp {other.name})"
+        else:
+            temp = f"({self.name} Imp {other})"
+        return Parameter(temp)
+
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
