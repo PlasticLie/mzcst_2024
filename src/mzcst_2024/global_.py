@@ -560,7 +560,7 @@ class Parameter(BaseObject):
     def equivalence_to(
         self, other: "Parameter" | ConvertableToParameter
     ) -> "Parameter":
-        """同或判断。
+        """按位同或。
 
         Bitwise equivalence the integer value of n1 with the integer value n2 (same as Not (n1 Xor n2)).
 
