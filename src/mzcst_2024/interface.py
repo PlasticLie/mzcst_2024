@@ -10,7 +10,7 @@ the associated applications (`prj.model3d`)."""
 
 import logging
 import os
-from typing import Optional
+from typing import Optional, overload
 
 import cst
 import cst.interface
@@ -292,6 +292,91 @@ class DesignEnvironment:
     Furthermore it allows to open or create `.cst` projects.
     """
 
+    @staticmethod
+    def new(
+        options: Optional[list[str]] = None,
+        gui_linux: Optional[bool] = None,
+        process_info: Optional[
+            "cst.interface.DesignEnvironment.ProcessInfo"
+        ] = None,
+        env: Optional[dict] = None,
+    ) -> "DesignEnvironment":
+        """Opens a new DE and connects to it.
+        A number of command line `options` may be passed as a list of strings.
+        For a list of available options call the `print_command_line_options()` method.
+        Use `gui_linux` to control whether the DE should run with or without a GUI in a Linux environment.
+
+        Args:
+            options (list[str], optional): 启动选项列表. Defaults to None.
+            gui_linux (bool, optional): 在Linux上是否启用GUI. Defaults to None.
+            process_info (cst.interface.DesignEnvironment.ProcessInfo, optional): 进程信息. Defaults to None.
+            env (dict, optional): 环境变量. Defaults to None.
+
+        Returns:
+            DesignEnvironment: 新创建的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.new(
+            options=options,
+            gui_linux=gui_linux,
+            process_info=process_info,
+            env=env,
+        )
+        return DesignEnvironment(env)
+
+    @staticmethod
+    @overload
+    def connect(pid: int) -> "DesignEnvironment":
+        """Connects to an existing CST Studio Suite Design Environment
+        (main window) given its process ID.
+
+        Args:
+            pid (int): 目标CST Studio Suite进程的ID
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect(pid)
+        return DesignEnvironment(env)
+
+    @staticmethod
+    @overload
+    def connect(tcp_address: str) -> "DesignEnvironment":
+        """Connects to an existing CST Studio Suite Design Environment
+        (main window) given its TCP address.
+
+        Args:
+            tcp_address (str): 目标CST Studio Suite进程的TCP地址
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect(tcp_address)
+        return DesignEnvironment(env)
+
+    @staticmethod
+    def connect_to_any() -> "DesignEnvironment":
+        """Connects to any existing CST Studio Suite Design Environment
+        (main window).
+
+        If you want to connect to a specific DE, use the `connect()` method.
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect_to_any()
+        return DesignEnvironment(env)
+
+    @staticmethod
+    def connect_to_any_or_new() -> "DesignEnvironment":
+        """Connects to any existing CST Studio Suite Design Environment
+        (main window). If none exists, a new instance is started.
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect_to_any_or_new()
+        return DesignEnvironment(env)
+
     def __init__(
         self, existing_env: Optional[cst.interface.DesignEnvironment] = None
     ):
@@ -306,6 +391,195 @@ class DesignEnvironment:
             self._env = existing_env
         pass
 
+    def quiet_mode_enabled(self):
+        """Convenience method to turn on quiet mode with a 'with'-statement
+        and automatically reset it to the previous state on exiting.
+
+        Returns:
+            contextmanager: 上下文管理器
+        """
+        return self._env.quiet_mode_enabled()
+
+    def quiet_mode_disabled(self):
+        """Convenience method to turn off quiet mode with a 'with'-statement
+        and automatically reset it to the previous state on exiting.
+
+        Returns:
+            contextmanager: 上下文管理器
+        """
+        return self._env.quiet_mode_disabled()
+
+    def active_project(self) -> Optional[Project]:
+        """Returns the currently active project if any.
+
+        Returns:
+            Project | None: 当前活动项目
+        """
+        proj = self._env.active_project()
+        if proj is None:
+            return None
+        return Project(proj)
+
+    def close(self) -> None:
+        """Closes the Design Environment.
+
+        Returns:
+            None:
+        """
+        return self._env.close()
+
+    def get_open_project(self, path: str) -> Project:
+        """Returns a handle to an already open project with the path given by `path`. Raises an exception when there is no project found corresponding to the given path.
+
+        Args:
+            path (str): 项目路径
+
+        Returns:
+            Project: 已打开的项目
+        """
+        proj = self._env.get_open_project(path)
+        return Project(proj)
+
+    def get_open_projects(self, re_filter: str = ".*") -> list[Project]:
+        """Returns a list of currently open projects matching the regular expression filter `re_filter`.
+
+        Returns:
+            list[Project]: 当前打开的项目列表
+        """
+        projs = self._env.get_open_projects(re_filter)
+        return [Project(p) for p in projs]
+
+    @property
+    def has_active_project(self) -> bool:
+        """Queries whether there is an active project.
+
+        Returns:
+            bool: 是否有活动项目
+        """
+        return self._env.has_active_project()
+
+    @property
+    def in_quiet_mode(self) -> bool:
+        return self._env.in_quiet_mode()
+
+    @property
+    def is_connected(self) -> bool:
+        return self._env.is_connected()
+
+    def list_open_projects(self) -> list[str]:
+        """Returns the paths of the currently open projects.
+
+        Returns:
+            list[str]: 当前打开的项目文件名列表
+        """
+        return self._env.list_open_projects()
+
+    def new_cs(self) -> Project:
+        """Creates a new CST Cable Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_cs()
+        return Project(proj)
+
+    def new_ds(self) -> Project:
+        """Creates a new CST Design Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_ds()
+        return Project(proj)
+
+    def new_ems(self) -> Project:
+        """Creates a new CST EM Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_ems()
+        return Project(proj)
+
+    def new_fd3d(self) -> Project:
+        """Creates a new Filter Designer 3D project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_fd3d()
+        return Project(proj)
+
+    def new_mps(self) -> Project:
+        """Creates a new CST Mphysics Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_mps()
+        return Project(proj)
+
     def new_mws(self) -> Project:
+        """Creates a new CST Microwave Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_mws()
         return Project(proj)
+
+    def new_pcbs(self) -> Project:
+        """Creates a new CST PCB Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_pcbs()
+        return Project(proj)
+
+    def new_project(self, project_type: cst.interface.ProjectType) -> Project:
+        """Creates a new CST project of the specified type and returns an instance of `Project` pertaining to it.
+
+        Args:
+            project_type (cst.interface.ProjectType): 项目类型
+        Returns:
+            Project: 新创建的项目
+        """
+        proj = self._env.new_project(project_type)
+        return Project(proj)
+
+    def new_ps(self) -> Project:
+        """Creates a new CST Particle Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_ps()
+        return Project(proj)
+
+    def open_project(self, path: str) -> Project:
+        """Opens the CST project given by `path` and returns an instance of `Project` pertaining to it.
+
+        Args:
+            path (str): 项目路径
+        Returns:
+            Project: 打开的项目
+        """
+        proj = self._env.open_project(path)
+        return Project(proj)
+
+    @property
+    def pid(self) -> int:
+        return self._env.pid
+
+    @staticmethod
+    def print_command_line_options() -> None:
+        """Prints the available command line options which can be used with `new()`.
+
+        Returns:
+            None:
+        """
+        return cst.interface.DesignEnvironment.print_command_line_options()
+
+    @property
+    def command_line_options(self) -> str:
+        """Prints the available command line options which can be used with `new()`."""
+        return cst.interface.DesignEnvironment.print_command_line_options()
+
+    @staticmethod
+    def print_version() -> str:
+        """Prints the version of the CST Studio Suite installation.
+
+        Returns:
+            None:
+        """
+        return cst.interface.DesignEnvironment.print_version()
+
+    def set_quiet_mode(self, flag: bool) -> None:
+        """When `flag` is set to True message boxes are suppressed. 
+        
+        Please note: Dialog boxes which require user input cannot be suppressed.
+
+        Args:
+            flag (bool): 是否启用安静模式
+        Returns:
+            None:
+        """
+        return self._env.set_quiet_mode(flag)
+
+    @staticmethod
+    def version() -> str:
+        """Return the version string of the current DE.
+
+        Returns:
+            str: 版本字符串
+        """
+        return cst.interface.DesignEnvironment.version()
