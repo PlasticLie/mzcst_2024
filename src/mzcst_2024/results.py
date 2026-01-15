@@ -27,6 +27,8 @@ CST Studio Suite is not supported.
 
 """
 
+import logging
+import numbers
 import os
 
 import cst.results
@@ -34,6 +36,9 @@ import numpy
 from cst.results import get_version_info, print_version_info
 
 # -pylint: disable=no-member
+
+
+_logger = logging.getLogger(__name__)
 
 
 class ProjectFile:
@@ -59,6 +64,10 @@ class ProjectFile:
         """
 
         self._pf = cst.results.ProjectFile(filepath, allow_interactive)
+        _logger.debug(
+            "%s",
+            f"Initialized ProjectFile with filepath: {filepath}, allow_interactive: {allow_interactive}",
+        )
 
         return
 
@@ -110,6 +119,7 @@ class ProjectFile:
         list[str]
             包含子项目的树状路径。
         """
+        _logger.info("Listing subprojects")
         return self._pf.list_subprojects()
 
     def load_subproject(self, subproject_path: str) -> "ProjectFile":
@@ -120,6 +130,7 @@ class ProjectFile:
         ProjectFile
             project file object of subproject
         """
+        _logger.info("Loading subproject: %s", subproject_path)
         ls = self._pf.load_subproject(subproject_path)
         return ProjectFile.init(ls)
 
@@ -173,9 +184,13 @@ class ResultModule:
         list[int]
             all existing run ids.
         """
+        _logger.info(
+            "%s",
+            f"Getting all run ids, max_mesh_passes_only={max_mesh_passes_only}",
+        )
         return self._rm.get_all_run_ids(max_mesh_passes_only)
 
-    def get_parameter_combination(self, run_id: int) -> dict:
+    def get_parameter_combination(self, run_id: int) -> dict[str, float]:
         """Return the parameter combination which corresponds to the provided run id.
 
         Parameters
@@ -188,6 +203,7 @@ class ResultModule:
         dict
             _description_
         """
+        _logger.info("Getting parameter combination for run id: %d", run_id)
         return self._rm.get_parameter_combination(run_id)
 
     def get_result_item(
@@ -231,6 +247,10 @@ class ResultModule:
         list[int]
             all existing run ids
         """
+        _logger.info(
+            "%s",
+            f"Getting run ids for treepath: {treepath}, skip_nonparametric={skip_nonparametric}",
+        )
         return self._rm.get_run_ids(treepath, skip_nonparametric)
 
     def get_tree_items(self, filter_: str = "0D/1D") -> list[str]:
@@ -246,6 +266,7 @@ class ResultModule:
         list[str]
             navigation tree items
         """
+        _logger.info("Getting tree items with filter: %s", filter_)
         return self._rm.get_tree_items(filter_)
 
 
@@ -284,23 +305,42 @@ class ResultItem:
     def __repr__(self):
         return repr(self._ri)
 
-    def get_data(self) -> list:
+    def get_data(self) -> list[tuple] | float:
         """The data as list of tuples, or a double value."""
+        _logger.info("Getting data")
         return self._ri.get_data()
 
-    def get_parameter_combination(self) -> dict:
+    def get_parameter_combination(self) -> dict[str, float]:
         """The parameter combination which was used to generate the result."""
+        _logger.info("Getting parameter combination")
         return self._ri.get_parameter_combination()
 
-    def get_ref_imp_data(self) -> list:
+    def get_ref_imp_data(self) -> list[complex]:
+        """The reference impedance of the result."""
+        _logger.info("Getting reference impedance data")
+        return self._ri.get_ref_imp_data()
+
+    @property
+    def reference_impedance_list(self) -> list[complex]:
         """The reference impedance of the result."""
         return self._ri.get_ref_imp_data()
 
-    def get_xdata(self) -> list:
+    def get_xdata(self) -> list[float]:
         """The x-axis of the result."""
         return self._ri.get_xdata()
 
-    def get_ydata(self) -> list:
+    @property
+    def xdata(self) -> list[float]:
+        """The x-axis of the result."""
+        return self._ri.get_xdata()
+
+    def get_ydata(self) -> list[complex]:
+        """The y-axis of the result."""
+        _logger.info("Getting Y data")
+        return self._ri.get_ydata()
+
+    @property
+    def ydata(self) -> list:
         """The y-axis of the result."""
         return self._ri.get_ydata()
 
