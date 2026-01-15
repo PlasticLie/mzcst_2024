@@ -399,7 +399,7 @@ class DesignEnvironment:
         Returns:
             DesignEnvironment: 新的DesignEnvironment实例。
         """
-        return DesignEnvironment()
+        return DesignEnvironment(env)
 
     def quiet_mode_enabled(self):
         """Convenience method to turn on quiet mode with a 'with'-statement
