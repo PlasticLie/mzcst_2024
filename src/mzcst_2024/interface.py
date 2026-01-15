@@ -323,8 +323,8 @@ class DesignEnvironment:
         )
         return DesignEnvironment(env)
 
-    @staticmethod
     @overload
+    @staticmethod
     def connect(pid: int) -> "DesignEnvironment":
         """Connects to an existing CST Studio Suite Design Environment
         (main window) given its process ID.
@@ -338,8 +338,8 @@ class DesignEnvironment:
         env = cst.interface.DesignEnvironment.connect(pid)
         return DesignEnvironment(env)
 
-    @staticmethod
     @overload
+    @staticmethod
     def connect(tcp_address: str) -> "DesignEnvironment":
         """Connects to an existing CST Studio Suite Design Environment
         (main window) given its TCP address.
@@ -390,6 +390,16 @@ class DesignEnvironment:
         else:
             self._env = existing_env
         pass
+
+    @staticmethod
+    def from_existing(env: cst.interface.DesignEnvironment) -> "DesignEnvironment":
+        """从已有的设计环境创建一个新的DesignEnvironment实例。
+        Args:
+            env (cst.interface.DesignEnvironment): 已有的设计环境实例。
+        Returns:
+            DesignEnvironment: 新的DesignEnvironment实例。
+        """
+        return DesignEnvironment()
 
     def quiet_mode_enabled(self):
         """Convenience method to turn on quiet mode with a 'with'-statement
