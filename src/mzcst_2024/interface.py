@@ -429,7 +429,10 @@ class DesignEnvironment:
         return self._env.close()
 
     def get_open_project(self, path: str) -> Project:
-        """Returns a handle to an already open project with the path given by `path`. Raises an exception when there is no project found corresponding to the given path.
+        """Returns a handle to an already open project with the path given by 
+        `path`. 
+        
+        Raises an exception when there is no project found corresponding to the given path.
 
         Args:
             path (str): 项目路径
@@ -441,7 +444,8 @@ class DesignEnvironment:
         return Project(proj)
 
     def get_open_projects(self, re_filter: str = ".*") -> list[Project]:
-        """Returns a list of currently open projects matching the regular expression filter `re_filter`.
+        """Returns a list of currently open projects matching the regular 
+        expression filter `re_filter`.
 
         Returns:
             list[Project]: 当前打开的项目列表
@@ -449,7 +453,6 @@ class DesignEnvironment:
         projs = self._env.get_open_projects(re_filter)
         return [Project(p) for p in projs]
 
-    @property
     def has_active_project(self) -> bool:
         """Queries whether there is an active project.
 
@@ -458,11 +461,9 @@ class DesignEnvironment:
         """
         return self._env.has_active_project()
 
-    @property
     def in_quiet_mode(self) -> bool:
         return self._env.in_quiet_mode()
 
-    @property
     def is_connected(self) -> bool:
         return self._env.is_connected()
 
@@ -564,8 +565,8 @@ class DesignEnvironment:
         return cst.interface.DesignEnvironment.print_version()
 
     def set_quiet_mode(self, flag: bool) -> None:
-        """When `flag` is set to True message boxes are suppressed. 
-        
+        """When `flag` is set to True message boxes are suppressed.
+
         Please note: Dialog boxes which require user input cannot be suppressed.
 
         Args:
