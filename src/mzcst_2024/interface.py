@@ -321,6 +321,7 @@ class DesignEnvironment:
             process_info=process_info,
             env=env,
         )
+        _logger.info("Started new Design Environment.")
         return DesignEnvironment(env)
 
     @overload
@@ -336,6 +337,7 @@ class DesignEnvironment:
             DesignEnvironment: 连接到的设计环境实例
         """
         env = cst.interface.DesignEnvironment.connect(pid)
+        _logger.info("Connected to Design Environment with PID %d", pid)
         return DesignEnvironment(env)
 
     @overload
@@ -351,6 +353,9 @@ class DesignEnvironment:
             DesignEnvironment: 连接到的设计环境实例
         """
         env = cst.interface.DesignEnvironment.connect(tcp_address)
+        _logger.info(
+            "Connected to Design Environment with TCP address %s", tcp_address
+        )
         return DesignEnvironment(env)
 
     @staticmethod
@@ -364,6 +369,7 @@ class DesignEnvironment:
             DesignEnvironment: 连接到的设计环境实例
         """
         env = cst.interface.DesignEnvironment.connect_to_any()
+        _logger.info("Connected to a random existing Design Environment.")
         return DesignEnvironment(env)
 
     @staticmethod
@@ -375,6 +381,9 @@ class DesignEnvironment:
             DesignEnvironment: 连接到的设计环境实例
         """
         env = cst.interface.DesignEnvironment.connect_to_any_or_new()
+        _logger.info(
+            "Connected to any existing Design Environment or started a new one."
+        )
         return DesignEnvironment(env)
 
     def __init__(
@@ -392,13 +401,16 @@ class DesignEnvironment:
         pass
 
     @staticmethod
-    def from_existing(env: cst.interface.DesignEnvironment) -> "DesignEnvironment":
+    def from_existing(
+        env: cst.interface.DesignEnvironment,
+    ) -> "DesignEnvironment":
         """从已有的设计环境创建一个新的DesignEnvironment实例。
         Args:
             env (cst.interface.DesignEnvironment): 已有的设计环境实例。
         Returns:
             DesignEnvironment: 新的DesignEnvironment实例。
         """
+        _logger.info("Creating DesignEnvironment from existing environment.")
         return DesignEnvironment(env)
 
     def quiet_mode_enabled(self):
@@ -408,6 +420,7 @@ class DesignEnvironment:
         Returns:
             contextmanager: 上下文管理器
         """
+        _logger.info("Enable quiet mode context.")
         return self._env.quiet_mode_enabled()
 
     def quiet_mode_disabled(self):
@@ -417,6 +430,7 @@ class DesignEnvironment:
         Returns:
             contextmanager: 上下文管理器
         """
+        _logger.info("Disable quiet mode context.")
         return self._env.quiet_mode_disabled()
 
     def active_project(self) -> Optional[Project]:
@@ -427,7 +441,9 @@ class DesignEnvironment:
         """
         proj = self._env.active_project()
         if proj is None:
+            _logger.info("No active project found.")
             return None
+        _logger.info("Active project found: %s", proj.filename())
         return Project(proj)
 
     def close(self) -> None:
@@ -436,12 +452,13 @@ class DesignEnvironment:
         Returns:
             None:
         """
+        _logger.info("Closing DesignEnvironment with PID: %s.", self._env.pid())
         return self._env.close()
 
     def get_open_project(self, path: str) -> Project:
-        """Returns a handle to an already open project with the path given by 
-        `path`. 
-        
+        """Returns a handle to an already open project with the path given by
+        `path`.
+
         Raises an exception when there is no project found corresponding to the given path.
 
         Args:
@@ -450,16 +467,18 @@ class DesignEnvironment:
         Returns:
             Project: 已打开的项目
         """
+        _logger.info("Getting open project with path: %s", path)
         proj = self._env.get_open_project(path)
         return Project(proj)
 
     def get_open_projects(self, re_filter: str = ".*") -> list[Project]:
-        """Returns a list of currently open projects matching the regular 
+        """Returns a list of currently open projects matching the regular
         expression filter `re_filter`.
 
         Returns:
             list[Project]: 当前打开的项目列表
         """
+        _logger.info("Getting open projects with filter: %s", re_filter)
         projs = self._env.get_open_projects(re_filter)
         return [Project(p) for p in projs]
 
@@ -471,10 +490,30 @@ class DesignEnvironment:
         """
         return self._env.has_active_project()
 
+    @property
+    def has_active_project_(self) -> bool:
+        """Queries whether there is an active project.
+
+        Returns:
+            bool: 是否有活动项目
+        """
+        return self._env.has_active_project()
+
     def in_quiet_mode(self) -> bool:
+        """Queries whether message boxes are currently suppressed. Please note: Dialog boxes which require user input cannot be suppressed."""
+        return self._env.in_quiet_mode()
+
+    @property
+    def in_quiet_mode_(self) -> bool:
         return self._env.in_quiet_mode()
 
     def is_connected(self) -> bool:
+        """Returns whether this object is still connected to a live DE."""
+        return self._env.is_connected()
+
+    @property
+    def is_connected_(self) -> bool:
+        """Returns whether this object is still connected to a live DE."""
         return self._env.is_connected()
 
     def list_open_projects(self) -> list[str]:
@@ -485,39 +524,55 @@ class DesignEnvironment:
         """
         return self._env.list_open_projects()
 
+    @property
+    def open_projects(self) -> list[str]:
+        """Returns the paths of the currently open projects.
+
+        Returns:
+            list[str]: 当前打开的项目文件名列表
+        """
+        return self._env.list_open_projects()
+
     def new_cs(self) -> Project:
         """Creates a new CST Cable Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_cs()
+        _logger.info("Created new CST Cable Studio project.")
         return Project(proj)
 
     def new_ds(self) -> Project:
         """Creates a new CST Design Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_ds()
+        _logger.info("Created new CST Design Studio project.")
         return Project(proj)
 
     def new_ems(self) -> Project:
         """Creates a new CST EM Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_ems()
+        _logger.info("Created new CST EM Studio project.")
         return Project(proj)
 
     def new_fd3d(self) -> Project:
         """Creates a new Filter Designer 3D project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_fd3d()
+        _logger.info("Created new Filter Designer 3D project.")
         return Project(proj)
 
     def new_mps(self) -> Project:
         """Creates a new CST Mphysics Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_mps()
+        _logger.info("Created new CST Mphysics Studio project.")
         return Project(proj)
 
     def new_mws(self) -> Project:
         """Creates a new CST Microwave Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_mws()
+        _logger.info("Created new CST Microwave Studio project.")
         return Project(proj)
 
     def new_pcbs(self) -> Project:
         """Creates a new CST PCB Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_pcbs()
+        _logger.info("Created new CST PCB Studio project.")
         return Project(proj)
 
     def new_project(self, project_type: cst.interface.ProjectType) -> Project:
@@ -529,11 +584,13 @@ class DesignEnvironment:
             Project: 新创建的项目
         """
         proj = self._env.new_project(project_type)
+        _logger.info("Created new project of type: %s", project_type)
         return Project(proj)
 
     def new_ps(self) -> Project:
         """Creates a new CST Particle Studio project and returns an instance of `Project` pertaining to it."""
         proj = self._env.new_ps()
+        _logger.info("Created new CST Particle Studio project.")
         return Project(proj)
 
     def open_project(self, path: str) -> Project:
@@ -545,11 +602,16 @@ class DesignEnvironment:
             Project: 打开的项目
         """
         proj = self._env.open_project(path)
+        _logger.info("Opened project at path: %s", path)
         return Project(proj)
 
-    @property
     def pid(self) -> int:
-        return self._env.pid
+        return self._env.pid()
+
+    @property
+    def pid_(self) -> int:
+        """(Property) Return the Process ID (PID) to which this DesignEnvironment is connected."""
+        return self._env.pid()
 
     @staticmethod
     def print_command_line_options() -> None:
@@ -566,7 +628,7 @@ class DesignEnvironment:
         return cst.interface.DesignEnvironment.print_command_line_options()
 
     @staticmethod
-    def print_version() -> str:
+    def print_version() -> None:
         """Prints the version of the CST Studio Suite installation.
 
         Returns:

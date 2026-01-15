@@ -26,3 +26,37 @@ if __name__ == "__main__":
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    #######################################
+    # region 创建新环境
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    envs: list[mz.interface.DesignEnvironment] = []
+
+    new_env = mz.interface.DesignEnvironment()
+
+    version_info = mz.interface.DesignEnvironment.version()
+    logger.info("CST Version:")
+    print(version_info)
+
+    logger.info("Created new DesignEnvironment with PID: %s", f"{new_env.pid_}")
+    logger.info("CST Version: %s", new_env.version())
+    logger.info("Is in quiet mode: %s", new_env.in_quiet_mode())
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    #######################################
+    # region 结束
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    timestamps.append(time.perf_counter())
+    elapsed = timestamps[-1] - timestamps[0]
+    logger.info(
+        "Finished %s, total elapsd time: %s.",
+        __file__,
+        mz.common.time_to_string(elapsed),
+    )
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
