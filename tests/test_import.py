@@ -1,6 +1,8 @@
 import os
 import sys
 
+import read_results_official
+
 if __name__ == "__main__":
     # mzcst_path = "../src"
     # abspath = os.path.abspath(mzcst_path)
@@ -13,9 +15,9 @@ if __name__ == "__main__":
 
     print(mz.__version__)
     print(mz.__file__)
-    import read_results
+    
 
-    print(read_results.__file__)
+    print(read_results_official.__file__)
     
 
     pass
