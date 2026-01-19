@@ -15,9 +15,9 @@
 
 # __version__ = "2025.5"
 
-import sys
+# import sys
 
-sys.path.append(r"C:\Program Files (x86)\CST Studio Suite 2024\AMD64\python_cst_libraries")
+# sys.path.append(r"C:\Program Files (x86)\CST Studio Suite 2024\AMD64\python_cst_libraries")
 
 import importlib_metadata
 
@@ -35,6 +35,7 @@ from . import (  # cst.asymptotic; _global,
     construction_curve,
     construction_face,
     curves,
+    global_,
     group,
     material,
     math_,
@@ -46,5 +47,6 @@ from . import (  # cst.asymptotic; _global,
     sources_and_ports,
     transformations_and_picks,
     utils,
+    winwrap_basic,
 )
-from ._global import BaseObject, Parameter, Units, VbaObject, change_solver_type
+from .global_ import BaseObject, Parameter, VbaObject

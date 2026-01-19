@@ -158,13 +158,9 @@ def time_decorator(func):
         t_start = time.perf_counter()
         result = func(*args, **kwargs)
         t_end = time.perf_counter()
-        _logger.info(
-            "%s",
-            f"{func.__name__} execution time: {time_to_string(t_end-t_start)}",
-        )
-        print(
-            f"{func.__name__} execution time: {time_to_string(t_end-t_start)}",
-        )
+        msg = f"{func.__name__} execution time: {time_to_string(t_end-t_start)}"
+        _logger.info("%s", msg)
+        print(msg)
         return result
 
     return wrapper

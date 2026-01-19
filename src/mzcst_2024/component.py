@@ -4,8 +4,8 @@ import logging
 import typing
 
 from . import interface
-from ._global import BaseObject, Parameter
 from .common import NEW_LINE, quoted
+from .global_ import BaseObject, Parameter
 
 __all__: list[str] = []
 
@@ -85,7 +85,7 @@ class Component(BaseObject):
         return self.name
 
     def __repr__(self):
-        return f'Component("{self.name}")'
+        return f'{self.__class__.__name__}("{self.name}")'
 
     def rename(self, modeler: interface.Model3D, new_name: str) -> "Component":
         """重命名Component，不建议使用，脚本有问题的话反正都会直接重跑的。

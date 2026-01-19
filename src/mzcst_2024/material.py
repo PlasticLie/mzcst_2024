@@ -4,8 +4,8 @@ import enum
 import logging
 
 from . import interface  # type:ignore
-from ._global import BaseObject
 from .common import NEW_LINE, quoted
+from .global_ import BaseObject
 
 __all__: list[str] = []
 

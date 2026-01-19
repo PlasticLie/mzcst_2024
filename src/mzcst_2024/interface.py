@@ -10,12 +10,12 @@ the associated applications (`prj.model3d`)."""
 
 import logging
 import os
-from typing import Dict, List, Union
+from typing import Optional, overload
 
 import cst
 import cst.interface
 
-from . import _global
+from . import global_
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ class Model3D:
         self.model3d = modeler
         return
 
-    def abort_solver(self, *, timeout: int = None) -> None:
+    def abort_solver(self, *, timeout: Optional[int] = None) -> None:
         """Aborts the currently running (or paused) solver.
 
         Args:
@@ -47,7 +47,7 @@ class Model3D:
         return self.model3d.abort_solver(timeout)
 
     def add_to_history(
-        self, header: str, vba_code: str, *, timeout: int = None
+        self, header: str, vba_code: str, *, timeout: Optional[int] = None
     ) -> None:
         """AddToHistory creates a new history block in the modeler with the
         given header-name and executes the `vba_code`
@@ -62,7 +62,7 @@ class Model3D:
         """
         return self.model3d.add_to_history(header, vba_code, timeout=timeout)
 
-    def get_active_solver_name(self, *, timeout: int = None) -> str:
+    def get_active_solver_name(self, *, timeout: Optional[int] = None) -> str:
         """Returns the currently active solver name.
 
         Args:
@@ -73,7 +73,7 @@ class Model3D:
         """
         return self.model3d.get_active_solver_name(timeout=timeout)
 
-    def get_solver_run_info(self, *, timeout: int = None) -> dict:
+    def get_solver_run_info(self, *, timeout: Optional[int] = None) -> dict:
         """Retrieves as dict containing information on the last or current solver run.
 
         Args:
@@ -84,7 +84,7 @@ class Model3D:
         """
         return self.model3d.get_solver_run_info(timeout=timeout)
 
-    def is_solver_running(self, *, timeout: int = None) -> bool:
+    def is_solver_running(self, *, timeout: Optional[int] = None) -> bool:
         """Queries whether the solver is currently running.
 
         Args:
@@ -95,7 +95,7 @@ class Model3D:
         """
         return self.model3d.is_solver_running(timeout=timeout)
 
-    def pause_solver(self, *, timeout: int = None) -> None:
+    def pause_solver(self, *, timeout: Optional[int] = None) -> None:
         """Pause the currently running solver.
 
         Parameters
@@ -109,7 +109,7 @@ class Model3D:
         """
         return self.model3d.pause_solver(timeout=timeout)
 
-    def resume_solver(self, *, timeout: int = None) -> None:
+    def resume_solver(self, *, timeout: Optional[int] = None) -> None:
         """Resume the currently paused solver.
 
         Parameters
@@ -123,7 +123,7 @@ class Model3D:
         """
         return self.model3d.resume_solver(timeout=timeout)
 
-    def run_solver(self, *, timeout: int = None) -> None:
+    def run_solver(self, *, timeout: Optional[int] = None) -> None:
         """Runs the currently selected solver until it finishes. In case of an error a RunTimeError exception will be thrown.
 
         Parameters
@@ -137,7 +137,7 @@ class Model3D:
         """
         return self.model3d.run_solver(timeout=timeout)
 
-    def start_solver(self, *, timeout: int = None) -> None:
+    def start_solver(self, *, timeout: Optional[int] = None) -> None:
         """Starts the currently selected solver asynchronously and gives back
         control to the calling script. It does not wait for the solver to
         finish, use in combination with `is_solver_running()`.
@@ -151,7 +151,7 @@ class Model3D:
         _logger.info("Starting solver asynchronously.")
         return self.model3d.start_solver(timeout=timeout)
 
-    def create_object(self, obj: _global.BaseObject) -> None:
+    def create_object(self, obj: global_.BaseObject) -> None:
         """Creates a new object in the 3D modeler.
 
         Args:
@@ -169,13 +169,21 @@ class Model3D:
                 obj.__class__.__name__,
             )
             try:
-                obj.create_from_kwargs(self.model3d)
+                obj.create_from_vba(self.model3d)
             except AttributeError:
                 _logger.error(
                     "Object %s does not have create_from_attributes or create_from_kwargs method.",
                     obj.__class__.__name__,
                 )
         return
+
+    @property
+    def solver_info(self) -> dict[str, Optional[str]]:
+        r: dict[str, Optional[str]] = {
+            "name": self.model3d.get_active_solver_name()
+        }
+        r.update(self.model3d.get_solver_run_info())
+        return r
 
 
 class Schematic:
@@ -284,7 +292,103 @@ class DesignEnvironment:
     Furthermore it allows to open or create `.cst` projects.
     """
 
-    def __init__(self, existing_env: cst.interface.DesignEnvironment = None):
+    @staticmethod
+    def new(
+        options: Optional[list[str]] = None,
+        gui_linux: Optional[bool] = None,
+        process_info: Optional[
+            "cst.interface.DesignEnvironment.ProcessInfo"
+        ] = None,
+        env: Optional[dict] = None,
+    ) -> "DesignEnvironment":
+        """Opens a new DE and connects to it.
+        A number of command line `options` may be passed as a list of strings.
+        For a list of available options call the `print_command_line_options()` method.
+        Use `gui_linux` to control whether the DE should run with or without a GUI in a Linux environment.
+
+        Args:
+            options (list[str], optional): 启动选项列表. Defaults to None.
+            gui_linux (bool, optional): 在Linux上是否启用GUI. Defaults to None.
+            process_info (cst.interface.DesignEnvironment.ProcessInfo, optional): 进程信息. Defaults to None.
+            env (dict, optional): 环境变量. Defaults to None.
+
+        Returns:
+            DesignEnvironment: 新创建的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.new(
+            options=options,
+            gui_linux=gui_linux,
+            process_info=process_info,
+            env=env,
+        )
+        _logger.info("Started new Design Environment.")
+        return DesignEnvironment(env)
+
+    @overload
+    @staticmethod
+    def connect(pid: int) -> "DesignEnvironment":
+        """Connects to an existing CST Studio Suite Design Environment
+        (main window) given its process ID.
+
+        Args:
+            pid (int): 目标CST Studio Suite进程的ID
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect(pid)
+        _logger.info("Connected to Design Environment with PID %d", pid)
+        return DesignEnvironment(env)
+
+    @overload
+    @staticmethod
+    def connect(tcp_address: str) -> "DesignEnvironment":
+        """Connects to an existing CST Studio Suite Design Environment
+        (main window) given its TCP address.
+
+        Args:
+            tcp_address (str): 目标CST Studio Suite进程的TCP地址
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect(tcp_address)
+        _logger.info(
+            "Connected to Design Environment with TCP address %s", tcp_address
+        )
+        return DesignEnvironment(env)
+
+    @staticmethod
+    def connect_to_any() -> "DesignEnvironment":
+        """Connects to any existing CST Studio Suite Design Environment
+        (main window).
+
+        If you want to connect to a specific DE, use the `connect()` method.
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect_to_any()
+        _logger.info("Connected to a random existing Design Environment.")
+        return DesignEnvironment(env)
+
+    @staticmethod
+    def connect_to_any_or_new() -> "DesignEnvironment":
+        """Connects to any existing CST Studio Suite Design Environment
+        (main window). If none exists, a new instance is started.
+
+        Returns:
+            DesignEnvironment: 连接到的设计环境实例
+        """
+        env = cst.interface.DesignEnvironment.connect_to_any_or_new()
+        _logger.info(
+            "Connected to any existing Design Environment or started a new one."
+        )
+        return DesignEnvironment(env)
+
+    def __init__(
+        self, existing_env: Optional[cst.interface.DesignEnvironment] = None
+    ):
         """如果不指定已有的设计环境，那就新建一个。
 
         Args:
@@ -296,6 +400,259 @@ class DesignEnvironment:
             self._env = existing_env
         pass
 
-    def new_mws(self) -> Project:
-        proj = self._env.new_mws()
+    @staticmethod
+    def from_existing(
+        env: cst.interface.DesignEnvironment,
+    ) -> "DesignEnvironment":
+        """从已有的设计环境创建一个新的DesignEnvironment实例。
+        Args:
+            env (cst.interface.DesignEnvironment): 已有的设计环境实例。
+        Returns:
+            DesignEnvironment: 新的DesignEnvironment实例。
+        """
+        _logger.info("Creating DesignEnvironment from existing environment.")
+        return DesignEnvironment(env)
+
+    def quiet_mode_enabled(self):
+        """Convenience method to turn on quiet mode with a 'with'-statement
+        and automatically reset it to the previous state on exiting.
+
+        Returns:
+            contextmanager: 上下文管理器
+        """
+        _logger.info("Enable quiet mode context.")
+        return self._env.quiet_mode_enabled()
+
+    def quiet_mode_disabled(self):
+        """Convenience method to turn off quiet mode with a 'with'-statement
+        and automatically reset it to the previous state on exiting.
+
+        Returns:
+            contextmanager: 上下文管理器
+        """
+        _logger.info("Disable quiet mode context.")
+        return self._env.quiet_mode_disabled()
+
+    def active_project(self) -> Optional[Project]:
+        """Returns the currently active project if any.
+
+        Returns:
+            Project | None: 当前活动项目
+        """
+        proj = self._env.active_project()
+        if proj is None:
+            _logger.info("No active project found.")
+            return None
+        _logger.info("Active project found: %s", proj.filename())
         return Project(proj)
+
+    def close(self) -> None:
+        """Closes the Design Environment.
+
+        Returns:
+            None:
+        """
+        _logger.info("Closing DesignEnvironment with PID: %s.", self._env.pid())
+        return self._env.close()
+
+    def get_open_project(self, path: str) -> Project:
+        """Returns a handle to an already open project with the path given by
+        `path`.
+
+        Raises an exception when there is no project found corresponding to the given path.
+
+        Args:
+            path (str): 项目路径
+
+        Returns:
+            Project: 已打开的项目
+        """
+        _logger.info("Getting open project with path: %s", path)
+        proj = self._env.get_open_project(path)
+        return Project(proj)
+
+    def get_open_projects(self, re_filter: str = ".*") -> list[Project]:
+        """Returns a list of currently open projects matching the regular
+        expression filter `re_filter`.
+
+        Returns:
+            list[Project]: 当前打开的项目列表
+        """
+        _logger.info("Getting open projects with filter: %s", re_filter)
+        projs = self._env.get_open_projects(re_filter)
+        return [Project(p) for p in projs]
+
+    def has_active_project(self) -> bool:
+        """Queries whether there is an active project.
+
+        Returns:
+            bool: 是否有活动项目
+        """
+        return self._env.has_active_project()
+
+    @property
+    def has_active_project_(self) -> bool:
+        """Queries whether there is an active project.
+
+        Returns:
+            bool: 是否有活动项目
+        """
+        return self._env.has_active_project()
+
+    def in_quiet_mode(self) -> bool:
+        """Queries whether message boxes are currently suppressed. Please note: Dialog boxes which require user input cannot be suppressed."""
+        return self._env.in_quiet_mode()
+
+    @property
+    def in_quiet_mode_(self) -> bool:
+        return self._env.in_quiet_mode()
+
+    def is_connected(self) -> bool:
+        """Returns whether this object is still connected to a live DE."""
+        return self._env.is_connected()
+
+    @property
+    def is_connected_(self) -> bool:
+        """Returns whether this object is still connected to a live DE."""
+        return self._env.is_connected()
+
+    def list_open_projects(self) -> list[str]:
+        """Returns the paths of the currently open projects.
+
+        Returns:
+            list[str]: 当前打开的项目文件名列表
+        """
+        return self._env.list_open_projects()
+
+    @property
+    def open_projects(self) -> list[str]:
+        """Returns the paths of the currently open projects.
+
+        Returns:
+            list[str]: 当前打开的项目文件名列表
+        """
+        return self._env.list_open_projects()
+
+    def new_cs(self) -> Project:
+        """Creates a new CST Cable Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_cs()
+        _logger.info("Created new CST Cable Studio project.")
+        return Project(proj)
+
+    def new_ds(self) -> Project:
+        """Creates a new CST Design Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_ds()
+        _logger.info("Created new CST Design Studio project.")
+        return Project(proj)
+
+    def new_ems(self) -> Project:
+        """Creates a new CST EM Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_ems()
+        _logger.info("Created new CST EM Studio project.")
+        return Project(proj)
+
+    def new_fd3d(self) -> Project:
+        """Creates a new Filter Designer 3D project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_fd3d()
+        _logger.info("Created new Filter Designer 3D project.")
+        return Project(proj)
+
+    def new_mps(self) -> Project:
+        """Creates a new CST Mphysics Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_mps()
+        _logger.info("Created new CST Mphysics Studio project.")
+        return Project(proj)
+
+    def new_mws(self) -> Project:
+        """Creates a new CST Microwave Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_mws()
+        _logger.info("Created new CST Microwave Studio project.")
+        return Project(proj)
+
+    def new_pcbs(self) -> Project:
+        """Creates a new CST PCB Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_pcbs()
+        _logger.info("Created new CST PCB Studio project.")
+        return Project(proj)
+
+    def new_project(self, project_type: cst.interface.ProjectType) -> Project:
+        """Creates a new CST project of the specified type and returns an instance of `Project` pertaining to it.
+
+        Args:
+            project_type (cst.interface.ProjectType): 项目类型
+        Returns:
+            Project: 新创建的项目
+        """
+        proj = self._env.new_project(project_type)
+        _logger.info("Created new project of type: %s", project_type)
+        return Project(proj)
+
+    def new_ps(self) -> Project:
+        """Creates a new CST Particle Studio project and returns an instance of `Project` pertaining to it."""
+        proj = self._env.new_ps()
+        _logger.info("Created new CST Particle Studio project.")
+        return Project(proj)
+
+    def open_project(self, path: str) -> Project:
+        """Opens the CST project given by `path` and returns an instance of `Project` pertaining to it.
+
+        Args:
+            path (str): 项目路径
+        Returns:
+            Project: 打开的项目
+        """
+        proj = self._env.open_project(path)
+        _logger.info("Opened project at path: %s", path)
+        return Project(proj)
+
+    def pid(self) -> int:
+        return self._env.pid()
+
+    @property
+    def pid_(self) -> int:
+        """(Property) Return the Process ID (PID) to which this DesignEnvironment is connected."""
+        return self._env.pid()
+
+    @staticmethod
+    def print_command_line_options() -> None:
+        """Prints the available command line options which can be used with `new()`.
+
+        Returns:
+            None:
+        """
+        return cst.interface.DesignEnvironment.print_command_line_options()
+
+    @property
+    def command_line_options(self) -> str:
+        """Prints the available command line options which can be used with `new()`."""
+        return cst.interface.DesignEnvironment.print_command_line_options()
+
+    @staticmethod
+    def print_version() -> None:
+        """Prints the version of the CST Studio Suite installation.
+
+        Returns:
+            None:
+        """
+        return cst.interface.DesignEnvironment.print_version()
+
+    def set_quiet_mode(self, flag: bool) -> None:
+        """When `flag` is set to True message boxes are suppressed.
+
+        Please note: Dialog boxes which require user input cannot be suppressed.
+
+        Args:
+            flag (bool): 是否启用安静模式
+        Returns:
+            None:
+        """
+        return self._env.set_quiet_mode(flag)
+
+    @staticmethod
+    def version() -> str:
+        """Return the version string of the current DE.
+
+        Returns:
+            str: 版本字符串
+        """
+        return cst.interface.DesignEnvironment.version()

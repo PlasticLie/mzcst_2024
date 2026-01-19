@@ -4,9 +4,9 @@ import logging
 import typing
 
 from . import interface
-from ._global import BaseObject, Parameter
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
 from .component import Component
+from .global_ import BaseObject, Parameter
 from .material import Material
 
 _logger = logging.getLogger(__name__)
@@ -28,13 +28,13 @@ class Solid(BaseObject):
         component: str | Component = "",
         material: str | Material = "Vacuum",
         *,
-        properties: dict[str, str] = None,
-        vba: list[str] = None,
+        properties: dict[str, str] | None = None,
+        vba: list[str] | None = None,
     ) -> None:
         super().__init__(vba=vba)
         self._name: str = name
         self._component: str = str(component)
-        self._properties: dict[str, str] = properties
+        self._properties = properties
 
         self._material: str = ""
         if isinstance(material, str):
@@ -294,7 +294,7 @@ def advanced_shell(
 def thicken_sheet_advanced(
     modeler: "interface.Model3D",
     solid: Solid,
-    key: str,
+    key: typing.Literal["Inside", "Outside", "Centered"],
     thickness: Parameter | float | int,
     clear_picks: bool = False,
 ) -> None:

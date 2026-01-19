@@ -16,10 +16,9 @@ import types
 import cst  # type:ignore
 from cst import interface  # type:ignore
 
-from ._global import Parameter
-
 # 自己的库
 from .common import NEW_LINE, quoted
+from .global_ import Parameter
 
 __all__: list[str] = []
 
@@ -111,7 +110,7 @@ class WCS:
 
     def __repr__(self):
         return (
-            f"WCS({quoted(self._name)}, "
+            f"{self.__class__.__name__}({quoted(self._name)}, "
             + f"{quoted(self._normal_x)}, {quoted(self._normal_y)}, {quoted(self._normal_z)}, "
             + f"{quoted(self._origin_x)}, {quoted(self._origin_y)}, {quoted(self._origin_z)}, "
             + f"{quoted(self._uVector_x)}, {quoted(self._uVector_y)}, {quoted(self._uVector_z)})"
@@ -140,7 +139,7 @@ class Component:
         return self._name
 
     def __repr__(self):
-        return f"Component({quoted(self.name)})"
+        return f"{self.__class__.__name__}({quoted(self.name)})"
 
     def create(
         self,
@@ -259,7 +258,7 @@ class Brick(Solid):
 
     def __repr__(self) -> str:
         return (
-            f"cst_lib.Brick({quoted(self._name)}, {quoted(self.xmin)}, "
+            f"{self.__class__.__name__}({quoted(self._name)}, {quoted(self.xmin)}, "
             + f"{quoted(self.xmax)}, "
             + f"{quoted(self.ymin)}, {quoted(self.ymax)}, "
             + f"{quoted(self.zmin)}, {quoted(self.zmax)}, "

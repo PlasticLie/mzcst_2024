@@ -1,8 +1,8 @@
 import logging
 
 from .. import interface
-from .._global import BaseObject, Parameter
 from ..common import NEW_LINE, quoted
+from ..global_ import BaseObject, Parameter
 from ..shape_operations import Solid
 
 _logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class Port(BaseObject):
         self._history_title = f"define port: {self._number}"
         return
 
-    def create_from_attributes(self, modeler: "interface.Model3D") -> "Solid":
+    def create_from_attributes(self, modeler: "interface.Model3D") -> "Port":
         """从属性字典新建端口。
 
         Args:

@@ -9,8 +9,8 @@ import time
 import types
 
 from . import interface
-from ._global import Parameter
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
+from .global_ import Parameter
 from .shape_operations import Solid
 
 _logger = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ class Brick(Solid):
 
     def __repr__(self) -> str:
         return (
-            f"Brick({quoted(self._name)}, {quoted(self._xmin)}, "
+            f"{self.__class__.__name__}({quoted(self._name)}, {quoted(self._xmin)}, "
             + f"{quoted(self._xmax)}, "
             + f"{quoted(self._ymin)}, {quoted(self._ymax)}, "
             + f"{quoted(self._zmin)}, {quoted(self._zmax)}, "
