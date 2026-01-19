@@ -7,6 +7,7 @@ import typing
 
 from . import interface
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
+from .winwrap_basic.expression import WinWrapBasicExpressionValidator
 
 _logger = logging.getLogger(__name__)
 __all__ = [
@@ -293,7 +294,7 @@ ConvertableToParameter = typing.Union[str, int, float]
 ConvertableToExpression = typing.Union[str, int, float]
 
 
-class Parameter(BaseObject):
+class Parameter():
     """创建和管理CST内部的参数
 
     Attributes:
