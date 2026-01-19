@@ -9,11 +9,13 @@ if __name__ == "__main__":
 
     for i, p in enumerate(sys.path):
         print(f"{i:2d}: {p}")
-    import mzcst_2024 as mz
 
-    print(mz.__version__)
-    print(mz.__file__)
-    
+    try:
+        import mzcst_2024 as mz
 
+        print(mz.__version__)
+        print(mz.__file__)
+    except ImportError as e:
+        print(f"ImportError: {e}")
 
     pass

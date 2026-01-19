@@ -158,10 +158,9 @@ def time_decorator(func):
         t_start = time.perf_counter()
         result = func(*args, **kwargs)
         t_end = time.perf_counter()
-        _logger.info(
-            "%s",
-            f"{func.__name__} execution time: {time_to_string(t_end-t_start)}",
-        )
+        msg = f"{func.__name__} execution time: {time_to_string(t_end-t_start)}"
+        _logger.info("%s", msg)
+        print(msg)
         return result
 
     return wrapper
@@ -209,117 +208,6 @@ class clock:
     @staticmethod
     def shit():
         return 0
-
-
-def is_valid_winwrap_basic_expression(expression: str) -> bool:
-    """检查输入的字符串是否为有效的WinWrap Basic算术表达式。
-    
-    支持的操作符：+, -, *, /, ^（幂）, \\（整数除法）, Mod（取余）
-    支持括号嵌套，变量名和数字。
-    
-    Args:
-        expression (str): 输入的表达式字符串。
-        
-    Returns:
-        bool: 如果是有效的表达式返回True，否则返回False。
-    """
-    import re
-    
-    if not expression or not isinstance(expression, str):
-        return False
-    
-    # 移除空白字符
-    expr = expression.strip()
-    
-    if not expr:
-        return False
-    
-    # 检查括号匹配
-    paren_count = 0
-    for char in expr:
-        if char == '(':
-            paren_count += 1
-        elif char == ')':
-            paren_count -= 1
-            if paren_count < 0:
-                return False
-    
-    if paren_count != 0:
-        return False
-    
-    # 替换所有括号内容的递归验证
-    def remove_innermost_parens(s: str) -> str:
-        """移除最内层的括号及其内容，替换为0"""
-        while '(' in s:
-            # 找到最内层的括号
-            match = re.search(r'\([^()]*\)', s)
-            if match:
-                inner = match.group(0)[1:-1]  # 去掉括号
-                if not inner or not is_valid_expression_content(inner):
-                    return None
-                s = s[:match.start()] + '0' + s[match.end():]
-            else:
-                break
-        return s
-    
-    def is_valid_expression_content(s: str) -> bool:
-        """检查表达式内容是否有效"""
-        s = s.strip()
-        if not s:
-            return False
-        
-        # 标记化：分离操作符、数字和变量
-        # WinWrap Basic操作符：+ - * / ^ \ Mod
-        pattern = r'(\d+\.?\d*|\.\d+|[a-zA-Z_]\w*|[+\-*/^\\()]|Mod)'
-        tokens = re.findall(pattern, s)
-        
-        # 重新组合检查是否完整覆盖
-        reconstructed = ''.join(tokens)
-        if reconstructed.replace(' ', '') != s.replace(' ', ''):
-            return False
-        
-        if not tokens:
-            return False
-        
-        # 检查token序列的有效性
-        # 应该是：数字/变量 操作符 数字/变量 ...
-        # 或者：操作符 数字/变量（一元操作符）
-        
-        i = 0
-        expect_operand = True  # 期望操作数
-        
-        while i < len(tokens):
-            token = tokens[i]
-            
-            if token in ('+', '-', '*', '/', '^', '\\', 'Mod'):
-                # 操作符
-                if expect_operand and token not in ('+', '-'):
-                    # 二元操作符不能在开头（除了一元+/-)
-                    return False
-                expect_operand = True
-                i += 1
-            elif re.match(r'^\d+\.?\d*$|^\.\d+$', token) or re.match(r'^[a-zA-Z_]\w*$', token):
-                # 数字或变量
-                if not expect_operand:
-                    return False
-                expect_operand = False
-                i += 1
-            else:
-                return False
-        
-        # 末尾不应该是操作符
-        if expect_operand:
-            return False
-        
-        return True
-    
-    # 先处理括号
-    simplified = remove_innermost_parens(expr)
-    if simplified is None:
-        return False
-    
-    # 检查最终的表达式
-    return is_valid_expression_content(simplified)
 
 
 if __name__ == "__main__":
