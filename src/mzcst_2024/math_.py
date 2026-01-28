@@ -14,10 +14,10 @@ ParameterLike = Parameter | int | float | str
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 pi = Parameter("Pi")
-eps_0 = Parameter("Eps0")
-mu_0 = Parameter("Mu0")
-c_0 = Parameter("CLight")
-e_0 = Parameter("ChargeElementary")
+eps0 = Parameter("Eps0")
+mu0 = Parameter("Mu0")
+c0 = Parameter("CLight")
+e0 = Parameter("ChargeElementary")
 m_electron = Parameter("MassElectron")
 m_proton = Parameter("MassProton")
 k_boltzmann = Parameter("ConstantBoltzmann")

@@ -89,9 +89,9 @@ if __name__ == "__main__":
     filename: str = "flat-demo-" + current_time + ".cst"
     fullname: str = os.path.join(PROJECT_ABSOLUTE_PATH, filename)
     logger.info('Project full path: "%s"', fullname)
-    design_env: interface.DesignEnvironment = interface.DesignEnvironment()
-    proj: "interface.Project" = design_env.new_mws()
-    m3d: "interface.Model3D" = proj.model3d
+    design_env = interface.DesignEnvironment.connect_to_any_or_new()
+    proj = design_env.new_mws()
+    m3d = proj.model3d
     logger.info("CST started.")
 
     # endregion
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     fmax: Parameter = Parameter("fmax", "12.4", "频带上限(GHz)").store(m3d)
     fcenter = ((fmin + fmax) / Parameter(2)).rename("fcenter").store(m3d)
     wavelength = (
-        (Parameter("3e8") / fcenter / Parameter("1e6"))
+        (mz.math_.c0 / fcenter / 1e6)
         .rename("wavelength")
         .re_describe("中心频率波长")
         .store(m3d)
@@ -119,17 +119,17 @@ if __name__ == "__main__":
     h_sub: Parameter = Parameter("h_sub", "3.16").store(m3d)
     l_cross: Parameter = Parameter("l_cross", "2.32").store(m3d)
     w_cross: Parameter = Parameter("w_cross", "1").store(m3d)
-    l_hat: Parameter = Parameter("h_hat", "4.5").store(m3d)
+    l_hat: Parameter = Parameter("l_hat", "4.5").store(m3d)
     w_hat: Parameter = Parameter("w_hat", "0.9").store(m3d)
     h_trace = Parameter("h_trace", "0.035", "铜厚").store(m3d)
     l_unit: Parameter = (
-        (Parameter(2) * (w_hat + l_cross) + w_cross)
+        (2 * (w_hat + l_cross) + w_cross)
         .rename("l_unit")
         .re_describe("十字结构的长度")
         .store(m3d)
     )
     w_unit: Parameter = (
-        (Parameter(2) * (w_hat + l_cross) + w_cross)
+        (2 * (w_hat + l_cross) + w_cross)
         .rename("w_unit")
         .re_describe("十字结构的宽度")
         .store(m3d)
@@ -166,14 +166,14 @@ if __name__ == "__main__":
     # region CST建模
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-    ARRAY_SIZE = (5, 5)  # (row, col)
+    ARRAY_SIZE = (1, 1)  # (row, col)
     ARRAY_LENGTH = (
-        l_sub * Parameter(ARRAY_SIZE[0]),
-        w_sub * Parameter(ARRAY_SIZE[1]),
+        l_sub * ARRAY_SIZE[0],
+        w_sub * ARRAY_SIZE[1],
     )
     ARRAY_BASE = (
-        -(ARRAY_LENGTH[0] / Parameter(2)),
-        -(ARRAY_LENGTH[1] / Parameter(2)),
+        -(ARRAY_LENGTH[0] / 2),
+        -(ARRAY_LENGTH[1] / 2),
         Parameter(0),
     )
     WCS.activate(m3d, "local")
