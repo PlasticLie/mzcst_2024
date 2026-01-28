@@ -10,7 +10,7 @@ version = "2026.01.28.1609"
 authors = [
     { name = "Li Mengzi", email = "limengzi96@outlook.com" },
 ]
-description = "An interface for Python 3.10 and CST Studio Suite 2024. It may work on newer versions, but it is not guaranteed."
+description = "An interface for Python 3.10 and CST Studio Suite 2024, and the implementation has been tested working on CST 2026"
 readme = "README.md"
 requires-python = ">=3.10, <=3.11"
 classifiers = [
@@ -26,7 +26,7 @@ dependencies = [
     "scipy>=1.5.4",
     "matplotlib>=3.3.4",
     "h5py>=3.6.0",
-    "cst-studio-suite-link>=2024.2.1201136.551"
+    "cst-studio-suite-link>=2024"
 ]
 
 [project.urls]
