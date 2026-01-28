@@ -102,8 +102,8 @@ if __name__ == "__main__":
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     # 单元
-    eps_sub: Parameter = Parameter("eps_sub", "2.25", "基板介电常数").store(m3d)
-    fmin: Parameter = Parameter("fmin", "8.2", "频带下限(GHz)").store(m3d)
+    eps_sub = Parameter("eps_sub", "2.25", "基板介电常数").store(m3d)
+    fmin = Parameter("fmin", "8.2", "频带下限(GHz)").store(m3d)
     fmax: Parameter = Parameter("fmax", "12.4", "频带上限(GHz)").store(m3d)
     fcenter = ((fmin + fmax) / Parameter(2)).rename("fcenter").store(m3d)
     wavelength = (
