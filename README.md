@@ -3,6 +3,8 @@
 实现与CST 2024交互的接口。包括`cst.interface`、`cst.results`、`cst.eda`、
 `cst.asymptotic`、`cst.radar`、`cst.units`。
 
+使用本包前请按CST官方帮助文档的指导安装 `python_cst_libraries`，以便本包的正常使用。
+
 如果您的CST安装在默认路径（`C:\Program Files (x86)\CST Studio 2024\`），那么使用本包将不需
 要额外配置，否则请按照官方帮助配置`PYTHONPATH`。
 
@@ -13,11 +15,12 @@
 
 至少本包内其他模块都通过本模块的接口间接与CST交互。
 
-注意：本模块基于 `Python 3.10.16`、`CST Studio Suite 2024 SP5` 环境开发和调试，未在
-其它环境测试过。
+注意：本模块主要在 `Python 3.10.16`、`CST Studio Suite 2024 SP5` 环境开发和调试。
+
+目前已有的测试发现本包能兼容 `CST 2026`，但考虑到兼容性，暂不修改本包的依赖要求。
 
 
-以下内容来自CST官方帮助文档。
+以下内容来自CST 2024的官方帮助文档。
 
 
 CST Python Libraries
