@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mzcst_2024"
-version = "2026.01.28.1609"
+version = "2026.01.28.2041"
 authors = [
     { name = "Li Mengzi", email = "limengzi96@outlook.com" },
 ]
@@ -26,7 +26,7 @@ dependencies = [
     "scipy>=1.5.4",
     "matplotlib>=3.3.4",
     "h5py>=3.6.0",
-    "cst-studio-suite-link>=2024"
+    "cst-studio-suite-link>=2024",
 ]
 
 [project.urls]
