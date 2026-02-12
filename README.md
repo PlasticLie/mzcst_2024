@@ -19,6 +19,12 @@
 
 目前已有的测试发现本包能兼容 `CST 2026`，但考虑到兼容性，暂不修改本包的依赖要求。
 
+安装方法：
+
+正式服： `pip install --upgrade mzcst-2024`
+
+测试服： `pip install -i https://test.pypi.org/simple/ --upgrade mzcst-2024`
+
 
 以下内容来自CST 2024的官方帮助文档。
 
