@@ -231,8 +231,8 @@ if __name__ == "__main__":
                     "0",  # normal_x
                     "0",  # normal_y
                     "1",  # normal_z
-                    (l_sub * Parameter(row)).name,  # origin_x
-                    (w_sub * Parameter(col)).name,  # origin_y
+                    (l_sub * row).name,  # origin_x
+                    (w_sub * col).name,  # origin_y
                     "0",  # origin_z
                     "1",  # uVector_x
                     "0",  # uVector_y
@@ -259,18 +259,10 @@ if __name__ == "__main__":
             traces_info: list[list[str]] = [
                 [
                     "trace_0",  # 横向十字
-                    (
-                        unit_base_x - bracket(l_unit / Parameter("2"))
-                    ).name,  # xmin
-                    (
-                        unit_base_x + bracket(l_unit / Parameter("2"))
-                    ).name,  # xmax
-                    (
-                        unit_base_y - bracket(w_cross / Parameter("2"))
-                    ).name,  # ymin
-                    (
-                        unit_base_y + bracket(w_cross / Parameter("2"))
-                    ).name,  # ymax
+                    (unit_base_x - bracket(l_unit / 2)).name,  # xmin
+                    (unit_base_x + bracket(l_unit / 2)).name,  # xmax
+                    (unit_base_y - bracket(w_cross / 2)).name,  # ymin
+                    (unit_base_y + bracket(w_cross / 2)).name,  # ymax
                     h_sub.name,  # zmin
                     (h_sub + h_trace).name,  # zmax
                     unit_comp + "/" + TRACE_COMP,  # 分组名
@@ -278,18 +270,10 @@ if __name__ == "__main__":
                 ],
                 [
                     "trace_1",  # 纵向十字
-                    (
-                        unit_base_x - bracket(w_cross / Parameter("2"))
-                    ).name,  # xmin
-                    (
-                        unit_base_x + bracket(w_cross / Parameter("2"))
-                    ).name,  # xmax
-                    (
-                        unit_base_y - bracket(l_unit / Parameter("2"))
-                    ).name,  # ymin
-                    (
-                        unit_base_y + bracket(l_unit / Parameter("2"))
-                    ).name,  # ymax
+                    (unit_base_x - bracket(w_cross / 2)).name,  # xmin
+                    (unit_base_x + bracket(w_cross / 2)).name,  # xmax
+                    (unit_base_y - bracket(l_unit / 2)).name,  # ymin
+                    (unit_base_y + bracket(l_unit / 2)).name,  # ymax
                     h_sub.name,  # zmin
                     (h_sub + h_trace).name,  # zmax
                     unit_comp + "/" + TRACE_COMP,  # 分组名
