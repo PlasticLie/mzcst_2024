@@ -677,7 +677,7 @@ class Parameter:
     def rename(
         self, n: str, modeler: "interface.Model3D" | None = None
     ) -> "Parameter":
-        """重命名参数，然后保存到CST建模环境中。
+        """重命名参数，【可选】然后保存到CST建模环境中。
 
         Args:
             n (str): 新名字。
@@ -698,10 +698,11 @@ class Parameter:
     def redescribe(
         self, description: str, modeler: "interface.Model3D" | None = None
     ) -> "Parameter":
-        """重写参数的描述信息，然后保存到CST建模环境中。
+        """重写参数的描述信息，【可选】然后保存到CST建模环境中。
 
         Args:
             description (str): 新的描述信息。
+            modeler (interface.Model3D | None): 建模环境，如果不为None，则会将修改保存到建模环境中。
 
         Returns:
             self (Parameter): 对象自身的引用。
@@ -719,7 +720,7 @@ class Parameter:
         e: ConvertableToExpression,
         modeler: "interface.Model3D" | None = None,
     ) -> "Parameter":
-        """修改参数的表达式，然后保存到CST建模环境中。
+        """修改参数的表达式，【可选】然后保存到CST建模环境中。
 
         Args:
             e (ConvertableToExpression): 新的表达式。
