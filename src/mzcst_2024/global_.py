@@ -295,7 +295,7 @@ ConvertableToParameter = typing.Union[str, int, float]
 ConvertableToExpression = typing.Union[str, int, float]
 
 
-class Parameter():
+class Parameter:
     """创建和管理CST内部的参数
 
     Attributes:
@@ -674,8 +674,8 @@ class Parameter():
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-    def rename(self, n: str) -> "Parameter":
-        """重命名参数。
+    def rename(self, n: str, modeler: "interface.Model3D") -> "Parameter":
+        """重命名参数，然后保存到CST建模环境中。
 
         Args:
             n (str): 新名字。
@@ -683,11 +683,18 @@ class Parameter():
         Returns:
             self (Parameter): 对象自身的引用。
         """
+        old_name = self._name
         self._name = n
+        modeler.add_to_history(
+            f"Rename parameter: {old_name} to {self._name}",
+            f'RenameParameter "{old_name}", "{self._name}"',
+        )
         return self
 
-    def redescribe(self, description: str) -> "Parameter":
-        """重写参数的描述信息。
+    def redescribe(
+        self, description: str, modeler: "interface.Model3D"
+    ) -> "Parameter":
+        """重写参数的描述信息，然后保存到CST建模环境中。
 
         Args:
             description (str): 新的描述信息。
@@ -696,6 +703,28 @@ class Parameter():
             self (Parameter): 对象自身的引用。
         """
         self._description = description
+        modeler.add_to_history(
+            f"Set parameter description: {self.name}",
+            f'SetParameterDescription("{self.name}","{self._description}")',
+        )
+        return self
+
+    def modify_expression(
+        self, e: ConvertableToExpression, modeler: "interface.Model3D"
+    ) -> "Parameter":
+        """修改参数的表达式，然后保存到CST建模环境中。
+
+        Args:
+            e (ConvertableToExpression): 新的表达式。
+
+        Returns:
+            self (Parameter): 对象自身的引用。
+        """
+        self._expression = str(e)
+        modeler.add_to_history(
+            f"Set parameter expression: {self.name}",
+            f'SetParameterExpression("{self.name}","{self._expression}")',
+        )
         return self
 
     def bracket(self) -> "Parameter":
@@ -714,7 +743,7 @@ class Parameter():
         return self
 
     def store(self, modeler: "interface.Model3D") -> "Parameter":
-        """将变量存储到CST中。
+        """将变量存储到CST建模环境中。
 
         Args:
             modeler (interface.Model3D): 建模环境。
@@ -739,7 +768,7 @@ class Parameter():
         return self
 
     def delete(self, modeler: "interface.Model3D") -> "Parameter":
-        """从建模环境删除变量。
+        """从建模环境删除变量。（注意并不是在Python中删除，而是在CST建模环境中删除）
 
         Args:
             modeler (interface.Model3D): 建模环境。
