@@ -733,7 +733,7 @@ class Parameter:
         if modeler is not None:
             modeler.add_to_history(
                 f"Set parameter expression: {self.name}",
-                f'SetParameterExpression("{self.name}","{self._expression}")',
+                f'StoreParameter ("{self.name}","{self._expression}")',
             )
         return self
 

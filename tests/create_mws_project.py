@@ -96,9 +96,9 @@ if __name__ == "__main__":
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     # 单元
-    eps_sub: Parameter = Parameter("eps_sub", "2.25", "基板介电常数").store(m3d)
-    fmin: Parameter = Parameter("fmin", "8.2", "频带下限(GHz)").store(m3d)
-    fmax: Parameter = Parameter("fmax", "12.4", "频带上限(GHz)").store(m3d)
+    eps_sub = Parameter("eps_sub", "2.25", "基板介电常数").store(m3d)
+    fmin = Parameter("fmin", "8.2", "频带下限(GHz)").store(m3d)
+    fmax = Parameter("fmax", "12.4", "频带上限(GHz)").store(m3d)
     fcenter = ((fmin + fmax) / 2).rename("fcenter").store(m3d)
     wavelength = (
         (Parameter("3e8") / fcenter / Parameter("1e6"))
@@ -106,24 +106,24 @@ if __name__ == "__main__":
         .redescribe("中心频率波长")
         .store(m3d)
     )
-    theta: Parameter = Parameter("theta", "0", "入射俯仰角").store(m3d)
-    phi: Parameter = Parameter("phi", "0", "入射方位角").store(m3d)
-    l_sub: Parameter = Parameter("l_sub", "9.95").store(m3d)
-    w_sub: Parameter = Parameter("w_sub", "l_sub").store(m3d)
-    h_sub: Parameter = Parameter("h_sub", "3.16").store(m3d)
-    l_cross: Parameter = Parameter("l_cross", "2.32").store(m3d)
-    w_cross: Parameter = Parameter("w_cross", "1").store(m3d)
-    l_hat: Parameter = Parameter("h_hat", "4.5").store(m3d)
-    w_hat: Parameter = Parameter("w_hat", "0.9").store(m3d)
+    theta = Parameter("theta", "0", "入射俯仰角").store(m3d)
+    phi = Parameter("phi", "0", "入射方位角").store(m3d)
+    l_sub = Parameter("l_sub", "9.95").store(m3d)
+    w_sub = Parameter("w_sub", "l_sub").store(m3d)
+    h_sub = Parameter("h_sub", "3.16").store(m3d)
+    l_cross = Parameter("l_cross", "2.32").store(m3d)
+    w_cross = Parameter("w_cross", "1").store(m3d)
+    l_hat = Parameter("h_hat", "4.5").store(m3d)
+    w_hat = Parameter("w_hat", "0.9").store(m3d)
     h_trace = Parameter("h_trace", "0.035", "铜厚").store(m3d)
-    l_unit: Parameter = (
-        (Parameter(2) * bracket(w_hat + l_cross) + w_cross)
+    l_unit = (
+        (2 * (w_hat + l_cross) + w_cross)
         .rename("l_unit")
         .redescribe("十字结构的长度")
         .store(m3d)
     )
-    w_unit: Parameter = (
-        (Parameter(2) * bracket(w_hat + l_cross) + w_cross)
+    w_unit = (
+        (2 * (w_hat + l_cross) + w_cross)
         .rename("w_unit")
         .redescribe("十字结构的宽度")
         .store(m3d)
