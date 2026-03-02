@@ -109,7 +109,7 @@ if __name__ == "__main__":
     wavelength = (
         (mz.math_.c0 / fcenter / 1e6)
         .rename("wavelength")
-        .re_describe("中心频率波长")
+        .redescribe("中心频率波长")
         .store(m3d)
     )
     theta: Parameter = Parameter("theta", "0", "入射俯仰角").store(m3d)
@@ -125,13 +125,13 @@ if __name__ == "__main__":
     l_unit: Parameter = (
         (2 * (w_hat + l_cross) + w_cross)
         .rename("l_unit")
-        .re_describe("十字结构的长度")
+        .redescribe("十字结构的长度")
         .store(m3d)
     )
     w_unit: Parameter = (
         (2 * (w_hat + l_cross) + w_cross)
         .rename("w_unit")
-        .re_describe("十字结构的宽度")
+        .redescribe("十字结构的宽度")
         .store(m3d)
     )
     center_x = Parameter("center_x", f"{l_sub.name} / 2").store(m3d)

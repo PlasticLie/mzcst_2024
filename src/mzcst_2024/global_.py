@@ -685,7 +685,7 @@ class Parameter():
         self._name = n
         return self
 
-    def re_describe(self, description: str) -> "Parameter":
+    def redescribe(self, description: str) -> "Parameter":
         """重写参数的描述信息。
 
         Args:

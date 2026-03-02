@@ -50,7 +50,7 @@ def test_parameter_operations():
     a = Parameter("a", 1.5, "test description")
     b = Parameter("b", "2")
     c = Parameter("c", 36)
-    d = ((a + b) * c).rename("d").re_describe("new description")
+    d = ((a + b) * c).rename("d").redescribe("new description")
     e = (a + b * c).rename("e")
     f = Parameter(2 / a).rename("f")
     print(repr(d))
