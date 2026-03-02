@@ -698,9 +698,10 @@ class Parameter():
         self._description = description
         return self
 
-    @warnings.warn("执行参数计算时已经自动加括号了，不需要再调用这个方法了。", UserWarning)
     def bracket(self) -> "Parameter":
-        """（还没实现好）
+        """【已弃用】执行参数计算时已经自动加括号了，不需要再调用这个方法了。
+
+
         给参数的表达式加括号。
 
         Args:
