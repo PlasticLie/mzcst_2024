@@ -99,7 +99,7 @@ if __name__ == "__main__":
     eps_sub: Parameter = Parameter("eps_sub", "2.25", "基板介电常数").store(m3d)
     fmin: Parameter = Parameter("fmin", "8.2", "频带下限(GHz)").store(m3d)
     fmax: Parameter = Parameter("fmax", "12.4", "频带上限(GHz)").store(m3d)
-    fcenter = (bracket(fmin + fmax) / Parameter(2)).rename("fcenter").store(m3d)
+    fcenter = ((fmin + fmax) / 2).rename("fcenter").store(m3d)
     wavelength = (
         (Parameter("3e8") / fcenter / Parameter("1e6"))
         .rename("wavelength")
@@ -558,10 +558,10 @@ if __name__ == "__main__":
 
     solid1_down = Brick(
         "solid1",  # 实体名
-        (waveguide_width / Parameter(-2)).name,  # xmin
-        (waveguide_width / Parameter(2)).name,  # xmax
-        (waveguide_height / Parameter(-2)).name,  # ymin
-        (waveguide_height / Parameter(2)).name,  # ymax
+        (waveguide_width / -2).name,  # xmin
+        (waveguide_width / 2).name,  # xmax
+        (waveguide_height / -2).name,  # ymin
+        (waveguide_height / 2).name,  # ymax
         "0",  # zmin
         "10.92",  # zmax
         horn_down_comp.name,  # 分组名
