@@ -675,7 +675,7 @@ class Parameter:
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     def rename(
-        self, n: str, modeler: "interface.Model3D" | None = None
+        self, n: str, modeler: "interface.Model3D" = None
     ) -> "Parameter":
         """重命名参数，【可选】然后保存到CST建模环境中。
 
@@ -696,7 +696,7 @@ class Parameter:
         return self
 
     def redescribe(
-        self, description: str, modeler: "interface.Model3D" | None = None
+        self, description: str, modeler: "interface.Model3D" = None
     ) -> "Parameter":
         """重写参数的描述信息，【可选】然后保存到CST建模环境中。
 
@@ -718,7 +718,7 @@ class Parameter:
     def modify_expression(
         self,
         e: ConvertableToExpression,
-        modeler: "interface.Model3D" | None = None,
+        modeler: "interface.Model3D" = None,
     ) -> "Parameter":
         """修改参数的表达式，【可选】然后保存到CST建模环境中。
 
