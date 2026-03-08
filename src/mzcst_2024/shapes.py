@@ -227,13 +227,63 @@ class AnalyticalFace(Solid):
         return self
 
 
+class Cone(Solid):
+    """This object is used to create a new cone shape.
+
+    Attributes:
+        name (str): 名称。
+        component (str): 所在组件名。
+        material (str): 材料名。
+        axis (str): 轴向，取值为 "X"、"Y" 或 "Z"。
+        top_radius (str): 圆锥顶面半径。
+        bottom_radius (str): 圆锥底面半径。
+        xcenter (str): 圆锥中心在X轴上的坐标。
+        ycenter (str): 圆锥中心在Y轴上的坐标。
+        zcenter (str): 圆锥中心在Z轴上的坐标。
+        xrange (tuple[str, str]): 圆锥在X轴上的范围，格式为 (xmin, xmax)。
+        yrange (tuple[str, str]): 圆锥在Y轴上的范围，格式为 (ymin, ymax)。
+        zrange (tuple[str, str]): 圆锥在Z轴上的范围，格式为 (zmin, zmax)。
+        segments (int): 圆锥的面片数。该设置指定了圆锥的几何形状是以光滑的表面还是以近似的面片来建模。如果该值设置为 "0"，则会创建一个分析（光滑）表示的圆锥。如果该数字设置为大于 2 的其他值，则圆锥的面将由该数量的平面面片近似表示。面片数量越多，圆锥的表示就越好。
+    """
+
+    def __init__(
+        self,
+        name,
+        component,
+        material,
+        axis: typing.Literal["X", "Y", "Z"],
+        top_radius: str,
+        bottom_radius: str,
+        xcenter: str,
+        ycenter: str,
+        zcenter: str,
+        xrange: tuple[str, str],
+        yrange: tuple[str, str],
+        zrange: tuple[str, str],
+        segments: str,
+    ):
+        super().__init__(name, component, material)
+        self._axis = axis
+        self._top_radius = top_radius
+        self._bottom_radius = bottom_radius
+        self._xcenter = xcenter
+        self._ycenter = ycenter
+        self._zcenter = zcenter
+        self._xrange = xrange
+        self._yrange = yrange
+        self._zrange = zrange
+        self._segments = segments
+        return
+        
+
+
 class Cylinder(Solid):
     """This object is used to create a new cylinder shape.
 
     Attributes:
         name (str): 名称。
-        r_in (str): 半径。
-        r_out (str): 半径。
+        r_in (str): 内半径。
+        r_out (str): 外半径。
         height (str): 高度。
         component (str): 所在组件名。
         material (str): 材料名。
@@ -296,7 +346,7 @@ class Cylinder(Solid):
         cylinder will be."""
         return self._segments
 
-    def create(self, modeler):
+    def create(self, modeler: interface.Model3D) -> "Cylinder":
         """定义圆柱体。
 
         Parameters
@@ -339,9 +389,7 @@ class Cylinder(Solid):
                     f'.Ycenter "{self._center_2}" ',
                 ]
             case _:
-                _logger.error(
-                    "Cylinder axis must be one of 'X', 'Y', or 'Z'."
-                )
+                _logger.error("Cylinder axis must be one of 'X', 'Y', or 'Z'.")
                 raise ValueError(
                     f"Invalid axis: {self._axis}. Must be 'X', 'Y', or 'Z'."
                 )

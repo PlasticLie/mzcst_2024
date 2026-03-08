@@ -42,7 +42,6 @@ class BaseObject(abc.ABC):
             attributes = {}
         else:
             self._attributes: dict[str, str] = attributes
-        self._history_title: str = "create object: "
         self._history: list[str] = []
         self._vba = vba
         return
@@ -51,20 +50,12 @@ class BaseObject(abc.ABC):
         return f"{self.__class__.__name__}(attributes={self.attributes}, vba={self._vba})"
 
     @property
-    def history_title(self) -> str:
-        return self._history_title
-
-    @property
     def history(self) -> list[str]:
         return self._history
 
     @property
     def attributes(self) -> dict[str, str]:
         return self._attributes
-
-    def retitle(self, t: str):
-        self._history_title = t
-        return self
 
     # @abc.abstractmethod
     def create_from_attributes(
@@ -120,8 +111,9 @@ class BaseObject(abc.ABC):
         """
         if self._vba is None:
             raise ValueError("invalid VBA code")
-        modeler.add_to_history(self._history_title, NEW_LINE.join(self._vba))
-        _logger.info(self._history_title)
+        self._history.append("create object:")
+        modeler.add_to_history(self._history[-1], NEW_LINE.join(self._vba))
+        _logger.info(self._history[-1])
         return self
 
 
