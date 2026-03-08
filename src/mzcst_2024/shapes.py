@@ -7,6 +7,7 @@ import logging
 import os
 import time
 import types
+import typing
 
 from . import interface
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
@@ -243,7 +244,7 @@ class Cylinder(Solid):
         name: str,
         component: str,
         material: str,
-        axis: str,
+        axis: typing.Literal["X", "Y", "Z"],
         r_in: str,
         r_out: str,
         center_1: str,
@@ -253,7 +254,7 @@ class Cylinder(Solid):
         segments: int = 0,
     ) -> None:
         super().__init__(name, component, material)
-        self._axis: str = axis
+        self._axis: typing.Literal["X", "Y", "Z"] = axis
         self._r_in: str = r_in
         self._r_out: str = r_out
         self._center_1: str = center_1
