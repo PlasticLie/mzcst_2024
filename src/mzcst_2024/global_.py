@@ -908,8 +908,8 @@ class Units(BaseObject):
 class CSTPath(pathlib.PurePosixPath):
     """CST路径类，包含一些常用的路径操作方法。"""
 
-    def __init__(self, *args: typing.Union[str, pathlib.PurePath]):
-        super().__init__(*args)
+    def __new__(cls, *paths: str) -> "CSTPath":
+        return super().__new__(cls, *paths)
 
 
 if __name__ == "__main__":
