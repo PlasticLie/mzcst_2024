@@ -3,6 +3,7 @@
 import abc
 import ast
 import logging
+import pathlib
 import typing
 import warnings
 
@@ -42,6 +43,7 @@ class BaseObject(abc.ABC):
         else:
             self._attributes: dict[str, str] = attributes
         self._history_title: str = "create object: "
+        self._history: list[str] = []
         self._vba = vba
         return
 
@@ -51,6 +53,10 @@ class BaseObject(abc.ABC):
     @property
     def history_title(self) -> str:
         return self._history_title
+
+    @property
+    def history(self) -> list[str]:
+        return self._history
 
     @property
     def attributes(self) -> dict[str, str]:
@@ -897,6 +903,13 @@ class Units(BaseObject):
         cmd: str = NEW_LINE.join(define_unit)
         modeler.add_to_history("define units", cmd)
         return self
+
+
+class CSTPath(pathlib.PurePosixPath):
+    """CST路径类，包含一些常用的路径操作方法。"""
+
+    def __init__(self, *args: typing.Union[str, pathlib.PurePath]):
+        super().__init__(*args)
 
 
 if __name__ == "__main__":
