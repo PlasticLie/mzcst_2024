@@ -274,7 +274,86 @@ class Cone(Solid):
         self._zrange = zrange
         self._segments = segments
         return
-        
+
+    @property
+    def axis(self) -> str:
+        return self._axis
+
+    @property
+    def top_radius(self) -> str:
+        return self._top_radius
+
+    @property
+    def bottom_radius(self) -> str:
+        return self._bottom_radius
+
+    @property
+    def xcenter(self) -> str:
+        return self._xcenter
+
+    @property
+    def ycenter(self) -> str:
+        return self._ycenter
+
+    @property
+    def zcenter(self) -> str:
+        return self._zcenter
+
+    @property
+    def xrange(self) -> tuple[str, str]:
+        return self._xrange
+
+    @property
+    def yrange(self) -> tuple[str, str]:
+        return self._yrange
+
+    @property
+    def zrange(self) -> tuple[str, str]:
+        return self._zrange
+
+    @property
+    def segments(self) -> str:
+        """This setting specifies how the cone's geometry is modelled, either as a smooth surface of by a facetted approximation. If this value is set to "0", an analytical (smooth) representation of the cone will be created. If this number is set to another value greater than 2, the cone's face will be approximated by this number of planar facets. The higher the number of segments, the better the representation of the cone will be."""
+        return self._segments
+
+    def create(self, modeler: interface.Model3D) -> "Cone":
+        """定义圆锥体。
+
+        Parameters
+        ----------
+        modeler : Model3D
+            建模环境。
+
+        Returns
+        -------
+        self
+            自身的引用。
+        """
+        sCommand = [
+            "With Cone ",
+            ".Reset ",
+            f'.Name "{self._name}" ',
+            f'.Component "{self._component}" ',
+            f'.Material "{self._material}" ',
+            f'.TopRadius "{self._top_radius}" ',
+            f'.BottomRadius "{self._bottom_radius}" ',
+            f'.Xcenter "{self._xcenter}" ',
+            f'.Ycenter "{self._ycenter}" ',
+            f'.Zcenter "{self._zcenter}" ',
+            f'.Xrange "{self._xrange[0]}", "{self._xrange[1]}" ',
+            f'.Yrange "{self._yrange[0]}", "{self._yrange[1]}" ',
+            f'.Zrange "{self._zrange[0]}", "{self._zrange[1]}" ',
+            f'.Axis "{self._axis}" ',
+            f'.Segments "{self._segments}" ',
+            ".Create ",
+            "End With",
+        ]
+
+        cmd = NEW_LINE.join(sCommand)
+        self._history.append(f'define cone: "{self.full_name}"')
+        modeler.add_to_history(self._history[-1], cmd)
+        _logger.info("Cone %s created.", self.full_name)
+        return self
 
 
 class Cylinder(Solid):
@@ -406,3 +485,349 @@ class Cylinder(Solid):
         _logger.info("Cylinder %s:%s created.", self._component, self._name)
 
         return self
+
+
+class ECylinder(Solid):
+    """This object is used to create a new elliptical cylinder shape.
+
+    Attributes:
+        name (str): 名称。
+        component (str): 所在组件名。
+        material (str): 材料名。
+        axis (str): 轴向，取值为 "X"、"Y" 或 "Z"。
+        x_radius (str): 椭圆在X轴方向的半径。
+        y_radius (str): 椭圆在Y轴方向的半径。
+        z_radius (str): 椭圆在Z轴方向的半径。
+        x_center (str): 椭圆中心在X轴上的坐标。
+        y_center (str): 椭圆中心在Y轴上的坐标。
+        z_center (str): 椭圆中心在Z轴上的坐标。
+        x_range (tuple[str, str]): 椭圆在X轴上的范围，格式为 (xmin, xmax)。
+        y_range (tuple[str, str]): 椭圆在Y轴上的范围，格式为 (ymin, ymax)。
+        z_range (tuple[str, str]): 椭圆在Z轴上的范围，格式为 (zmin, zmax)。
+        segments (str): 椭圆柱的面片数。该设置指定了椭圆柱的几何形状是以光滑的表面还是以近似的面片来建模。如果该值设置为 "0"，则会创建一个分析（光滑）表示的椭圆柱。如果该数字设置为大于 2 的其他值，则椭圆柱的面将由该数量的平面面片近似表示。面片数量越多，椭圆柱的表示就越好。
+    """
+
+    def __init__(
+        self,
+        name,
+        component,
+        material,
+        axis: typing.Literal["X", "Y", "Z"],
+        x_radius: str,
+        y_radius: str,
+        z_radius: str,
+        x_center: str,
+        y_center: str,
+        z_center: str,
+        x_range: tuple[str, str],
+        y_range: tuple[str, str],
+        z_range: tuple[str, str],
+        segments: str,
+    ):
+        super().__init__(name, component, material)
+        self._axis = axis
+        self._x_radius = x_radius
+        self._y_radius = y_radius
+        self._z_radius = z_radius
+        self._x_center = x_center
+        self._y_center = y_center
+        self._z_center = z_center
+        self._x_range = x_range
+        self._y_range = y_range
+        self._z_range = z_range
+        self._segments = segments
+        return
+
+    @property
+    def axis(self) -> str:
+        return self._axis
+
+    @property
+    def x_radius(self) -> str:
+        return self._x_radius
+
+    @property
+    def y_radius(self) -> str:
+        return self._y_radius
+
+    @property
+    def z_radius(self) -> str:
+        return self._z_radius
+
+    @property
+    def x_center(self) -> str:
+        return self._x_center
+
+    @property
+    def y_center(self) -> str:
+        return self._y_center
+
+    @property
+    def z_center(self) -> str:
+        return self._z_center
+
+    @property
+    def x_range(self) -> tuple[str, str]:
+        return self._x_range
+
+    @property
+    def y_range(self) -> tuple[str, str]:
+        return self._y_range
+
+    @property
+    def z_range(self) -> tuple[str, str]:
+        return self._z_range
+
+    @property
+    def segments(self) -> str:
+        """This setting specifies how the elliptical cylinder's geometry is modelled, either as a smooth surface of by a facetted approximation. If this value is set to "0", an analytical (smooth) representation of the elliptical cylinder will be created. If this number is set to another value greater than 2, the elliptical cylinder's face will be approximated by this number of planar facets. The higher the number of segments, the better the representation of the elliptical cylinder will be."""
+        return self._segments
+
+    def create(self, modeler: interface.Model3D) -> "ECylinder":
+        """定义椭圆柱体。
+
+        Parameters
+        ----------
+        modeler : Model3D
+            建模环境。
+
+        Returns
+        -------
+        self
+            自身的引用。
+        """
+        sCommand = [
+            "With ECylinder ",
+            ".Reset ",
+            f'.Name "{self._name}" ',
+            f'.Component "{self._component}" ',
+            f'.Material "{self._material}" ',
+            f'.Xradius "{self._x_radius}" ',
+            f'.Yradius "{self._y_radius}" ',
+            f'.Zradius "{self._z_radius}" ',
+            f'.Xcenter "{self._x_center}" ',
+            f'.Ycenter "{self._y_center}" ',
+            f'.Zcenter "{self._z_center}" ',
+            f'.Xrange "{self._x_range[0]}", "{self._x_range[1]}" ',
+            f'.Yrange "{self._y_range[0]}", "{self._y_range[1]}" ',
+            f'.Zrange "{self._z_range[0]}", "{self._z_range[1]}" ',
+            f'.Axis "{self._axis}" ',
+            f'.Segments "{self._segments}" ',
+            ".Create ",
+            "End With",
+        ]
+
+        cmd = NEW_LINE.join(sCommand)
+        self._history.append(f'define elliptical cylinder: "{self.full_name}"')
+        modeler.add_to_history(self._history[-1], cmd)
+        _logger.info("Elliptical Cylinder %s created.", self.full_name)
+        return self
+
+
+class Sphere(Solid):
+    """This object is used to create a new sphere shape.
+
+    Attributes:
+        name (str): 名称。
+        component (str): 所在组件名。
+        material (str): 材料名。
+        axis (typing.Literal["X", "Y", "Z"]): 轴向，取值为 "X"、"Y" 或 "Z"。
+        center_radius (str): 球的半径。
+        top_radius (str): 球顶面半径。
+        bottom_radius (str): 球底面半径。
+        center (tuple[str, str, str]): 球心坐标，格式为 (x_center, y_center, z_center)。
+        segments (str): 球的面片数。该设置指定了球的几何形状是以光滑的表面还是以近似的面片来建模。如果该值设置为 "0"，则会创建一个分析（光滑）表示的球。如果该数字设置为大于 2 的其他值，则球的面将由该数量的平面面片近似表示。面片数量越多，球的表示就越好。
+    """
+
+    def __init__(
+        self,
+        name,
+        component,
+        material,
+        axis: typing.Literal["X", "Y", "Z"],
+        center_radius: str,
+        top_radius: str,
+        bottom_radius: str,
+        center: tuple[str, str, str],
+        segments: str,
+    ):
+        super().__init__(name, component, material)
+        self._axis = axis
+        self._center_radius = center_radius
+        self._top_radius = top_radius
+        self._bottom_radius = bottom_radius
+        self._center = center
+        self._segments = segments
+        return
+
+    @property
+    def axis(self) -> str:
+        return self._axis
+
+    @property
+    def center_radius(self) -> str:
+        return self._center_radius
+
+    @property
+    def top_radius(self) -> str:
+        return self._top_radius
+
+    @property
+    def bottom_radius(self) -> str:
+        return self._bottom_radius
+
+    @property
+    def center(self) -> tuple[str, str, str]:
+        return self._center
+
+    @property
+    def segments(self) -> str:
+        """This setting specifies how the sphere's geometry is modelled, either as a smooth surface of by a facetted approximation. If this value is set to "0", an analytical (smooth) representation of the sphere will be created. If this number is set to another value greater than 2, the sphere's face will be approximated by this number of planar facets. The higher the number of segments, the better the representation of the sphere will be."""
+        return self._segments
+
+    def create(self, modeler: interface.Model3D) -> "Sphere":
+        """定义球体。
+
+        Parameters
+        ----------
+        modeler : Model3D
+            建模环境。
+
+        Returns
+        -------
+        self
+            自身的引用。
+        """
+        sCommand = [
+            "With Sphere ",
+            ".Reset ",
+            f'.Name "{self._name}" ',
+            f'.Component "{self._component}" ',
+            f'.Material "{self._material}" ',
+            f'.Axis "{self._axis}" ',
+            f'.CenterRadius "{self._center_radius}" ',
+            f'.TopRadius "{self._top_radius}" ',
+            f'.BottomRadius "{self._bottom_radius}" ',
+            f'.Center "{self._center[0]}", "{self._center[1]}", "{self._center[2]}" ',
+            f'.Segments "{self._segments}" ',
+            ".Create ",
+            "End With",
+        ]
+        cmd = NEW_LINE.join(sCommand)
+        self._history.append(f'define sphere: "{self.full_name}"')
+        modeler.add_to_history(self._history[-1], cmd)
+        _logger.info("Sphere %s created.", self.full_name)
+        return self
+
+class Torus(Solid):
+    """This object is used to create a new torus shape.
+
+    Attributes:
+        name (str): 名称。
+        component (str): 所在组件名。
+        material (str): 材料名。
+        axis (typing.Literal["X", "Y", "Z"]): 轴向，取值为 "X"、"Y" 或 "Z"。
+        outer_radius (str): 圆环的外半径。
+        inner_radius (str): 圆环的内半径。
+        x_center (str): 圆环中心在X轴上的坐标。
+        y_center (str): 圆环中心在Y轴上的坐标。
+        z_center (str): 圆环中心在Z轴上的坐标。
+        segments (str): 圆环的面片数。该设置指定了圆环的几何形状是以光滑的表面还是以近似的面片来建模。如果该值设置为 "0"，则会创建一个分析（光滑）表示的圆环。如果该数字设置为大于 2 的其他值，则圆环的面将由该数量的平面面片近似表示。面片数量越多，圆环的表示就越好。
+    """
+
+    def __init__(
+        self,
+        name,
+        component,
+        material,
+        axis: typing.Literal["X", "Y", "Z"],
+        outer_radius: str,
+        inner_radius: str,
+        x_center: str,
+        y_center: str,
+        z_center: str,
+        segments: str,
+    ):
+        super().__init__(name, component, material)
+        self._axis = axis
+        self._outer_radius = outer_radius
+        self._inner_radius = inner_radius
+        self._x_center = x_center
+        self._y_center = y_center
+        self._z_center = z_center
+        self._segments = segments
+        return
+
+    @property
+    def axis(self) -> str:
+        return self._axis
+
+    @property
+    def outer_radius(self) -> str:
+        return self._outer_radius
+
+    @property
+    def inner_radius(self) -> str:
+        return self._inner_radius
+
+    @property
+    def x_center(self) -> str:
+        return self._x_center
+
+    @property
+    def y_center(self) -> str:
+        return self._y_center
+
+    @property
+    def z_center(self) -> str:
+        return self._z_center
+
+    @property
+    def segments(self) -> str:
+        """This setting specifies how the torus's geometry is modelled, either as a smooth surface of by a facetted approximation. If this value is set to "0", an analytical (smooth) representation of the torus will be created. If this number is set to another value greater than 2, the torus's face will be approximated by this number of planar facets. The higher the number of segments, the better the representation of the torus will be."""
+        return self._segments
+
+    def create(self, modeler: interface.Model3D) -> "Torus":
+        """定义圆环体。
+
+        Parameters
+        ----------
+        modeler : Model3D
+            建模环境。
+
+        Returns
+        -------
+        self
+            自身的引用。
+        """
+        sCommand = [
+            "With Torus ",
+            ".Reset ",
+            f'.Name "{self._name}" ',
+            f'.Component "{self._component}" ',
+            f'.Material "{self._material}" ',
+            f'.Axis "{self._axis}" ',
+            f'.OuterRadius "{self._outer_radius}" ',
+            f'.InnerRadius "{self._inner_radius}" ',
+            f'.Xcenter "{self._x_center}" ',
+            f'.Ycenter "{self._y_center}" ',
+            f'.Zcenter "{self._z_center}" ',
+            f'.Segments "{self._segments}" ',
+            ".Create ",
+            "End With",
+        ]
+        cmd = NEW_LINE.join(sCommand)
+        self._history.append(f'define torus: "{self.full_name}"')
+        modeler.add_to_history(self._history[-1], cmd)
+        _logger.info("Torus %s created.", self.full_name)
+        return self
+
+
+class Wire(Solid):
+    """[todo] This object is used to create a new wire shape.
+
+    Attributes:
+        name (str): 名称。
+    """
+    def __init__(self, name, component = "", material = "Vacuum", *, properties = None, vba = None):
+        super().__init__(name, component, material, properties=properties, vba=vba)
