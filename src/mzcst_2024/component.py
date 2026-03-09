@@ -78,7 +78,11 @@ class Component(BaseObject):
         return
 
     @property
-    def name(self) -> CSTPath:
+    def name(self) -> str:
+        return str(self._name)
+
+    @property
+    def path(self) -> CSTPath:
         return self._name
 
     def __str__(self):
@@ -104,8 +108,8 @@ class Component(BaseObject):
         modeler.add_to_history(title, cmd)
         self._name = CSTPath(new_name)
 
-        self._history.append(f"new component: {self.name}")
-        _logger.info("%s", title)
+        self._history.append(title)
+        _logger.info("%s", self._history[-1])
         return self
 
     def create(
@@ -124,9 +128,9 @@ class Component(BaseObject):
         """
         sCommand = [f'Component.New "{self.name}"']
         cmd = NEW_LINE.join(sCommand)
-        title = f"new component: {self.name}"
-        modeler.add_to_history(title, cmd)
-        _logger.info("%s", title)
+        self._history.append(f"new component: {self.name}")
+        modeler.add_to_history(self._history[-1], cmd)
+        _logger.info("%s", self._history[-1])
         return self
 
     def delete(
