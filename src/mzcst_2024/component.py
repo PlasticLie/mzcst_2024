@@ -143,9 +143,9 @@ class Component(BaseObject):
         """
         sCommand = [f'Component.Delete "{self.name}"']
         cmd = NEW_LINE.join(sCommand)
-        self._history.append( f"delete component: {self.name}")
-        modeler.add_to_history(title, cmd)
-        _logger.info("%s", title)
+        self._history.append(f"delete component: {self.name}")
+        modeler.add_to_history(self._history[-1], cmd)
+        _logger.info("%s", self._history[-1])
         return self
 
     def hide_component(self, modeler: interface.Model3D) -> "Component":
