@@ -143,7 +143,7 @@ class Component(BaseObject):
         """
         sCommand = [f'Component.Delete "{self.name}"']
         cmd = NEW_LINE.join(sCommand)
-        title = f"delete component: {self.name}"
+        self._history.append( f"delete component: {self.name}")
         modeler.add_to_history(title, cmd)
         _logger.info("%s", title)
         return self
