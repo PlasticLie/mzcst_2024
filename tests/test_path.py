@@ -39,5 +39,8 @@ if __name__ == "__main__":
     logger.info("CSTPath: %s", p)
     logger.info("CSTPath parts: %s", p.parts)
 
+    p2 = p / "g/h/i"
+    logger.info("p2: %s", repr(p2))
+
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
