@@ -3,11 +3,11 @@
 import logging
 
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
-from .global_ import Parameter
+from .global_ import Parameter, ParameterLike
 
 _logger = logging.getLogger(__name__)
 
-ParameterLike = Parameter | int | float | str
+# ParameterLike = Parameter | int | float | str
 
 #######################################
 # region Constants
