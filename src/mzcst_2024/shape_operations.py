@@ -335,13 +335,34 @@ def thicken_sheet_advanced(
 
 
 class _BaseBend(BaseObject):
+    """[todo] This object is used to bend thin planar sheets or shapes on a solid shape."""
+
     def __init__(self, vba=None):
         super().__init__(vba=vba)
         self._param_sweep_and_optimizer_checks_result = False
         return
 
+    @property
+    def param_sweep_and_optimizer_checks_result(self) -> bool:
+        """To activate a check routine performed during a parameter sweep or optimizer calculation. The check verifies whether the sheets are entirely bent on the solid. The check is performed for bend shape and bend layer stackup operations."""
+        return self._param_sweep_and_optimizer_checks_result
+
 
 class BendShape(_BaseBend):
+    """[todo] This object is used to bend thin planar sheets or shapes on a
+    solid shape. The sheet to be bent and the solid shape are defined by the
+    user. The faces of the sheet that should be bent on the solid shape are
+    defined by the user as well. The bending operation will be performed in the
+    order of the history entries, so it is possible to perform multiple bending
+    operations on the same sheet or shape. This can be useful to bend a sheet on
+    different solid shapes or to bend different parts of a sheet on the same
+    solid shape. The parameter `param_sweep_and_optimizer_checks_result` can be
+    used to activate a check routine performed during a parameter sweep or
+    optimizer calculation. The check verifies whether the sheets are entirely
+    bent on the solid. The check is performed for bend shape and bend layer
+    stackup operations.
+    """
+
     def __init__(self, sheet: Solid, solid: Solid, faces: str, vba=None):
         super().__init__(vba)
         self._sheet: Solid = sheet
@@ -387,3 +408,63 @@ class BendShape(_BaseBend):
         modeler.add_to_history(title, cmd)
         _logger.info("Bend sheet: %s to %s", self.sheet, self.solid)
         return self
+
+
+class BendLayerStackup(_BaseBend):
+    """[todo] This object is used to bend thin planar sheets or shapes on a
+    solid shape. The sheet to be bent and the solid shape are defined by the
+    user. The layers of the sheet that should be bent on the solid shape are
+    defined by the user as well. The bending operation will be performed in the
+    order of the history entries, so it is possible to perform multiple bending
+    operations on the same sheet or shape. This can be useful to bend a sheet on
+    different solid shapes or to bend different parts of a sheet on the same
+    solid shape. The parameter `param_sweep_and_optimizer_checks_result` can be
+    used to activate a check routine performed during a parameter sweep or
+    optimizer calculation. The check verifies whether the sheets are entirely
+    bent on the solid. The check is performed for bend shape and bend layer
+    stackup operations.
+    """
+
+    def __init__(
+        self,
+        stackup: str,
+        shape: str,
+        centralized: bool | typing.Literal["True", "False"],
+        angle: str | Parameter,
+        radius: str | Parameter,
+        ulength: str | Parameter,
+        vlength: str | Parameter,
+    ):
+        super().__init__()
+        self._stackup = stackup
+        self._shape = shape
+        self._centralized = str(centralized)
+        self._angle = str(angle)
+        self._radius = str(radius)
+        self._ulength = str(ulength)
+        self._vlength = str(vlength)
+        return
+
+
+class LocalModification:
+    """[todo] This object is used to perform local modifications on faces of shapes and to work with face constraints for the sensitivity analysis.
+
+    Local Modifications can be very useful when parameterizing an imported structure. No information about the history of the solid creation is needed.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        number_distortion_in_x: str,
+        number_distortion_in_y: str,
+        minimum_distortion_height: str,
+        maximum_distortion_height: str,
+        distortion_pattern_id: str,
+    ):
+        self._name = name
+        self._number_distortion_in_x = number_distortion_in_x
+        self._number_distortion_in_y = number_distortion_in_y
+        self._minimum_distortion_height = minimum_distortion_height
+        self._maximum_distortion_height = maximum_distortion_height
+        self._distortion_pattern_id = distortion_pattern_id
+        return
