@@ -831,3 +831,4 @@ class Wire(Solid):
     """
     def __init__(self, name, component = "", material = "Vacuum", *, properties = None, vba = None):
         super().__init__(name, component, material, properties=properties, vba=vba)
+        return
