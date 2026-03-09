@@ -103,12 +103,10 @@ class Component(BaseObject):
         Returns:
             Component: self
         """
-        title = f'rename component "{self._name}" to "{new_name}"'
         cmd = f'Component.Rename "{self._name}" "{new_name}"'
-        modeler.add_to_history(title, cmd)
+        self._history.append(f'rename component "{self._name}" to "{new_name}"')
+        modeler.add_to_history(self._history[-1], cmd)
         self._name = CSTPath(new_name)
-
-        self._history.append(title)
         _logger.info("%s", self._history[-1])
         return self
 
