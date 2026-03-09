@@ -19,7 +19,7 @@ class Component(BaseObject):
 
     def __init__(self, name: str | CSTPath):
         super().__init__()
-        self._name = CSTPath(name) if isinstance(name, str) else name
+        self._name = CSTPath(name) 
         self._history_title = f"new component: {self.name}"
         return
 
@@ -102,9 +102,8 @@ class Component(BaseObject):
         title = f'rename component "{self._name}" to "{new_name}"'
         cmd = f'Component.Rename "{self._name}" "{new_name}"'
         modeler.add_to_history(title, cmd)
-        self._name = (
-            CSTPath(new_name) if isinstance(new_name, str) else new_name
-        )
+        self._name = CSTPath(new_name)
+
         self._history_title = f"new component: {self.name}"
         _logger.info("%s", title)
         return self

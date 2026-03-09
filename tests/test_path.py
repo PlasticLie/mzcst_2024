@@ -41,6 +41,8 @@ if __name__ == "__main__":
 
     p2 = p / "g/h/i"
     logger.info("p2: %s", repr(p2))
+    p3 = mz.CSTPath(p2)
+    logger.info("p3: %s", repr(p3))
 
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
