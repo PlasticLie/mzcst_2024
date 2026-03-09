@@ -5,7 +5,7 @@ import typing
 
 from . import interface
 from .common import NEW_LINE, quoted
-from .global_ import BaseObject, Parameter
+from .global_ import BaseObject, CSTPath, Parameter
 
 __all__: list[str] = []
 
@@ -17,9 +17,9 @@ class Component(BaseObject):
     sorted into a component.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str | CSTPath):
         super().__init__()
-        self._name: str = name
+        self._name = CSTPath(name) if isinstance(name, str) else name
         self._history_title = f"new component: {self.name}"
         return
 
@@ -79,20 +79,22 @@ class Component(BaseObject):
 
     @property
     def name(self) -> str:
-        return self._name
+        return str(self._name)
 
     def __str__(self):
-        return self.name
+        return str(self._name)
 
     def __repr__(self):
         return f'{self.__class__.__name__}("{self.name}")'
 
-    def rename(self, modeler: interface.Model3D, new_name: str) -> "Component":
+    def rename(
+        self, modeler: interface.Model3D, new_name: str | CSTPath
+    ) -> "Component":
         """重命名Component，不建议使用，脚本有问题的话反正都会直接重跑的。
 
         Args:
             modeler (interface.Model3D): 建模器
-            new_name (str): 新的名字
+            new_name (str | CSTPath): 新的名字
 
         Returns:
             Component: self
@@ -100,7 +102,9 @@ class Component(BaseObject):
         title = f'rename component "{self._name}" to "{new_name}"'
         cmd = f'Component.Rename "{self._name}" "{new_name}"'
         modeler.add_to_history(title, cmd)
-        self._name = new_name
+        self._name = (
+            CSTPath(new_name) if isinstance(new_name, str) else new_name
+        )
         self._history_title = f"new component: {self.name}"
         _logger.info("%s", title)
         return self
@@ -197,7 +201,7 @@ class Component(BaseObject):
             raise TypeError(
                 f"sub_component_name must be str or Iterable[str], got {type(sub_component_name)}"
             )
-        
+
         return Component(new_comp_name).create(modeler)
 
 
