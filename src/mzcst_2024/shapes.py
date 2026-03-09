@@ -719,6 +719,7 @@ class Sphere(Solid):
         _logger.info("Sphere %s created.", self.full_name)
         return self
 
+
 class Torus(Solid):
     """This object is used to create a new torus shape.
 
@@ -823,12 +824,16 @@ class Torus(Solid):
         return self
 
 
-class Wire(Solid):
-    """[todo] This object is used to create a new wire shape.
+class Wire:
+    """[todo] This object is used to create a new wire shape."""
 
-    Attributes:
-        name (str): 名称。
-    """
-    def __init__(self, name, component = "", material = "Vacuum", *, properties = None, vba = None):
-        super().__init__(name, component, material, properties=properties, vba=vba)
+    def __init__(
+        self,
+        name: str,
+        folder: str,
+        type_: typing.Literal["Bondwire", "Curvewire"],
+    ):
+        self._name = name
+        self._folder = folder
+        self._type = type_
         return
