@@ -359,7 +359,7 @@ class Parameter:
     #######################################
     # region overload magic methods
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    
+
     def __repr__(self) -> str:
         if self.description == "":
             if self._expression == self._name:
@@ -372,11 +372,9 @@ class Parameter:
 
     def __format__(self, format_spec: str):
         return super().__format__(format_spec)
-    
+
     # endregion
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
-    
 
     #######################################
     # region 算数运算符重载
