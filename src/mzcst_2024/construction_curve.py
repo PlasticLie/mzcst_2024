@@ -153,7 +153,7 @@ class Arc(BaseObject):
         y2: ParameterLike = 0,
         angle: ParameterLike = 90,
         use_angle: bool = False,
-        segments: ParameterLike = 0,
+        segments: int = 0,
     ):
         super().__init__()
         self._name = name
@@ -167,30 +167,49 @@ class Arc(BaseObject):
         self._y2 = str(y2)
         self._angle = str(angle)
         self._use_angle = use_angle
-        self._segments = (
-            segments if isinstance(segments, str) else str(segments)
-        )
+        self._segments = segments
         return
 
     def create(self, modeler: interface.Model3D) -> "Arc":
-        scmd = [
-            "With Arc",
-            ".Reset",
-            f'.Name "{self._name}"',
-            f'.Curve "{self._curve_name}"',
-            f'.Orientation "{self._orientation}"',
-            f'.XCenter "{self._xcenter}"',
-            f'.YCenter "{self._ycenter}"',
-            f'.X1 "{self._x1}"',
-            f'.Y1 "{self._y1}"',
-            f'.X2 "{self._x2}"',
-            f'.Y2 "{self._y2}"',
-            f'.Angle "{self._angle}"',
-            f".UseAngle {self._use_angle}",
-            f".Segments {self._segments}",
-            ".Create",
-            "End With",
-        ]
+
+        if self._segments < 0:
+            _logger.error("Segments must be non-negative.")
+            return self
+
+        if self._use_angle:
+            scmd = [
+                "With Arc",
+                ".Reset",
+                f'.Name "{self._name}"',
+                f'.Curve "{self._curve_name}"',
+                f'.Orientation "{self._orientation}"',
+                f'.XCenter "{self._xcenter}"',
+                f'.YCenter "{self._ycenter}"',
+                f'.X1 "{self._x1}"',
+                f'.Y1 "{self._y1}"',
+                f'.Angle "{self._angle}"',
+                f".UseAngle {self._use_angle}",
+                f".Segments {self._segments}",
+                ".Create",
+                "End With",
+            ]
+        else:
+            scmd = [
+                "With Arc",
+                ".Reset",
+                f'.Name "{self._name}"',
+                f'.Curve "{self._curve_name}"',
+                f'.Orientation "{self._orientation}"',
+                f'.XCenter "{self._xcenter}"',
+                f'.YCenter "{self._ycenter}"',
+                f'.X1 "{self._x1}"',
+                f'.Y1 "{self._y1}"',
+                f'.X2 "{self._x2}"',
+                f'.Y2 "{self._y2}"',
+                f".Segments {self._segments}",
+                ".Create",
+                "End With",
+            ]
         cmd = NEW_LINE.join(scmd)
         self._history.append(f'create arc item "{self._name}"')
         modeler.add_to_history(self._history[-1], cmd)
