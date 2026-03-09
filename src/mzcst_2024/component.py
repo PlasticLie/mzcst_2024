@@ -19,8 +19,8 @@ class Component(BaseObject):
 
     def __init__(self, name: str | CSTPath):
         super().__init__()
-        self._name = CSTPath(name) 
-        self._history_title = f"new component: {self.name}"
+        self._name = CSTPath(name)
+        # self._history_title = f"new component: {self.name}"
         return
 
     @staticmethod
@@ -78,8 +78,8 @@ class Component(BaseObject):
         return
 
     @property
-    def name(self) -> str:
-        return str(self._name)
+    def name(self) -> CSTPath:
+        return self._name
 
     def __str__(self):
         return str(self._name)
@@ -104,7 +104,7 @@ class Component(BaseObject):
         modeler.add_to_history(title, cmd)
         self._name = CSTPath(new_name)
 
-        self._history_title = f"new component: {self.name}"
+        self._history.append(f"new component: {self.name}")
         _logger.info("%s", title)
         return self
 
