@@ -246,7 +246,7 @@ class Shell_key(enum.Enum):
 def advanced_shell(
     modeler: "interface.Model3D",
     solid: Solid,
-    key: str,
+    key: typing.Literal["Inside", "Outside", "Centered"],
     thickness: Parameter | float | int,
     # clearpicks: bool = False,
 ) -> None:
