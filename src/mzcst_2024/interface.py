@@ -656,3 +656,24 @@ class DesignEnvironment:
             str: 版本字符串
         """
         return cst.interface.DesignEnvironment.version()
+
+
+class SolverStatusChecker:
+    """检查求解器状态的工具类，连续两次检查到求解器都在运行时才返回True"""
+
+    def __init__(self, model3d: Model3D):
+        self._model3d = model3d
+        self._solver_status: list[bool] = [False, False]
+
+    @property
+    def solver_info(self) -> dict[str, str | None]:
+        return self._model3d.solver_info
+
+    def is_solver_running(self) -> bool:
+        return self._model3d.is_solver_running()
+
+    def __call__(self) -> bool:
+
+        self._solver_status[1] = self._solver_status[0]
+        self._solver_status[0] = self._model3d.is_solver_running()
+        return self._solver_status[0] and self._solver_status[1]
