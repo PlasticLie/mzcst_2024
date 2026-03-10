@@ -1,4 +1,5 @@
 """通用绘图对象。"""
+
 import logging
 
 from .. import interface
@@ -110,8 +111,8 @@ class Background(BaseObject):
 
 
 class Boundary(BaseObject):
-    """Represents the boundary condition of the calculation domain for each 
-    boundary plane. You may either have a magnetic, electric or an open boundary 
+    """Represents the boundary condition of the calculation domain for each
+    boundary plane. You may either have a magnetic, electric or an open boundary
     condition.
 
     Attributes:
@@ -347,8 +348,13 @@ class Boundary(BaseObject):
 
     """
 
-    def __init__(self, *, attributes=None, vba=None,  ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(
+        self,
+        *,
+        attributes=None,
+        vba=None,
+    ):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
     def create_from_attributes(self, modeler):
@@ -376,49 +382,50 @@ class Boundary(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append("define boundary")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 
 class LayerStacking(BaseObject):
-    """The `layerstacking` object can be used to define one or more background 
-    items to the project. The specified layers differ in thickness and material 
+    """The `layerstacking` object can be used to define one or more background
+    items to the project. The specified layers differ in thickness and material
     and are aligned at the borders of the bounding box.
 
     Attributes:
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class Optimizer(BaseObject):
-    """With the optimizer object you may start an optimization run. For the 
-    optimization you have to define a set of parameters that will be changed by 
-    the optimizer and at least one goal function that is tried to be optimized.  
+    """With the optimizer object you may start an optimization run. For the
+    optimization you have to define a set of parameters that will be changed by
+    the optimizer and at least one goal function that is tried to be optimized.
     The kind of goal function depends on the chosen solver type.
 
     Attributes:
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class ParameterSweep(BaseObject):
-    """Allows to automatically perform several simulations with varying 
+    """Allows to automatically perform several simulations with varying
     parameters.
 
     Attributes:
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
@@ -429,50 +436,50 @@ class SolverParameter(BaseObject):
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class ADSCosimulation(BaseObject):
-    """In addition to its tight integration into the CST Design Environment, CST 
-    Microwave Studio also features strong interfaces to Keysight ADS®. Besides 
-    the ”static” link option offering the possibility to use pre-computed 
-    S-parameter data in ADS circuit simulations, the ”co-simulation” alternative 
-    enables ADS to launch CST Microwave Studio in order to automatically 
-    calculate required data. All information is then stored together with the 
-    CST Microwave Studio model in order to avoid unnecessary repetitions of 
+    """In addition to its tight integration into the CST Design Environment, CST
+    Microwave Studio also features strong interfaces to Keysight ADS®. Besides
+    the ”static” link option offering the possibility to use pre-computed
+    S-parameter data in ADS circuit simulations, the ”co-simulation” alternative
+    enables ADS to launch CST Microwave Studio in order to automatically
+    calculate required data. All information is then stored together with the
+    CST Microwave Studio model in order to avoid unnecessary repetitions of
     lengthy EM simulations.
 
-    Please note that this advanced interface requires ADS 2005A or above and 
-    needs CST Microwave Studio and ADS being installed on the same computer. CST 
-    Microwave Studio manages an ADS Design Kit which contains a dynamically 
-    extended list of EM simulation components. Once the ADS Design Kit is 
-    installed, the library based on CST Microwave Studio models will be 
+    Please note that this advanced interface requires ADS 2005A or above and
+    needs CST Microwave Studio and ADS being installed on the same computer. CST
+    Microwave Studio manages an ADS Design Kit which contains a dynamically
+    extended list of EM simulation components. Once the ADS Design Kit is
+    installed, the library based on CST Microwave Studio models will be
     accessible through the ADS library browser.
 
-    For more detailed information about this and the installation of the ADS 
-    Design Kit please refer to the CST Studio Suite - Getting Started manual or 
-    the ADS documentation which is located in the CST Microwave Studio global 
+    For more detailed information about this and the installation of the ADS
+    Design Kit please refer to the CST Studio Suite - Getting Started manual or
+    the ADS documentation which is located in the CST Microwave Studio global
     macro directory in the subfolder "ADS\\DesignKit".
 
     Attributes:
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
 
 
 class SimuliaCSE(BaseObject):
-    """This object offers the possibility to run a co-simulation using Simulia 
+    """This object offers the possibility to run a co-simulation using Simulia
     Co-Simulation Engine (CSE).
 
     Attributes:
         param1 (type): 1st attribute.
     """
 
-    def __init__(self, *, attributes=None, vba=None ):
-        super().__init__(attributes=attributes, vba=vba )
+    def __init__(self, *, attributes=None, vba=None):
+        super().__init__(attributes=attributes, vba=vba)
         return
