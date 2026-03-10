@@ -24,7 +24,6 @@ class SolverHF(BaseObject):
 
     def __init__(self, *, attributes=None, vba=None):
         super().__init__(attributes=attributes, vba=vba)
-        self._history_title = "define HF Solver:"
         return
 
     def create_from_attributes(self, modeler):
@@ -52,7 +51,8 @@ class SolverHF(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append("define HF Solver:")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 
@@ -88,7 +88,7 @@ class FDSolver(BaseObject):
 
     def __init__(self, *, attributes=None, vba=None):
         super().__init__(attributes=attributes, vba=vba)
-        self._history_title = "define FD Solver:"
+        
         return
 
     def create_from_attributes(self, modeler):
@@ -116,7 +116,8 @@ class FDSolver(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append("define FD Solver:")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 

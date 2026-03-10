@@ -63,9 +63,9 @@ class Monitor(BaseObject):
     ):
         super().__init__()
         self._label = field_type
-        
+        self._number = 1
         self._attributes = properties
-        self._history_title = f"define monitor: {self._number}"
+        
         return
 
     def create_from_attributes(self, modeler: "interface.Model3D") -> "Solid":
@@ -97,5 +97,6 @@ class Monitor(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define monitor: {self._number}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self

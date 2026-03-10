@@ -65,7 +65,8 @@ class Plot(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append("create plot:")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 

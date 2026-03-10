@@ -78,7 +78,6 @@ class Material(BaseObject):
         self._name: str = name
         self._folder: str = folder
         # self._properties: dict[str, str] = properties
-        self._history_title = f"define material: {self.full_name}"
         return
 
     @staticmethod
@@ -217,7 +216,8 @@ class Material(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define material: {self.full_name}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 

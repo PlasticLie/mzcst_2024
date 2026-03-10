@@ -41,7 +41,7 @@ class Port(BaseObject):
         self._label = label
         self._number = number
         self._attributes = properties
-        self._history_title = f"define port: {self._number}"
+
         return
 
     def create_from_attributes(self, modeler: "interface.Model3D") -> "Port":
@@ -73,5 +73,6 @@ class Port(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define port: {self._number}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self

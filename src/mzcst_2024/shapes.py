@@ -52,8 +52,6 @@ class Brick(Solid):
         self._ymax: str = ymax
         self._zmin: str = zmin
         self._zmax: str = zmax
-        self._history_title = f'define brick: "{self.component}:{self.name}"'
-
         return
 
     @property
@@ -135,8 +133,8 @@ class Brick(Solid):
             "End With",
         ]
         cmd = NEW_LINE.join(sCommand)
-
-        modeler.add_to_history(self._history_title, cmd)
+        self._history.append(f"define brick: {self._component}:{self._name}")   
+        modeler.add_to_history(self._history[-1], cmd)
         _logger.info("Brick %s:%s created.", self._component, self._name)
         return self
 
@@ -391,7 +389,7 @@ class Cylinder(Solid):
         self._range_1: str = range_1
         self._range_2: str = range_2
         self._segments: int = segments
-        self._history_title = f'define cylinder: "{self.component}:{self.name}"'
+        
         return
 
     @property
@@ -480,7 +478,7 @@ class Cylinder(Solid):
         ]
 
         cmd = NEW_LINE.join(sCommand)
-
+        self._history.append(f'define cylinder: "{self.component}:{self.name}"')
         modeler.add_to_history(self._history_title, cmd)
         _logger.info("Cylinder %s:%s created.", self._component, self._name)
 

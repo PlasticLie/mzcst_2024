@@ -77,7 +77,7 @@ class Background(BaseObject):
 
     def __init__(self, *, attributes: dict[str, str] = None):
         super().__init__(attributes=attributes)
-        self._history_title = "define background"
+        
         return
 
     def create_from_attributes(self, modeler) -> "Background":
@@ -106,7 +106,8 @@ class Background(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append("define background")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 

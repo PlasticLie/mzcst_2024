@@ -44,7 +44,6 @@ class Solid(BaseObject):
         self._history: list[str] = [
             f"define solid: {self.component}:{self.name}"
         ]
-        self._history_title = f"define solid: {self.full_name}"
         return
 
     @property
@@ -108,7 +107,8 @@ class Solid(BaseObject):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define solid: {self._component}:{self._name}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
     def add(self, modeler: "interface.Model3D", other: "Solid") -> "Solid":

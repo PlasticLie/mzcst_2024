@@ -19,7 +19,6 @@ class Extrude(Solid):
         properties: dict[str, str] = None,
     ):
         super().__init__(name, component, material, properties=properties)
-        self._history_title = f"define extrude: {self._component}:{self._name}"
 
     def create(self, modeler: "interface.Model3D") -> "Extrude":
         """从属性列表新建挤压实体。
@@ -51,7 +50,8 @@ class Extrude(Solid):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define extrude: {self._component}:{self._name}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 
@@ -67,7 +67,6 @@ class Rotate(Solid):
         properties: dict[str, str] = None,
     ):
         super().__init__(name, component, material, properties=properties)
-        self._history_title = f"define rotate: {self._component}:{self._name}"
         return
 
     def create(self, modeler: "interface.Model3D") -> "Rotate":
@@ -100,7 +99,8 @@ class Rotate(Solid):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define rotate: {self._component}:{self._name}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 
@@ -115,7 +115,7 @@ class Loft(Solid):
         properties: dict[str, str] = None,
     ):
         super().__init__(name, component, material, properties=properties)
-        self._history_title = f"define loft: {self._component}:{self._name}"
+        
         return
 
     def create(self, modeler: "interface.Model3D") -> "Loft":
@@ -148,7 +148,8 @@ class Loft(Solid):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define loft: {self._component}:{self._name}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
 
 class TraceFromCurve(Solid):
@@ -163,7 +164,6 @@ class TraceFromCurve(Solid):
         properties: dict[str, str] = None,
     ):
         super().__init__(name, component, material, properties=properties)
-        self._history_title = f"define trace from curve: {self._component}:{self._name}"
         return
 
     def create(self, modeler: "interface.Model3D") -> "TraceFromCurve":
@@ -196,5 +196,6 @@ class TraceFromCurve(Solid):
             ]
             cmd3 = NEW_LINE.join(scmd3)
             cmd = NEW_LINE.join((cmd1, cmd2, cmd3))
-            modeler.add_to_history(self._history_title, cmd)
+            self._history.append(f"define trace from curve: {self._component}:{self._name}")
+            modeler.add_to_history(self._history[-1], cmd)
         return self
