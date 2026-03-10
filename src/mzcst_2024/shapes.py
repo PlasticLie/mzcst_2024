@@ -479,7 +479,7 @@ class Cylinder(Solid):
 
         cmd = NEW_LINE.join(sCommand)
         self._history.append(f'define cylinder: "{self.component}:{self.name}"')
-        modeler.add_to_history(self._history_title, cmd)
+        modeler.add_to_history(self._history[-1], cmd)
         _logger.info("Cylinder %s:%s created.", self._component, self._name)
 
         return self

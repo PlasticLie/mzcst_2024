@@ -20,7 +20,6 @@ class Component(BaseObject):
     def __init__(self, name: str | CSTPath):
         super().__init__()
         self._name = CSTPath(name)
-        # self._history_title = f"new component: {self.name}"
         return
 
     @staticmethod
