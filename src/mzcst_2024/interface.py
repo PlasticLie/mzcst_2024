@@ -32,7 +32,8 @@ class Model3D:
         Args:
             modeler (cst.interface.Model3D): 建模器对象。
         """
-        self.model3d = modeler
+        self._model3d = modeler
+        self._solver_status: list[bool] = [False, False]
         return
 
     def abort_solver(self, *, timeout: Optional[int] = None) -> None:
@@ -44,7 +45,7 @@ class Model3D:
         Returns:
             None
         """
-        return self.model3d.abort_solver(timeout)
+        return self._model3d.abort_solver(timeout)
 
     def add_to_history(
         self, header: str, vba_code: str, *, timeout: Optional[int] = None
@@ -60,7 +61,7 @@ class Model3D:
         Returns:
             _type_: _description_
         """
-        return self.model3d.add_to_history(header, vba_code, timeout=timeout)
+        return self._model3d.add_to_history(header, vba_code, timeout=timeout)
 
     def get_active_solver_name(self, *, timeout: Optional[int] = None) -> str:
         """Returns the currently active solver name.
@@ -71,7 +72,7 @@ class Model3D:
         Returns:
             str: _description_
         """
-        return self.model3d.get_active_solver_name(timeout=timeout)
+        return self._model3d.get_active_solver_name(timeout=timeout)
 
     def get_solver_run_info(self, *, timeout: Optional[int] = None) -> dict:
         """Retrieves as dict containing information on the last or current solver run.
@@ -82,7 +83,7 @@ class Model3D:
         Returns:
             str: _description_
         """
-        return self.model3d.get_solver_run_info(timeout=timeout)
+        return self._model3d.get_solver_run_info(timeout=timeout)
 
     def is_solver_running(self, *, timeout: Optional[int] = None) -> bool:
         """Queries whether the solver is currently running.
@@ -93,7 +94,7 @@ class Model3D:
         Returns:
             bool: _description_
         """
-        return self.model3d.is_solver_running(timeout=timeout)
+        return self._model3d.is_solver_running(timeout=timeout)
 
     def pause_solver(self, *, timeout: Optional[int] = None) -> None:
         """Pause the currently running solver.
@@ -107,7 +108,7 @@ class Model3D:
         -------
         None
         """
-        return self.model3d.pause_solver(timeout=timeout)
+        return self._model3d.pause_solver(timeout=timeout)
 
     def resume_solver(self, *, timeout: Optional[int] = None) -> None:
         """Resume the currently paused solver.
@@ -121,7 +122,7 @@ class Model3D:
         -------
         None
         """
-        return self.model3d.resume_solver(timeout=timeout)
+        return self._model3d.resume_solver(timeout=timeout)
 
     def run_solver(self, *, timeout: Optional[int] = None) -> None:
         """Runs the currently selected solver until it finishes. In case of an error a RunTimeError exception will be thrown.
@@ -135,7 +136,7 @@ class Model3D:
         -------
         None
         """
-        return self.model3d.run_solver(timeout=timeout)
+        return self._model3d.run_solver(timeout=timeout)
 
     def start_solver(self, *, timeout: Optional[int] = None) -> None:
         """Starts the currently selected solver asynchronously and gives back
@@ -149,7 +150,11 @@ class Model3D:
             None:
         """
         _logger.info("Starting solver asynchronously.")
-        return self.model3d.start_solver(timeout=timeout)
+        return self._model3d.start_solver(timeout=timeout)
+
+    #######################################
+    # region 开发者自行添加的接口
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     def create_object(self, obj: global_.BaseObject) -> None:
         """Creates a new object in the 3D modeler.
@@ -162,14 +167,14 @@ class Model3D:
         """
 
         try:
-            obj.create_from_attributes(self.model3d)
+            obj.create_from_attributes(self._model3d)
         except AttributeError:
             _logger.warning(
                 "Object %s does not have create_from_attributes method, trying create_from_kwargs.",
                 obj.__class__.__name__,
             )
             try:
-                obj.create_from_vba(self.model3d)
+                obj.create_from_vba(self._model3d)
             except AttributeError:
                 _logger.error(
                     "Object %s does not have create_from_attributes or create_from_kwargs method.",
@@ -180,10 +185,28 @@ class Model3D:
     @property
     def solver_info(self) -> dict[str, Optional[str]]:
         r: dict[str, Optional[str]] = {
-            "name": self.model3d.get_active_solver_name()
+            "name": self._model3d.get_active_solver_name()
         }
-        r.update(self.model3d.get_solver_run_info())
+        r.update(self._model3d.get_solver_run_info())
         return r
+
+    @property
+    def solver_finished(self) -> bool:
+        """基于`is_solver_running()`的结果判断求解是否完成。为了避免误判，只有当连续两次调用`is_solver_running()`都返回False时才认为求解完成。
+
+        建议：在调用`start_solver()`后至少等待一段时间（例如几秒钟）再开始调用`solver_finished`属性，以避免过早地判断求解完成。
+
+        Returns:
+            bool: 求解完成为True，否则为False
+        """
+        self._solver_status[1] = self._solver_status[0]
+        self._solver_status[0] = self.is_solver_running()
+        return (
+            self._solver_status[0] is False and self._solver_status[1] is False
+        )
+
+    # endregion
+    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 
 class Schematic:
@@ -656,24 +679,3 @@ class DesignEnvironment:
             str: 版本字符串
         """
         return cst.interface.DesignEnvironment.version()
-
-
-class SolverStatusChecker:
-    """检查求解器状态的工具类，连续两次检查到求解器都在运行时才返回True"""
-
-    def __init__(self, model3d: Model3D):
-        self._model3d = model3d
-        self._solver_status: list[bool] = [False, False]
-
-    @property
-    def solver_info(self) -> dict[str, str | None]:
-        return self._model3d.solver_info
-
-    def is_solver_running(self) -> bool:
-        return self._model3d.is_solver_running()
-
-    def __call__(self) -> bool:
-
-        self._solver_status[1] = self._solver_status[0]
-        self._solver_status[0] = self._model3d.is_solver_running()
-        return self._solver_status[0] and self._solver_status[1]

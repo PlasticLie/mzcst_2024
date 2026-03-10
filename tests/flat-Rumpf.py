@@ -425,7 +425,7 @@ if __name__ == "__main__":
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     if RUN_SOLVER:
         m3d.start_solver()
-        while m3d.is_solver_running():
+        while not m3d.solver_finished:
             logger.info("solver is running: %s", f"{m3d.solver_info}")
             time.sleep(60)
         proj.save()
