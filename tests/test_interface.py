@@ -37,7 +37,8 @@ if __name__ == "__main__":
 
     envs: list[mz.interface.DesignEnvironment] = []
 
-    new_env = mz.interface.DesignEnvironment.connect_to_any_or_new()
+    # new_env = mz.interface.DesignEnvironment.connect_to_any_or_new()
+    new_env = mz.interface.DesignEnvironment()
 
     version_info = mz.interface.DesignEnvironment.version()
     logger.info("CST Version:")
@@ -111,12 +112,15 @@ if __name__ == "__main__":
 
     envs[-1].open_project(fullname)
     flat_demo_project = envs[-1].active_project()
+    flat_demo_m3d = flat_demo_project.model3d
+    logger.info("Opened project: %s", fullname)
+    logger.info("attributes of model3d: %s", dir(flat_demo_m3d._model3d))
     flat_demo_result = mz.results.ProjectFile(fullname, allow_interactive=True)
-    flat_demo_3d = flat_demo_result.get_3d()
-    parameters = flat_demo_3d.get_parameter_combination(0)
-    tree_items = flat_demo_3d.get_tree_items()
-    s11 = flat_demo_3d.get_result_item("1D Results\\S-Parameters\\S1,1")
-    s21 = flat_demo_3d.get_result_item("1D Results\\S-Parameters\\S2,1")
+    flat_demo_r3d = flat_demo_result.get_3d()
+    parameters = flat_demo_r3d.get_parameter_combination(0)
+    tree_items = flat_demo_r3d.get_tree_items()
+    s11 = flat_demo_r3d.get_result_item("1D Results\\S-Parameters\\S1,1")
+    s21 = flat_demo_r3d.get_result_item("1D Results\\S-Parameters\\S2,1")
 
     s11_x = np.array(s11.xdata)
     s11_y = np.array(s11.ydata)
