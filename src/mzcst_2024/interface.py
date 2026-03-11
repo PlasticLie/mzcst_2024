@@ -152,6 +152,12 @@ class Model3D:
         _logger.info("Starting solver asynchronously.")
         return self._model3d.start_solver(timeout=timeout)
 
+    def print_attributes(self) -> None:
+        """Prints the attributes of the underlying `cst.interface.Model3D` object for debugging purposes."""
+        _logger.info("Attributes of Model3D:")
+        for attr in dir(self._model3d):
+            _logger.info(attr)
+
     #######################################
     # region 开发者自行添加的接口
     # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
