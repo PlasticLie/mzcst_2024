@@ -84,10 +84,10 @@ if __name__ == "__main__":
         )
     # 是否绘图
     DRAW_FIGURES: dict[int | str, bool] = {
-        0: True,  # 总开关
+        0: False,  # 总开关
         "s11_magnitude": True,
         "s21_magnitude": True,
-        "keep": True,
+        "keep": False,
     }
     # 是否建模
     BUILD_MODEL: bool = True

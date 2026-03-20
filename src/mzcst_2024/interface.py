@@ -10,6 +10,7 @@ the associated applications (`prj.model3d`)."""
 
 import logging
 import os
+from pathlib import PurePath
 from typing import Optional, overload
 
 import cst
@@ -237,6 +238,7 @@ class Project:
         self._proj = p
         self._model3d = Model3D(self._proj.model3d)
         self._dsn_env = DesignEnvironment(self._proj.design_environment)
+        self._full_name: str = ""
         pass
 
     @property
@@ -308,8 +310,9 @@ class Project:
         Returns:
             None:
         """
-        self._proj.save(path, include_results, allow_overwrite)
-        _logger.info("project saved: %s", path)
+        p = self._full_name if path == "" else path
+        self._proj.save(p, include_results, allow_overwrite)
+        _logger.info("project saved: %s", p)
         return
 
 
