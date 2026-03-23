@@ -99,6 +99,7 @@ class EllipticalParaboloidDome(BinarySurface):
         self._semi_x = semi_x
         self._semi_y = semi_y
         self._height = height
+        self._resolution = (0.1, 0.1)
         return
 
     # 属性方法
@@ -114,6 +115,10 @@ class EllipticalParaboloidDome(BinarySurface):
     @property
     def height(self) -> float:
         return self._height
+
+    @property
+    def resolution(self) -> tuple[float, float]:
+        return self._resolution
 
     # 特殊方法
     def __repr__(self) -> str:
