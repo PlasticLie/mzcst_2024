@@ -238,7 +238,6 @@ class Project:
         self._proj = p
         self._model3d = Model3D(self._proj.model3d)
         self._dsn_env = DesignEnvironment(self._proj.design_environment)
-        self._full_name: str = ""
         pass
 
     @property
@@ -310,9 +309,9 @@ class Project:
         Returns:
             None:
         """
-        p = self._full_name if path == "" else path
+        p = self.filename() if path == "" else path
         self._proj.save(p, include_results, allow_overwrite)
-        _logger.info("project saved: %s", p)
+        _logger.info("project saved: %s", self.filename())
         return
 
 
