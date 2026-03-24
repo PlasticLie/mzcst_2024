@@ -19,16 +19,20 @@ _logger = logging.getLogger(__name__)
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 
-def largest_odd_less_than(n: int | float) -> int:
-    """
-    返回不大于给定数的最大奇数
+def _largest_odd_less_than(n: int | float) -> int:
+    """返回不大于给定数的最大奇数。
 
-    参数:
-    n: 输入的数字（整数或浮点数）
+    Parameters
+    ----------
+    n : int | float
+        输入的数字（整数或浮点数）
 
-    返回:
-    不大于n的最大奇数（如果n是整数则返回整数，否则返回浮点数）
+    Returns
+    -------
+    int
+        不大于n的最大奇数。
     """
+
     # 如果n是整数
     if isinstance(n, int):
         floor_n = n
@@ -138,13 +142,17 @@ class BinarySurface(BaseSurfaceObject):
         BinarySurface
             self
         """
+        if res_y is None:
+            res_y = res_x
         self._resolution = [res_x, res_y]
         return self
 
     def set_grid(
         self, grid_x: int, grid_y: int | None = None
     ) -> "BinarySurface":
-        """设置网格数
+        """设置网格数。
+
+        为便于计算，网格数必须为奇数，因此会自动调整为不大于给定值的最大奇数。
 
         Parameters
         ----------
@@ -158,7 +166,17 @@ class BinarySurface(BaseSurfaceObject):
         BinarySurface
             self
         """
-        self._grid = [grid_x, grid_y]
+        if grid_y is None:
+            grid_y = grid_x
+        self._grid = [
+            _largest_odd_less_than(grid_x),
+            _largest_odd_less_than(grid_y),
+        ]
+
+        _logger.info(
+            "%s",
+            f"Grid set to {self._grid[0]} x {self._grid[1]} (requested {grid_x} x {grid_y})",
+        )
         return self
 
 
