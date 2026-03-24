@@ -256,7 +256,7 @@ class EllipticalParaboloidDome(BinarySurface):
         r = max(self._semi_x, self._semi_y)
         self._x_range = [-r, r]
         self._y_range = [-r, r]
-        super().set_resolution(0.1, 0.1)
+        super().set_resolution(0.1)
         return
 
     # 属性方法
