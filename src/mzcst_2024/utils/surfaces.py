@@ -67,13 +67,65 @@ class BinarySurface(BaseSurfaceObject):
 
     def __init__(self):
         super().__init__()
+        self._x_range: list[float] = [0.0, 0.0]
+        self._y_range: list[float] = [0.0, 0.0]
+        self._resolution: list[float] = [0.0, 0.0]
+        self._grid: list[int] = [0, 0]
         return
+
+    @property
+    def resolution(self) -> list[float]:
+        """网格边长"""
+        return self._resolution
+
+    @property
+    def grid(self) -> list[int]:
+        """网格数"""
+        return self._grid
 
     @abc.abstractmethod
     def get_z(
         self, x: float | np.ndarray, y: float | np.ndarray
     ) -> float | np.ndarray:
         return 0.0
+
+    def set_resolution(
+        self, res_x: float, res_y: float | None = None
+    ) -> "BinarySurface":
+        """设置网格分辨率
+
+        Parameters
+        ----------
+        res_x : float
+            x轴分辨率
+        res_y : float
+            y轴分辨率
+
+        Returns
+        -------
+        BinarySurface
+            self
+        """
+        self._resolution = [res_x, res_y]
+        return self
+
+    def set_grid(self, grid_x: int, grid_y: int) -> "BinarySurface":
+        """设置网格数
+
+        Parameters
+        ----------
+        grid_x : int
+            x方向网格数
+        grid_y : int
+            y方向网格数
+
+        Returns
+        -------
+        BinarySurface
+            self
+        """
+        self._grid = [grid_x, grid_y]
+        return self
 
 
 class EllipticalParaboloidDome(BinarySurface):
@@ -99,7 +151,8 @@ class EllipticalParaboloidDome(BinarySurface):
         self._semi_x = semi_x
         self._semi_y = semi_y
         self._height = height
-        self._resolution = (0.1, 0.1)
+        self._resolution = [0.1, 0.1]
+        self._grid
         return
 
     # 属性方法
@@ -115,10 +168,6 @@ class EllipticalParaboloidDome(BinarySurface):
     @property
     def height(self) -> float:
         return self._height
-
-    @property
-    def resolution(self) -> tuple[float, float]:
-        return self._resolution
 
     # 特殊方法
     def __repr__(self) -> str:
