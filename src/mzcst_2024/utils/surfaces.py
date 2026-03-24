@@ -151,6 +151,9 @@ class EllipticalParaboloidDome(BinarySurface):
         self._semi_x = semi_x
         self._semi_y = semi_y
         self._height = height
+        r = max(self._semi_x, self._semi_y)
+        self._x_range = [-r, r]
+        self._y_range = [-r, r]
         self._resolution = [0.1, 0.1]
         self._grid
         return
