@@ -99,7 +99,16 @@ class BaseSurfaceObject(abc.ABC):
 
 
 class BinarySurface(BaseSurfaceObject):
-    """可以写成二元函数的曲面。"""
+    """可以写成二元函数的曲面。
+
+    需要实现`get_z(x, y)`方法，返回给定x、y值对应的z值。
+
+    Attributes:
+        x_range (list[float]): x轴范围。
+        y_range (list[float]): y轴范围。
+        resolution (list[float]): 网格分辨率。
+        grid (list[int]): 网格数。
+    """
 
     def __init__(self):
         super().__init__()
@@ -108,6 +117,14 @@ class BinarySurface(BaseSurfaceObject):
         self._resolution: list[float] = [0.0, 0.0]
         self._grid: list[int] = [0, 0]
         return
+
+    @property
+    def x_range(self) -> list[float]:
+        return self._x_range
+
+    @property
+    def y_range(self) -> list[float]:
+        return self._y_range
 
     @property
     def resolution(self) -> list[float]:
@@ -220,6 +237,9 @@ class EllipticalParaboloidDome(BinarySurface):
     也可写成: `z = h * (1 - x**2 / a**2 - y**2 / b**2)`。
 
     其中`a`是`x`方向的半长轴，`b`是`y`方向的半短轴。
+
+    默认情况下，`z == 0`平面上的范围是一个以原点为中心的椭圆，半长轴为`a`，半短轴为`b`。
+    网格分辨率默认为0.1，网格数根据范围和分辨率自动计算，并调整为不大于计算值的最大奇数，以保证网格中心对齐。
 
     Attributes:
         semi_x (float): `z == 0` 平面的半长轴（x方向）。
