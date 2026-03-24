@@ -1,4 +1,7 @@
-"""Module for Mathematical Functions and Constants."""
+"""Module for Mathematical Functions and Constants.
+
+Note: This module is only used to generate parameter expressions in CST and does not perform mathematical calculations in Python.
+"""
 
 import logging
 
