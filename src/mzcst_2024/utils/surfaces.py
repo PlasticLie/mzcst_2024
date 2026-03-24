@@ -128,7 +128,10 @@ class BinarySurface(BaseSurfaceObject):
     def set_resolution(
         self, res_x: float, res_y: float | None = None
     ) -> "BinarySurface":
-        """设置网格分辨率
+        """设置网格分辨率。
+
+        根据请求的分辨率计算网格数，并调整为不大于给定值的最大奇数，从而保证网格中心对齐。
+        然后根据调整后的网格数重新计算实际分辨率。
 
         Parameters
         ----------
@@ -144,7 +147,26 @@ class BinarySurface(BaseSurfaceObject):
         """
         if res_y is None:
             res_y = res_x
-        self._resolution = [res_x, res_y]
+        self._grid = [
+            _largest_odd_less_than(
+                (self._x_range[1] - self._x_range[0]) / res_x
+            ),
+            _largest_odd_less_than(
+                (self._y_range[1] - self._y_range[0]) / res_y
+            ),
+        ]
+        self._resolution = [
+            (self._x_range[1] - self._x_range[0]) / self._grid[0],
+            (self._y_range[1] - self._y_range[0]) / self._grid[1],
+        ]
+        _logger.info(
+            "%s",
+            f"Resolution set to {self._resolution[0]} x {self._resolution[1]} (requested resolution {res_x} x {res_y})",
+        )
+        _logger.info(
+            "%s",
+            f"Grid set to {self._grid[0]} x {self._grid[1]}.",
+        )
         return self
 
     def set_grid(
@@ -172,10 +194,18 @@ class BinarySurface(BaseSurfaceObject):
             _largest_odd_less_than(grid_x),
             _largest_odd_less_than(grid_y),
         ]
+        self._resolution = [
+            (self._x_range[1] - self._x_range[0]) / self._grid[0],
+            (self._y_range[1] - self._y_range[0]) / self._grid[1],
+        ]
 
         _logger.info(
             "%s",
             f"Grid set to {self._grid[0]} x {self._grid[1]} (requested {grid_x} x {grid_y})",
+        )
+        _logger.info(
+            "%s",
+            f"Resolution set to {self._resolution[0]} x {self._resolution[1]}.",
         )
         return self
 
@@ -206,8 +236,7 @@ class EllipticalParaboloidDome(BinarySurface):
         r = max(self._semi_x, self._semi_y)
         self._x_range = [-r, r]
         self._y_range = [-r, r]
-        self._resolution = [0.1, 0.1]
-        self._grid
+        super().set_resolution(0.1, 0.1)
         return
 
     # 属性方法
