@@ -15,6 +15,38 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
 _logger = logging.getLogger(__name__)
 
 #######################################
+# region 工具函数
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+
+def largest_odd_less_than(n: int | float) -> int:
+    """
+    返回不大于给定数的最大奇数
+
+    参数:
+    n: 输入的数字（整数或浮点数）
+
+    返回:
+    不大于n的最大奇数（如果n是整数则返回整数，否则返回浮点数）
+    """
+    # 如果n是整数
+    if isinstance(n, int):
+        floor_n = n
+    else:
+        # 对于浮点数，先向下取整到整数
+        floor_n = math.floor(n)
+
+    # 如果向下取整的整数是奇数，直接返回
+    if floor_n % 2 != 0:
+        return floor_n
+    # 如果向下取整的整数是偶数，返回前一个奇数
+    return floor_n - 1
+
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+#######################################
 # region 曲面类定义
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
@@ -109,7 +141,9 @@ class BinarySurface(BaseSurfaceObject):
         self._resolution = [res_x, res_y]
         return self
 
-    def set_grid(self, grid_x: int, grid_y: int) -> "BinarySurface":
+    def set_grid(
+        self, grid_x: int, grid_y: int | None = None
+    ) -> "BinarySurface":
         """设置网格数
 
         Parameters
