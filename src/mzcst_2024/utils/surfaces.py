@@ -301,13 +301,19 @@ class EllipticalParaboloidDome(BinarySurface):
     ) -> float | np.ndarray:
         """作为函数调用时返回给定x、y值对应的z值。
 
-        Args:
-            x (float | np.ndarray): x值
-            y (float | np.ndarray): y值
+        Parameters
+        ----------
+        x : float | np.ndarray
+            x坐标，可以是单个值或数组。
+        y : float | np.ndarray
+            y坐标，可以是单个值或数组。
 
-        Returns:
-            float | np.ndarray: z值
+        Returns
+        -------
+        float | np.ndarray
+            z坐标，类型由输入的x和y决定，如果输入是数组，则返回数组。
         """
+
         z_ = self._height * (
             1 - x**2 / self._semi_x**2 - y**2 / self._semi_y**2
         )
