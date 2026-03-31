@@ -1,3 +1,12 @@
+"""Test the interface of the mzcst_2024 package.
+
+This test covers the following aspects:
+- Creating a new DesignEnvironment
+- Opening an existing project
+- Accessing project attributes and results
+- Plotting results using matplotlib
+"""
+
 import logging
 import math
 import os
