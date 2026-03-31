@@ -1,3 +1,5 @@
+"""Test the expression validation in the mzcst_2024 package."""
+
 import mzcst_2024 as mz
 
 
