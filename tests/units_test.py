@@ -2,15 +2,140 @@
 
 Only works in CST 2026.
 
-It seems that the `cst.units` module provides a way to create physical 
-quantities with units, but in CST 2024 and 2025, the module is not fully 
-functional or documented. Therefore, this test script demonstrates how to use 
+It seems that the `cst.units` module provides a way to create physical
+quantities with units, but in CST 2024 and 2025, the module is not fully
+functional or documented. Therefore, this test script demonstrates how to use
 the `cst.units` module in CST 2026, where it appears to be more complete.
 """
 
 import random
 
 from cst.units import A, Unit, V, W, mil, mm, um
+
+available_units = [
+    "A",
+    "Bq",
+    "C",
+    "ComplexQuantity",
+    "F",
+    "GHz",
+    "GJ",
+    "GV",
+    "GW",
+    "Gy",
+    "H",
+    "Hz",
+    "J",
+    "K",
+    "MA",
+    "MHz",
+    "MJ",
+    "MOhm",
+    "MV",
+    "MW",
+    "N",
+    "Ohm",
+    "Pa",
+    "Quantity",
+    "S",
+    "Sv",
+    "T",
+    "THz",
+    "TW",
+    "Unit",
+    "V",
+    "W",
+    "Wb",
+    "__builtins__",
+    "__cached__",
+    "__doc__",
+    "__file__",
+    "__getattr__",
+    "__loader__",
+    "__name__",
+    "__package__",
+    "__spec__",
+    "angstrom",
+    "atto",
+    "byte",
+    "cd",
+    "centi",
+    "cm",
+    "convert_value",
+    "day",
+    "deca",
+    "deci",
+    "degC",
+    "degF",
+    "exa",
+    "femto",
+    "fs",
+    "ft",
+    "g",
+    "giga",
+    "hPa",
+    "hecto",
+    "hour",
+    "inch",
+    "kA",
+    "kHz",
+    "kJ",
+    "kN",
+    "kOhm",
+    "kPa",
+    "kV",
+    "kW",
+    "kat",
+    "kg",
+    "kilo",
+    "km",
+    "lm",
+    "lx",
+    "m",
+    "mA",
+    "mF",
+    "mH",
+    "mOhm",
+    "mV",
+    "mW",
+    "mega",
+    "mg",
+    "micro",
+    "mil",
+    "milli",
+    "min",
+    "mm",
+    "mmol",
+    "mol",
+    "ms",
+    "nF",
+    "nH",
+    "nano",
+    "nm",
+    "ns",
+    "one",
+    "pF",
+    "peta",
+    "pico",
+    "pm",
+    "ps",
+    "rad",
+    "s",
+    "scaling_factor_to_SI",
+    "sr",
+    "tera",
+    "uA",
+    "uF",
+    "uH",
+    "uV",
+    "ug",
+    "um",
+    "us",
+    "yocto",
+    "yotta",
+    "zepto",
+    "zetta",
+]
 
 # Create quantities with units
 l1 = 2 * mm
@@ -25,11 +150,11 @@ print(p1)  # prints "20 W"
 print(i1)  # prints "5 A"
 
 # Create quantities with string based unit, only string variants from the Predefined units table can be used.
-alength = 42 * Unit("mm")
-aspeed = (
-    120 * Unit("km") / Unit("hour")
-)  # Note that you cannot use "km/h" as it is not one of the predefined units
-apower = 55 * Unit("GW")
+# alength = 42 * Unit("mm")
+# aspeed = (
+#     120 * Unit("km") / Unit("hour")
+# )  # Note that you cannot use "km/h" as it is not one of the predefined units
+# apower = 55 * Unit("GW")
 
 # Compute derived quantities with automatic unit conversions
 l4 = l1 + l2  # add "mm" and "µm" resulting in "mm"
@@ -49,7 +174,6 @@ print(l6)  # prints "127 µm"
 print(l3.value)  # prints "5"
 print(l6.value)  # prints "127"
 print(i1.value)  # prints "5"
-
 
 
 l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
