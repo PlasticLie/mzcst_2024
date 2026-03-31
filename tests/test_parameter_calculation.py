@@ -1,3 +1,9 @@
+"""Test the parameter calculation and expression validation in the mzcst_2024 package.
+This test covers the following aspects:
+- Validating WinWrap Basic expressions
+- Performing operations on Parameter objects
+"""
+
 import mzcst_2024 as mz
 from mzcst_2024 import Parameter, math_
 
