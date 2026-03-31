@@ -1,3 +1,5 @@
+"""Test the import of the mzcst_2024 package."""
+
 import os
 import sys
 
