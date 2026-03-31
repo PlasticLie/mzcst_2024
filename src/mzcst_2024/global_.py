@@ -817,6 +817,35 @@ class Parameter:
 ParameterLike = Parameter | int | float | str
 
 
+class ParameterList:
+    """参数列表"""
+
+    def __init__(self, names: list[str], values: list[ParameterLike]):
+        self._names: list[str] = names
+        self._values: list[str] = [str(v) for v in values]
+        pass
+
+    def store(self, modeler: "interface.Model3D") -> "ParameterList":
+        """将参数列表存储到CST建模环境中。
+
+        Adds or modifies an arbitrary number of parameters in one go. For bulk changes of many parameters this method can be considerably faster than changing parameters one after another in a loop.
+        
+        The parameters are allowed to arbitrarily depend on each other or on other already existing parameters.
+
+        Args:
+            modeler (interface.Model3D): 建模环境。
+
+        Returns:
+            self (ParameterList): 对象自身的引用。
+        """
+        for name, value in zip(self._names, self._values):
+            modeler.add_to_history(
+                f"Store parameter: {name}",
+                'MakeSureParameterExists("' + name + '", "' + value + '")',
+            )
+        return self
+
+
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
