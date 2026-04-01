@@ -74,57 +74,60 @@ import cst.units as cu
 #         return self.cq.value
 
 
-# class Unit:
-#     """Class representing a physical unit."""
+class Unit:
+    """Class representing a physical unit.
+    
+    复刻了 `cst.units.Unit` 的接口，但目前仅作为占位符存在，未来可能会扩展以提供更全面的功能。
+    """
 
-#     def __init__(self, unit: str):
-#         self.u = unit
-#         return
+    def __init__(self, unit: str):
+        self._u = unit
+        return
 
-#     @staticmethod
-#     def decode(arg0: str) -> cu.Unit:
-#         """Deserializes the given string to a Unit"""
-#         return cu.Unit.decode(arg0)
+    @staticmethod
+    def decode(arg0: str) -> "Unit":
+        """Deserializes the given string to a Unit"""
+        return cu.Unit.decode(arg0)
 
-#     def encode(self) -> str:
-#         """Serializes the Unit to a string"""
-#         return self.u.encode()
+    def encode(self) -> str:
+        """Serializes the Unit to a string"""
+        return self._u.encode()
 
-#     def get_symbol(self) -> str:
-#         """Returns the Unit"""
-#         return self.u.get_symbol()
+    def get_symbol(self) -> str:
+        """Returns the Unit"""
+        return self._u.get_symbol()
 
-#     def inSI(self) -> cu.Unit:
-#         """Returns the equivalent quantity expressed in strict SI-units."""
-#         return self.u.inSI()
+    def inSI(self) -> cu.Unit:
+        """Returns the equivalent quantity expressed in strict SI-units."""
+        return self._u.inSI()
 
-#     def pow(self, nom: int, denom: int) -> cu.Unit:
-#         """Raises the value and the Unit to the power nom/denom use the ** operator to raise to round integer values."""
-#         return self.u.pow(nom, denom)
+    def pow(self, nom: int, denom: int) -> cu.Unit:
+        """Raises the value and the Unit to the power nom/denom use the ** operator to raise to round integer values."""
+        return self._u.pow(nom, denom)
 
-#     def simplify(self) -> cu.Unit:
-#         """Tries to simplify the value and unit."""
-#         return self.u.simplify()
-
-
-# def convert_value(value: object, from_unit: Unit, to_unit: Unit) -> object:
-#     """Converts a value expressed in from_unit to to_unit"""
-#     return cu.convert_value(value, from_unit, to_unit)
+    def simplify(self) -> cu.Unit:
+        """Tries to simplify the value and unit."""
+        return self._u.simplify()
 
 
-# def scaling_factor_to_SI(unit: Unit) -> float:
-#     """Compute scaling factor into equivalent SI unit.
+def convert_value(value: object, from_unit: Unit, to_unit: Unit) -> object:
+    """Converts a value expressed in from_unit to to_unit"""
+    return cu.convert_value(value, from_unit, to_unit)
 
-#     Parameters:
-#     -----------
-#     unit : Unit
-#         Simple or compound unit.
-#     Returns:
-#     -----------
-#     float
-#         numerical scaling factor for converting into SI units.
-#     """
-#     return cu.scaling_factor_to_SI(unit)
+
+def scaling_factor_to_SI(unit: Unit) -> float:
+    """Compute scaling factor into equivalent SI unit.
+
+    Parameters:
+    -----------
+    unit : Unit
+        Simple or compound unit.
+    Returns:
+    -----------
+    float
+        numerical scaling factor for converting into SI units.
+    """
+    return (1 * unit).convert_to(unit.inSI()).value
 
 
 A = cu.A
