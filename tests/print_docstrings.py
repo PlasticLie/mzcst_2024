@@ -17,8 +17,7 @@ if __name__ == "__main__":
         f"{RESULTS_DIR}/units_docstrings.txt", "w", encoding="utf-8"
     ) as f:
         printer = ModuleDocstringPrinter(cu, f, False)
-        printer.print_classes_and_methods()
-        printer.print_functions()
+        printer.print_all()
 
     with open(
         f"{RESULTS_DIR}/interface_docstrings.txt", "w", encoding="utf-8"
@@ -36,7 +35,6 @@ if __name__ == "__main__":
         printer = ObjectDocstringPrinter(m3d, f, False)
         # printer.print_methods()
         printer.print_attributes_and_methods()
-
 
     with open(
         f"{RESULTS_DIR}/results_docstrings.txt", "w", encoding="utf-8"

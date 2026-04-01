@@ -96,6 +96,30 @@ class ModuleDocstringPrinter:
             )
             print(file=self._file)
 
+    def print_attributes(self):
+        """打印模块中所有非函数非类属性的 docstring。"""
+        attributes = []
+        for name, member in inspect.getmembers(self._module):
+            if name.startswith("_") and self._only_public:
+                continue
+            if not (inspect.isfunction(member) or inspect.isclass(member)):
+                attributes.append((name, member))
+        attributes.sort(key=lambda item: item[0].lower())
+        if attributes:
+            print("=== Attributes ===", file=self._file)
+            for attr_name, attr in attributes:
+                print(f"  - {attr_name}: {type(attr)}", file=self._file)
+            print(file=self._file)
+        else:
+            print(f"在 {self._module.__name__} 中未找到任何公开属性。", file=self._file)
+            print(file=self._file)
+
+    def print_all(self):
+        """打印模块中所有成员的 docstring。"""
+        self.print_attributes()
+        self.print_classes_and_methods()
+        self.print_functions()
+
 
 class ClassDocstringPrinter:
     def __init__(self, cls, file=None, only_public=True):
@@ -128,7 +152,7 @@ class ClassDocstringPrinter:
         if attributes:
             print("  Attributes:", file=self._file)
             for attr_name, attr in attributes:
-                print(f"    - {attr_name}", file=self._file)
+                print(f"    - {attr_name}: {type(attr)}", file=self._file)
             print(file=self._file)
         else:
             print("  (无公开属性)", file=self._file)
@@ -209,7 +233,7 @@ class ObjectDocstringPrinter:
         if attributes:
             print("  Attributes:", file=self._file)
             for attr_name, attr in attributes:
-                print(f"    - {attr_name}", file=self._file)
+                print(f"    - {attr_name}: {type(attr)}", file=self._file)
             print(file=self._file)
         else:
             print("  (无公开属性)", file=self._file)
