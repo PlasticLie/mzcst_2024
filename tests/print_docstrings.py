@@ -23,8 +23,7 @@ if __name__ == "__main__":
         f"{RESULTS_DIR}/interface_docstrings.txt", "w", encoding="utf-8"
     ) as f:
         printer = ModuleDocstringPrinter(ci, f, False)
-        printer.print_classes_and_methods()
-        printer.print_functions()
+        printer.print_all()
 
     with open(
         f"{RESULTS_DIR}/model3d_docstrings.txt", "w", encoding="utf-8"

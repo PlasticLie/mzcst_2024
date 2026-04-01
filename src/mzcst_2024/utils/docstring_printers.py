@@ -50,7 +50,7 @@ class ModuleDocstringPrinter:
             if attributes:
                 print("  Attributes:", file=self._file)
                 for attr_name, attr in attributes:
-                    print(f"    - {attr_name}", file=self._file)
+                    print(f"    - {attr_name}: {type(attr)}", file=self._file)
                 print(file=self._file)
             else:
                 print("  (无公开属性)", file=self._file)
@@ -111,7 +111,10 @@ class ModuleDocstringPrinter:
                 print(f"  - {attr_name}: {type(attr)}", file=self._file)
             print(file=self._file)
         else:
-            print(f"在 {self._module.__name__} 中未找到任何公开属性。", file=self._file)
+            print(
+                f"在 {self._module.__name__} 中未找到任何公开属性。",
+                file=self._file,
+            )
             print(file=self._file)
 
     def print_all(self):
