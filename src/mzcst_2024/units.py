@@ -243,6 +243,7 @@ tera = cu.tera
 uA = cu.uA
 uF = cu.uF
 uH = cu.uH
+Unit = cu.Unit
 uV = cu.uV
 ug = cu.ug
 um = cu.um

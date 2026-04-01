@@ -11,9 +11,9 @@ the `cst.units` module in CST 2026, where it appears to be more complete.
 import random
 
 import cst.units as cu
-from cst.units import A, Unit, V, W, mil, mm, um
 
 import mzcst_2024.units as mu
+from mzcst_2024.units import A, Unit, V, W, mil, mm, um
 
 # Create quantities with units
 l1 = 2 * mm
