@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import inspect
+import sys
 
+import cst.interface as ci
 import cst.units as cu
 
 
@@ -12,7 +14,7 @@ class DocstringPrinter:
 
     def __init__(self, module, file=None, only_public=True):
         self._module = module
-        self._file = file
+        self._file = sys.stdout if file is None else file
         self._only_public = only_public
 
     def _iter_public_methods(self, cls: type):
@@ -37,24 +39,27 @@ class DocstringPrinter:
             return
 
         for class_name, cls in classes:
-            print(f"=== Class: {class_name} ===")
-            print(inspect.getdoc(cls) or "(无 class docstring)")
-            print()
+            print(f"=== Class: {class_name} ===", file=self._file)
+            print(
+                inspect.getdoc(cls) or "(无 class docstring)", file=self._file
+            )
+            print(file=self._file)
 
             methods = sorted(
                 self._iter_public_methods(cls), key=lambda item: item[0].lower()
             )
             if not methods:
-                print("  (无公开方法)")
-                print()
+                print("  (无公开方法)", file=self._file)
+                print(file=self._file)
                 continue
 
             for method_name, method in methods:
-                print(f"  - Method: {method_name}")
+                print(f"  - Method: {method_name}", file=self._file)
                 print(
-                    f"    {inspect.getdoc(method) or '(无 method docstring)'}"
+                    f"    {inspect.getdoc(method) or '(无 method docstring)'}",
+                    file=self._file,
                 )
-                print()
+                print(file=self._file)
 
     def print_functions(self):
         """打印模块中所有函数的 docstring。"""
@@ -70,14 +75,22 @@ class DocstringPrinter:
             return
 
         for func_name, func in functions:
-            print(f"=== Function: {func_name} ===")
-            print(inspect.getdoc(func) or "(无 function docstring)")
-            print()
+            print(f"=== Function: {func_name} ===", file=self._file)
+            print(
+                inspect.getdoc(func) or "(无 function docstring)",
+                file=self._file,
+            )
+            print(file=self._file)
 
 
 if __name__ == "__main__":
-    with open("/results/units_docstrings.txt", "w", encoding="utf-8") as f:
+    with open("results/units_docstrings.txt", "w", encoding="utf-8") as f:
         printer = DocstringPrinter(cu, f)
+        printer.print_classes_and_methods()
+        printer.print_functions()
+
+    with open("results/interface_docstrings.txt", "w", encoding="utf-8") as f:
+        printer = DocstringPrinter(ci, f)
         printer.print_classes_and_methods()
         printer.print_functions()
     pass
