@@ -76,7 +76,7 @@ class DocstringPrinter:
 
 
 if __name__ == "__main__":
-    with open("units_docstrings.txt", "w", encoding="utf-8") as f:
+    with open("/results/units_docstrings.txt", "w", encoding="utf-8") as f:
         printer = DocstringPrinter(cu)
         printer.print_classes_and_methods()
         printer.print_functions()
