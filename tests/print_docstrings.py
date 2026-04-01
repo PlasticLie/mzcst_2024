@@ -4,6 +4,7 @@ import cst.interface as ci
 import cst.results as cr
 import cst.units as cu
 
+import mzcst_2024
 from mzcst_2024.utils.docstring_printers import (
     ClassDocstringPrinter,
     ModuleDocstringPrinter,
@@ -41,4 +42,10 @@ if __name__ == "__main__":
     #     printer = ModuleDocstringPrinter(cr, f, False)
     #     printer.print_classes_and_methods()
     #     printer.print_functions()
+
+    with open(
+        f"{RESULTS_DIR}/mzcst_2024_shape_operations_docstrings.txt", "w", encoding="utf-8"
+    ) as f:
+        printer = ModuleDocstringPrinter(mzcst_2024.shape_operations, f, False)
+        printer.print_all()
     pass
