@@ -10,7 +10,10 @@ the `cst.units` module in CST 2026, where it appears to be more complete.
 
 import random
 
+import cst.units as cu
 from cst.units import A, Unit, V, W, mil, mm, um
+
+import mzcst_2024.units as mu
 
 # Create quantities with units
 l1 = 2 * mm
