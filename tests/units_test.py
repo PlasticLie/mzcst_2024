@@ -8,6 +8,7 @@ functional or documented. Therefore, this test script demonstrates how to use
 the `cst.units` module in CST 2026, where it appears to be more complete.
 """
 
+import inspect
 import random
 
 import cst.units as cu
@@ -58,6 +59,47 @@ l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
 print(l7.value)  # prints value with unknown/random unit
 print(l7.convert_to(mm).value)  # prints value with known unit
 
+
+def print_classes_and_methods() -> None:
+    def _iter_public_methods(cls: type):
+        """返回类的公开可调用成员（尽量覆盖 pybind 暴露的方法）。"""
+        for name, member in inspect.getmembers(cls):
+            if name.startswith("_"):
+                continue
+            if callable(member):
+                yield name, member
+
+    classes = []
+    for name, obj in inspect.getmembers(cu):
+        if inspect.isclass(obj):
+            classes.append((name, obj))
+
+    classes.sort(key=lambda item: item[0].lower())
+
+    if not classes:
+        print("在 cst.units 中未找到任何类。")
+        return
+
+    for class_name, cls in classes:
+        print(f"=== Class: {class_name} ===")
+        print(inspect.getdoc(cls) or "(无 class docstring)")
+        print()
+
+        methods = sorted(
+            _iter_public_methods(cls), key=lambda item: item[0].lower()
+        )
+        if not methods:
+            print("  (无公开方法)")
+            print()
+            continue
+
+        for method_name, method in methods:
+            print(f"  - Method: {method_name}")
+            print(f"    {inspect.getdoc(method) or '(无 method docstring)'}")
+            print()
+
+if __name__ == "__main__":
+    print_classes_and_methods()
 
 available_units = [
     "A",
