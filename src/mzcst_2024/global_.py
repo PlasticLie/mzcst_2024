@@ -825,11 +825,14 @@ class ParameterList:
         self._values: list[str] = [str(v) for v in values]
         pass
 
+    def __getitem__(self, key):
+        return Parameter(self._names[key], self._values[key])
+
     def store(self, modeler: "interface.Model3D") -> "ParameterList":
         """将参数列表存储到CST建模环境中。
 
         Adds or modifies an arbitrary number of parameters in one go. For bulk changes of many parameters this method can be considerably faster than changing parameters one after another in a loop.
-        
+
         The parameters are allowed to arbitrarily depend on each other or on other already existing parameters.
 
         Args:
