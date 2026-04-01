@@ -131,7 +131,7 @@ def scaling_factor_to_SI(unit: Unit) -> float:
 A = cu.A
 Bq = cu.Bq
 C = cu.C
-# ComplexQuantity",
+ComplexQuantity = cu.ComplexQuantity
 F = cu.F
 GHz = cu.GHz
 GJ = cu.GJ
@@ -151,7 +151,7 @@ MW = cu.MW
 N = cu.N
 Ohm = cu.Ohm
 Pa = cu.Pa
-# Quantity",
+Quantity = cu.Quantity
 S = cu.S
 Sv = cu.Sv
 T = cu.T
@@ -162,12 +162,23 @@ V = cu.V
 W = cu.W
 Wb = cu.Wb
 angstrom = cu.angstrom
+
+# "__builtins__",
+# "__cached__",
+# "__doc__",
+# "__file__",
+# "__getattr__",
+# "__loader__",
+# "__name__",
+# "__package__",
+# "__spec__",
+
 atto = cu.atto
 byte = cu.byte
 cd = cu.cd
 centi = cu.centi
 cm = cu.cm
-# convert_value
+convert_value = cu.convert_value
 day = cu.day
 deca = cu.deca
 deci = cu.deci
