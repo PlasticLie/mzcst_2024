@@ -95,19 +95,19 @@ class Unit:
 
     def get_symbol(self) -> str:
         """Returns the Unit"""
-        return self._u.get_symbol()
+        return self._u
 
-    def inSI(self) -> cu.Unit:
+    def inSI(self) -> "Unit":
         """Returns the equivalent quantity expressed in strict SI-units."""
         return self._u.inSI()
 
-    def pow(self, nom: int, denom: int) -> cu.Unit:
+    def pow(self, nom: int, denom: int) -> "Unit":
         """Raises the value and the Unit to the power nom/denom use the ** operator to raise to round integer values."""
         return self._u.pow(nom, denom)
 
-    def simplify(self) -> cu.Unit:
+    def simplify(self) -> "Unit":
         """Tries to simplify the value and unit."""
-        return self._u.simplify()
+        return self
 
 
 def convert_value(value: object, from_unit: Unit, to_unit: Unit) -> object:
