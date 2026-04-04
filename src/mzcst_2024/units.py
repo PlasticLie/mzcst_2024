@@ -52,7 +52,8 @@ class Unit:
         )
 
     def pow(self, nom: int, denom: int) -> "Unit":
-        """Raises the value and the `Unit` to the power nom/denom use the ** operator to raise to round integer values."""
+        """Raises the value and the `Unit` to the power nom/denom use the **
+        operator to raise to round integer values."""
         if denom == 0:
             raise ZeroDivisionError("denom must not be zero")
         p = Fraction(nom, denom)
