@@ -1,6 +1,4 @@
-"""仿照`cst.units`，实现与之兼容的单位处理。
-
-"""
+"""仿照`cst.units`，实现与之兼容的单位处理。"""
 
 from __future__ import annotations
 
@@ -11,8 +9,7 @@ from typing import Dict
 
 
 class Unit:
-    """Class representing a physical unit.
-    """
+    """Class representing a physical unit."""
 
     def __init__(
         self,
@@ -234,11 +231,14 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
     return dict(dims), factor, symbol
 
 
-def _register(symbol: str, dims: Dict[str, Fraction], factor: float = 1.0) -> None:
+_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], float, str]] = {}
+
+
+def _register(
+    symbol: str, dims: Dict[str, Fraction], factor: float = 1.0
+) -> None:
     _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
 
-
-_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], float, str]] = {}
 
 # SI base units
 _register("one", {})
@@ -257,12 +257,30 @@ _register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)})
 _register("J", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)})
 _register("W", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)})
 _register("C", {"A": Fraction(1), "s": Fraction(1)})
-_register("V", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)})
-_register("Ohm", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-2)})
-_register("S", {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(3), "A": Fraction(2)})
-_register("F", {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(4), "A": Fraction(2)})
-_register("H", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-2)})
-_register("Wb", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-1)})
+_register(
+    "V",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
+)
+_register(
+    "Ohm",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-2)},
+)
+_register(
+    "S",
+    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(3), "A": Fraction(2)},
+)
+_register(
+    "F",
+    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(4), "A": Fraction(2)},
+)
+_register(
+    "H",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-2)},
+)
+_register(
+    "Wb",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-1)},
+)
 _register("T", {"kg": Fraction(1), "s": Fraction(-2), "A": Fraction(-1)})
 
 # Time and length convenience units
@@ -373,5 +391,3 @@ __all__ = [
     "mA",
     "uA",
 ]
-
-
