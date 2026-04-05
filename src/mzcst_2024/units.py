@@ -9,7 +9,35 @@ from typing import Dict
 
 
 class Unit:
-    """Class representing a physical unit."""
+    """Class representing a physical unit, compatible with `cst.units`.
+    
+    This class supports arithmetic operations to combine units, and can be used 
+    to create `Quantity` objects by multiplying with numerical values. It also
+    supports conversion to SI units and simplification of compound units. The 
+    unit symbols are resolved from a registry, and the class can be extended by 
+    adding new units to the registry.
+
+    Parameters
+    ----------
+    unit : str
+        The symbol of the unit to create, which must be registered in the unit 
+        registry.
+    _dims : Dict[str, Fraction], optional
+        The dimension vector of the unit, used for internal construction. This 
+        should not be provided by users directly, as it is intended for internal 
+        use when creating new units from arithmetic operations.
+    _factor : float, optional
+        The scaling factor relative to the SI representation of the same 
+        dimensions, used for internal construction. This should not be provided 
+        by users directly, as it is intended for internal use when creating new 
+        units from arithmetic operations.
+    _symbol : str, optional
+        The symbol of the unit, used for internal construction. This should not 
+        be provided by users directly, as it is intended for internal use when 
+        creating new units from arithmetic operations. If not provided, it will 
+        be generated from the dimension vector.
+
+    """
 
     def __init__(
         self,
@@ -136,10 +164,43 @@ class Unit:
 
 @dataclass(frozen=True)
 class Quantity:
+    """Class representing a physical quantity, which is a value associated with a unit.
+
+    This class supports arithmetic operations with automatic unit conversion
+    when necessary, compatible with `cst.units.Quantity`.
+
+    Returns
+    -------
+    Quantity
+        The converted quantity.
+
+    Raises
+    ------
+    ValueError
+        If the units are not compatible for conversion.
+    """
+
     value: Number
     unit: Unit
 
     def convert_to(self, dest_unit: Unit) -> "Quantity":
+        """Converts the quantity to a different unit.
+
+        Parameters
+        ----------
+        dest_unit : Unit
+            The unit to convert to.
+
+        Returns
+        -------
+        Quantity
+            The converted quantity.
+
+        Raises
+        ------
+        ValueError
+            If the units are not compatible for conversion.
+        """
         if self.unit.dims != dest_unit.dims:
             raise ValueError(
                 f"Cannot convert from '{self.unit.get_symbol()}' to '{dest_unit.get_symbol()}'"
@@ -180,8 +241,45 @@ class Quantity:
         return f"Quantity(value={self.value!r}, unit={self.unit!r})"
 
 
+class ComplexQuantity(Quantity):
+    """A quantity with a complex value, compatible with `cst.units.ComplexQuantity`.
+
+    This is a simple extension of `Quantity` to allow for complex values, which
+    can be useful in certain contexts such as AC circuit analysis or quantum
+    mechanics.
+
+    Parameters
+    ----------
+    value : complex
+        The complex value of the quantity.
+    unit : Unit
+        The unit of the quantity.
+    """
+
+    value: complex
+
+
 def convert_value(value: Number, from_unit: Unit, to_unit: Unit) -> Number:
-    """Converts a value expressed in from_unit to to_unit"""
+    """Converts a value expressed in from_unit to to_unit.
+
+    Parameters
+    ----------
+    value : Number
+        The numerical value to convert.
+    from_unit : Unit
+        The unit of the input value.
+    to_unit : Unit
+        The unit to convert to.
+
+    Returns
+    -------
+    Number
+        The converted numerical value.
+    Raises
+    ------
+    ValueError
+        If the units are not compatible for conversion.
+    """
     return Quantity(value, from_unit).convert_to(to_unit).value
 
 
@@ -192,7 +290,7 @@ def scaling_factor_to_SI(unit: Unit) -> float:
     ----------
     unit : Unit
         Simple or compound unit.
-        
+
     Returns
     -------
     float
@@ -202,6 +300,18 @@ def scaling_factor_to_SI(unit: Unit) -> float:
 
 
 def _format_power(power: Fraction) -> str:
+    """Formats the power for a unit symbol.
+
+    Parameters
+    ----------
+    power : Fraction
+        The power to format.
+
+    Returns
+    -------
+    str
+        The formatted power as a string.
+    """
     if power == 1:
         return ""
     if power.denominator == 1:
@@ -210,6 +320,18 @@ def _format_power(power: Fraction) -> str:
 
 
 def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
+    """Formats a unit symbol from its dimension vector.
+
+    Parameters
+    ----------
+    dims : Dict[str, Fraction]
+        The dimension vector of the unit.
+
+    Returns
+    -------
+    str
+        The formatted unit symbol as a string.
+    """
     if not dims:
         return "1"
     num_terms: list[str] = []
@@ -227,6 +349,23 @@ def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
 
 
 def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
+    """Resolves a unit symbol to its dimensions, factor, and canonical symbol.
+
+    Parameters
+    ----------
+    unit : str
+        The unit symbol to resolve.
+
+    Returns
+    -------
+    tuple[Dict[str, Fraction], float, str]
+        A tuple containing the dimensions, factor, and canonical symbol of the unit.
+
+    Raises
+    ------
+    ValueError
+        If the unit symbol is not found in the registry.
+    """
     if unit not in _UNIT_REGISTRY:
         raise ValueError(f"Unknown unit symbol: {unit}")
     dims, factor, symbol = _UNIT_REGISTRY[unit]
@@ -239,6 +378,18 @@ _UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], float, str]] = {}
 def _register(
     symbol: str, dims: Dict[str, Fraction], factor: float = 1.0
 ) -> None:
+    """Registers a unit in the unit registry.
+
+    Parameters
+    ----------
+    symbol : str
+        The symbol of the unit.
+
+    dims : Dict[str, Fraction]
+        The dimensions of the unit.
+    factor : float, optional
+        The conversion factor to the base unit, by default 1.0
+    """
     _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
 
 
