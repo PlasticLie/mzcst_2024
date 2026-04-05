@@ -188,12 +188,13 @@ def convert_value(value: Number, from_unit: Unit, to_unit: Unit) -> Number:
 def scaling_factor_to_SI(unit: Unit) -> float:
     """Compute scaling factor into equivalent SI unit.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     unit : Unit
         Simple or compound unit.
-    Returns:
-    -----------
+        
+    Returns
+    -------
     float
         numerical scaling factor for converting into SI units.
     """
