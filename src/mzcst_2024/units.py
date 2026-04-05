@@ -180,7 +180,7 @@ class Quantity:
         return f"Quantity(value={self.value!r}, unit={self.unit!r})"
 
 
-def convert_value(value: object, from_unit: Unit, to_unit: Unit) -> object:
+def convert_value(value: Number, from_unit: Unit, to_unit: Unit) -> Number:
     """Converts a value expressed in from_unit to to_unit"""
     return Quantity(value, from_unit).convert_to(to_unit).value
 
