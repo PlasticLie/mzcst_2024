@@ -393,16 +393,6 @@ def _register(
     _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
 
 
-# SI base units
-_register("one", {})
-_register("m", {"m": Fraction(1)})
-_register("kg", {"kg": Fraction(1)})
-_register("s", {"s": Fraction(1)})
-_register("A", {"A": Fraction(1)})
-_register("K", {"K": Fraction(1)})
-_register("mol", {"mol": Fraction(1)})
-_register("cd", {"cd": Fraction(1)})
-
 # Common derived units
 _register("Hz", {"s": Fraction(-1)})
 _register("N", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)})
@@ -456,8 +446,21 @@ _register("kA", {"A": Fraction(1)}, 1e3)
 _register("mA", {"A": Fraction(1)}, 1e-3)
 _register("uA", {"A": Fraction(1)}, 1e-6)
 
-# Exported constants
-one = Unit("one")
+
+
+
+#######################################
+# region SI base Units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("m", {"m": Fraction(1)})
+_register("kg", {"kg": Fraction(1)})
+_register("s", {"s": Fraction(1)})
+_register("A", {"A": Fraction(1)})
+_register("K", {"K": Fraction(1)})
+_register("mol", {"mol": Fraction(1)})
+_register("cd", {"cd": Fraction(1)})
+
 m = Unit("m")
 kg = Unit("kg")
 s = Unit("s")
@@ -465,6 +468,36 @@ A = Unit("A")
 K = Unit("K")
 mol = Unit("mol")
 cd = Unit("cd")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region Dimensionless and angular units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("one", {})
+_register("rad", {})
+_register("sr", {})
+
+one = Unit("one")
+rad = Unit("rad")
+sr = Unit("sr")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region SI derived units with special names and symbols
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
 
 Hz = Unit("Hz")
 N = Unit("N")
