@@ -838,7 +838,7 @@ uV = Unit("uV")
 
 
 #######################################
-# region Other commonly used units
+# region radioactivity and radiation units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 
@@ -847,6 +847,9 @@ Bq = Unit("Bq")
 
 _register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
 Sv = Unit("Sv")
+
+_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
+Gy = Unit("Gy")
 
 
 # endregion
