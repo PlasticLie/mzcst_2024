@@ -7,34 +7,36 @@ from fractions import Fraction
 from numbers import Number
 from typing import Dict
 
+from networkx import degree_centrality
+
 
 class Unit:
     """Class representing a physical unit, compatible with `cst.units`.
-    
-    This class supports arithmetic operations to combine units, and can be used 
+
+    This class supports arithmetic operations to combine units, and can be used
     to create `Quantity` objects by multiplying with numerical values. It also
-    supports conversion to SI units and simplification of compound units. The 
-    unit symbols are resolved from a registry, and the class can be extended by 
+    supports conversion to SI units and simplification of compound units. The
+    unit symbols are resolved from a registry, and the class can be extended by
     adding new units to the registry.
 
     Parameters
     ----------
     unit : str
-        The symbol of the unit to create, which must be registered in the unit 
+        The symbol of the unit to create, which must be registered in the unit
         registry.
     _dims : Dict[str, Fraction], optional
-        The dimension vector of the unit, used for internal construction. This 
-        should not be provided by users directly, as it is intended for internal 
+        The dimension vector of the unit, used for internal construction. This
+        should not be provided by users directly, as it is intended for internal
         use when creating new units from arithmetic operations.
     _factor : float, optional
-        The scaling factor relative to the SI representation of the same 
-        dimensions, used for internal construction. This should not be provided 
-        by users directly, as it is intended for internal use when creating new 
+        The scaling factor relative to the SI representation of the same
+        dimensions, used for internal construction. This should not be provided
+        by users directly, as it is intended for internal use when creating new
         units from arithmetic operations.
     _symbol : str, optional
-        The symbol of the unit, used for internal construction. This should not 
-        be provided by users directly, as it is intended for internal use when 
-        creating new units from arithmetic operations. If not provided, it will 
+        The symbol of the unit, used for internal construction. This should not
+        be provided by users directly, as it is intended for internal use when
+        creating new units from arithmetic operations. If not provided, it will
         be generated from the dimension vector.
 
     """
@@ -393,60 +395,7 @@ def _register(
     _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
 
 
-# Common derived units
-_register("Hz", {"s": Fraction(-1)})
-_register("N", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)})
-_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)})
-_register("J", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)})
-_register("W", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)})
-_register("C", {"A": Fraction(1), "s": Fraction(1)})
-_register(
-    "V",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-)
-_register(
-    "Ohm",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-2)},
-)
-_register(
-    "S",
-    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(3), "A": Fraction(2)},
-)
-_register(
-    "F",
-    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(4), "A": Fraction(2)},
-)
-_register(
-    "H",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-2)},
-)
-_register(
-    "Wb",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-1)},
-)
-_register("T", {"kg": Fraction(1), "s": Fraction(-2), "A": Fraction(-1)})
-
 # Time and length convenience units
-_register("min", {"s": Fraction(1)}, 60.0)
-_register("hour", {"s": Fraction(1)}, 3600.0)
-_register("day", {"s": Fraction(1)}, 86400.0)
-_register("km", {"m": Fraction(1)}, 1e3)
-_register("cm", {"m": Fraction(1)}, 1e-2)
-_register("mm", {"m": Fraction(1)}, 1e-3)
-_register("um", {"m": Fraction(1)}, 1e-6)
-_register("nm", {"m": Fraction(1)}, 1e-9)
-_register("pm", {"m": Fraction(1)}, 1e-12)
-_register("mil", {"m": Fraction(1)}, 2.54e-5)
-
-# Mass and electrical prefixes used often
-_register("g", {"kg": Fraction(1)}, 1e-3)
-_register("mg", {"kg": Fraction(1)}, 1e-6)
-_register("ug", {"kg": Fraction(1)}, 1e-9)
-_register("kA", {"A": Fraction(1)}, 1e3)
-_register("mA", {"A": Fraction(1)}, 1e-3)
-_register("uA", {"A": Fraction(1)}, 1e-6)
-
-
 
 
 #######################################
@@ -480,10 +429,12 @@ cd = Unit("cd")
 _register("one", {})
 _register("rad", {})
 _register("sr", {})
+_register("degree", {}, 3.141592653589793 / 180.0)
 
 one = Unit("one")
 rad = Unit("rad")
 sr = Unit("sr")
+degree = Unit("degree")
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -493,11 +444,37 @@ sr = Unit("sr")
 # region SI derived units with special names and symbols
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-
-
-# endregion
-# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
+_register("Hz", {"s": Fraction(-1)})
+_register("N", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)})
+_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)})
+_register("J", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)})
+_register("W", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)})
+_register("C", {"A": Fraction(1), "s": Fraction(1)})
+_register(
+    "V",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
+)
+_register(
+    "Ohm",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-2)},
+)
+_register(
+    "S",
+    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(3), "A": Fraction(2)},
+)
+_register(
+    "F",
+    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(4), "A": Fraction(2)},
+)
+_register(
+    "H",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-2)},
+)
+_register(
+    "Wb",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-1)},
+)
+_register("T", {"kg": Fraction(1), "s": Fraction(-2), "A": Fraction(-1)})
 
 Hz = Unit("Hz")
 N = Unit("N")
@@ -513,67 +490,392 @@ H = Unit("H")
 Wb = Unit("Wb")
 T = Unit("T")
 
-minute = Unit("min")
-hour = Unit("hour")
-day = Unit("day")
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region SI prefixes
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("yotta", {}, 1e24)
+_register("zetta", {}, 1e21)
+_register("exa", {}, 1e18)
+_register("peta", {}, 1e15)
+_register("tera", {}, 1e12)
+_register("giga", {}, 1e9)
+_register("mega", {}, 1e6)
+_register("kilo", {}, 1e3)
+_register("deci", {}, 1e-1)
+_register("centi", {}, 1e-2)
+_register("milli", {}, 1e-3)
+_register("micro", {}, 1e-6)
+_register("nano", {}, 1e-9)
+_register("pico", {}, 1e-12)
+_register("femto", {}, 1e-15)
+_register("atto", {}, 1e-18)
+_register("zepto", {}, 1e-21)
+
+yotta = Unit("yotta")
+zetta = Unit("zetta")
+exa = Unit("exa")
+peta = Unit("peta")
+tera = Unit("tera")
+giga = Unit("giga")
+mega = Unit("mega")
+kilo = Unit("kilo")
+deci = Unit("deci")
+centi = Unit("centi")
+milli = Unit("milli")
+micro = Unit("micro")
+nano = Unit("nano")
+pico = Unit("pico")
+femto = Unit("femto")
+atto = Unit("atto")
+zepto = Unit("zepto")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region length units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("km", {"m": Fraction(1)}, 1e3)
+_register("cm", {"m": Fraction(1)}, 1e-2)
+_register("mm", {"m": Fraction(1)}, 1e-3)
+_register("um", {"m": Fraction(1)}, 1e-6)
+_register("nm", {"m": Fraction(1)}, 1e-9)
+_register("pm", {"m": Fraction(1)}, 1e-12)
+
+_register("mil", {"m": Fraction(1)}, 2.54e-5)
+_register("inch", {"m": Fraction(1)}, 0.0254)
+_register("foot", {"m": Fraction(1)}, 0.3048)
+_register("yard", {"m": Fraction(1)}, 0.9144)
+_register("mile", {"m": Fraction(1)}, 1609.344)
+
+_register("angstrom", {"m": Fraction(1)}, 1e-10)
+
 km = Unit("km")
 cm = Unit("cm")
 mm = Unit("mm")
 um = Unit("um")
 nm = Unit("nm")
 pm = Unit("pm")
+
 mil = Unit("mil")
+inch = Unit("inch")
+foot = Unit("foot")
+yard = Unit("yard")
+mile = Unit("mile")
+
+angstrom = Unit("angstrom")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region area units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("km^2", {"m": Fraction(2)}, 1e6)
+_register("ha", {"m": Fraction(2)}, 1e4)
+_register("m^2", {"m": Fraction(2)}, 1.0)
+_register("cm^2", {"m": Fraction(2)}, 1e-4)
+_register("mm^2", {"m": Fraction(2)}, 1e-6)
+
+_register("acre", {"m": Fraction(2)}, 4046.8564224)
+
+km2 = Unit("km^2")
+ha = Unit("ha")
+m2 = Unit("m^2")
+cm2 = Unit("cm^2")
+mm2 = Unit("mm^2")
+
+acre = Unit("acre")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region volume units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("m^3", {"m": Fraction(3)}, 1.0)
+_register("cm^3", {"m": Fraction(3)}, 1e-6)
+
+_register("L", {"m": Fraction(3)}, 1e-3)
+_register("mL", {"m": Fraction(3)}, 1e-6)
+
+m3 = Unit("m^3")
+cm3 = Unit("cm^3")
+
+L = Unit("L")
+mL = Unit("mL")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region Mass units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("g", {"kg": Fraction(1)}, 1e-3)
+_register("mg", {"kg": Fraction(1)}, 1e-6)
+_register("ug", {"kg": Fraction(1)}, 1e-9)
 
 g = Unit("g")
 mg = Unit("mg")
 ug = Unit("ug")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region Time units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("min", {"s": Fraction(1)}, 60.0)
+_register("hour", {"s": Fraction(1)}, 3600.0)
+_register("day", {"s": Fraction(1)}, 86400.0)
+
+minute = Unit("min")
+hour = Unit("hour")
+day = Unit("day")
+
+_register("ps", {"s": Fraction(1)}, 1e-12)
+_register("ns", {"s": Fraction(1)}, 1e-9)
+_register("us", {"s": Fraction(1)}, 1e-6)
+_register("ms", {"s": Fraction(1)}, 1e-3)
+
+ps = Unit("ps")
+ns = Unit("ns")
+us = Unit("us")
+ms = Unit("ms")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+#######################################
+# region frequency units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("kHz", {"s": Fraction(-1)}, 1e3)
+_register("MHz", {"s": Fraction(-1)}, 1e6)
+_register("GHz", {"s": Fraction(-1)}, 1e9)
+_register("THz", {"s": Fraction(-1)}, 1e12)
+
+kHz = Unit("kHz")
+MHz = Unit("MHz")
+GHz = Unit("GHz")
+THz = Unit("THz")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region temperature units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("degC", {"K": Fraction(1)}, 1.0)
+_register("degF", {"K": Fraction(1)}, 5.0 / 9.0)
+
+degC = Unit("degC")
+degF = Unit("degF")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region force units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("kN", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)}, 1e3)
+
+kN = Unit("kN")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+#######################################
+# region pressure units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1.0)
+_register(
+    "hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 100.0
+)
+_register("kPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e3)
+_register("bar", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e5)
+_register("MPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e6)
+
+_register(
+    "psi", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 6894.75729
+)
+_register(
+    "mmHg",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    133.322368,
+)
+
+Pa = Unit("Pa")
+hPa = Unit("hPa")
+kPa = Unit("kPa")
+bar_ = Unit("bar")
+MPa = Unit("MPa")
+
+psi = Unit("psi")
+mmHg = Unit("mmHg")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+#######################################
+# region energy units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("kJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e3)
+_register("MJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e6)
+_register("GJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e9)
+
+_register(
+    "eV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    1.602176634e-19,
+)
+_register(
+    "keV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    1.602176634e-16,
+)
+_register(
+    "MeV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    1.602176634e-13,
+)
+_register(
+    "GeV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    1.602176634e-10,
+)
+_register(
+    "TeV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    1.602176634e-7,
+)
+
+kJ = Unit("kJ")
+MJ = Unit("MJ")
+GJ = Unit("GJ")
+
+eV = Unit("eV")
+keV = Unit("keV")
+MeV = Unit("MeV")
+GeV = Unit("GeV")
+TeV = Unit("TeV")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+#######################################
+# region power units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("kW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e3)
+_register("MW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e6)
+_register("GW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e9)
+
+kW = Unit("kW")
+MW = Unit("MW")
+GW = Unit("GW")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region Electrical units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("kA", {"A": Fraction(1)}, 1e3)
+_register("mA", {"A": Fraction(1)}, 1e-3)
+_register("uA", {"A": Fraction(1)}, 1e-6)
+
 kA = Unit("kA")
 mA = Unit("mA")
 uA = Unit("uA")
 
+_register(
+    "kV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
+    1e3,
+)
+_register(
+    "mV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
+    1e-3,
+)
+_register(
+    "uV",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
+    1e-6,
+)
+
+kV = Unit("kV")
+mV = Unit("mV")
+uV = Unit("uV")
+
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region Other commonly used units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+
+_register("Bq", {"s": Fraction(-1)}, 1.0)
+Bq = Unit("Bq")
+
+_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
+Sv = Unit("Sv")
+
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+#######################################
+# region data types
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("bit", {}, 1.0)
+_register("byte", {}, 8.0)
+bit = Unit("bit")
+byte = Unit("byte")
+
+_register("kibi", {}, 1024.0)
+_register("mebi", {}, 1024.0**2)
+_register("gibi", {}, 1024.0**3)
+_register("tebi", {}, 1024.0**4)
+_register("pebi", {}, 1024.0**5)
+
+kibi = Unit("kibi")
+mebi = Unit("mebi")
+gibi = Unit("gibi")
+tebi = Unit("tebi")
+pebi = Unit("pebi")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
 # Keep compatibility with cst.units naming without redefining built-in by assignment.
 globals()["min"] = minute
-
-__all__ = [
-    "Unit",
-    "Quantity",
-    "convert_value",
-    "scaling_factor_to_SI",
-    "one",
-    "m",
-    "kg",
-    "s",
-    "A",
-    "K",
-    "mol",
-    "cd",
-    "Hz",
-    "N",
-    "Pa",
-    "J",
-    "W",
-    "C",
-    "V",
-    "Ohm",
-    "S",
-    "F",
-    "H",
-    "Wb",
-    "T",
-    "minute",
-    "hour",
-    "day",
-    "km",
-    "cm",
-    "mm",
-    "um",
-    "nm",
-    "pm",
-    "mil",
-    "g",
-    "mg",
-    "ug",
-    "kA",
-    "mA",
-    "uA",
-]
