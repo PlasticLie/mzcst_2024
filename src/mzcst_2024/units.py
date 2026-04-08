@@ -146,7 +146,7 @@ class Unit:
         return self.get_symbol()
 
     def __repr__(self) -> str:
-        return f"Unit('{self.get_symbol()}')"
+        return f"Unit('{self.get_symbol()}', _dims={self._dims!r}, _factor={self._factor!r}, _symbol={self._symbol!r})"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
