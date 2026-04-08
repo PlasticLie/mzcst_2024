@@ -26,18 +26,21 @@
 """
 
 import math
-import unittest
 import random
+import unittest
 from fractions import Fraction
-
 
 import mzcst_2024.units as mu
 from mzcst_2024.units import (
     A,
+    C,
+    ComplexQuantity,
     F,
     H,
     Hz,
     J,
+    K,
+    L,
     N,
     Ohm,
     Pa,
@@ -48,16 +51,24 @@ from mzcst_2024.units import (
     V,
     W,
     Wb,
-    C,
+    bit,
+    byte,
     cd,
     cm,
+    cm3,
     convert_value,
     day,
+    degree,
+    eV,
     g,
     hour,
+    hPa,
+    inch,
     kA,
     kg,
+    kibi,
     km,
+    kV,
     m,
     mA,
     mg,
@@ -67,14 +78,13 @@ from mzcst_2024.units import (
     nm,
     one,
     pm,
+    rad,
     s,
     scaling_factor_to_SI,
     uA,
     ug,
     um,
-    K,
 )
-
 
 # ---------------------------------------------------------------------------
 # 基本量的创建
@@ -216,6 +226,38 @@ class TestConversion(unittest.TestCase):
         result = convert_value(5.0, mil, um)
         assert math.isclose(result, 127.0, rel_tol=1e-9)
 
+    def test_degree_to_rad(self):
+        result = (180 * degree).convert_to(rad)
+        assert math.isclose(result.value, math.pi, rel_tol=1e-9)
+
+    def test_inch_to_mm(self):
+        result = (1 * inch).convert_to(mm)
+        assert math.isclose(result.value, 25.4, rel_tol=1e-9)
+
+    def test_liter_to_cm3(self):
+        result = (1 * L).convert_to(cm3)
+        assert math.isclose(result.value, 1000.0, rel_tol=1e-9)
+
+    def test_hpa_to_pa(self):
+        result = (1 * hPa).convert_to(Pa)
+        assert math.isclose(result.value, 100.0, rel_tol=1e-9)
+
+    def test_ev_to_joule(self):
+        result = (1 * eV).convert_to(J)
+        assert math.isclose(result.value, 1.602176634e-19, rel_tol=1e-9)
+
+    def test_kv_to_v(self):
+        result = (2 * kV).convert_to(V)
+        assert math.isclose(result.value, 2000.0, rel_tol=1e-9)
+
+    def test_byte_to_bit(self):
+        result = (1 * byte).convert_to(bit)
+        assert math.isclose(result.value, 8.0, rel_tol=1e-9)
+
+    def test_kibi_to_byte(self):
+        result = (1 * kibi).convert_to(byte)
+        assert math.isclose(result.value, 128.0, rel_tol=1e-9)
+
 
 # ---------------------------------------------------------------------------
 # .value 属性（已知单位下直接读取数值）
@@ -317,6 +359,62 @@ class TestUnit(unittest.TestCase):
     def test_unit_dimensionless_one(self):
         assert one.dims == {}
 
+    def test_unit_decode_bar_symbol(self):
+        pressure = Unit.decode("bar")
+        assert pressure.dims == Pa.dims
+        assert math.isclose(pressure.factor, 1e5, rel_tol=1e-9)
+
+
+# ---------------------------------------------------------------------------
+# ComplexQuantity
+# ---------------------------------------------------------------------------
+
+
+class TestComplexQuantity(unittest.TestCase):
+    def test_complex_value_keeps_unit(self):
+        z = ComplexQuantity(3 + 4j, Ohm)
+        assert z.value == 3 + 4j
+        assert z.unit == Ohm
+
+    def test_complex_quantity_repr(self):
+        z = ComplexQuantity(1 - 2j, V)
+        assert "ComplexQuantity" not in repr(z)
+        assert "Quantity(" in repr(z)
+
+
+# ---------------------------------------------------------------------------
+# 单位量纲测试
+# ---------------------------------------------------------------------------
+
+
+class TestUnitDimensions(unittest.TestCase):
+    """验证复合单位运算后的量纲是否正确。"""
+
+    def test_pressure_dims_from_force_over_area(self):
+        pressure_unit = N / (m**2)
+        assert pressure_unit.dims == Pa.dims
+
+    def test_voltage_dims_from_power_over_current(self):
+        voltage_unit = W / A
+        assert voltage_unit.dims == V.dims
+
+    def test_magnetic_flux_density_dims(self):
+        magnetic_flux_density = Wb / (m**2)
+        assert magnetic_flux_density.dims == T.dims
+
+    def test_frequency_dims(self):
+        assert Hz.dims == {"s": Fraction(-1)}
+
+    def test_dimensionless_after_cancellation(self):
+        dimless = m / m
+        assert dimless.dims == {}
+
+    def test_compound_unit_scaling_factor(self):
+        speed_unit = km / hour
+        si_speed = m / s
+        result = convert_value(1.0, speed_unit, si_speed)
+        assert math.isclose(result, 1000.0 / 3600.0, rel_tol=1e-9)
+
 
 # ---------------------------------------------------------------------------
 # scaling_factor_to_SI
@@ -377,3 +475,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         l6 = l3.convert_to(um)
         assert l6.unit == um
         assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
+
+
+if __name__ == "__main__":
+    unittest.main()
