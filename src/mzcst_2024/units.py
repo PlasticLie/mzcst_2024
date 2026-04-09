@@ -146,7 +146,18 @@ class Unit:
         return self.get_symbol()
 
     def __repr__(self) -> str:
-        return f"Unit('{self.get_symbol()}', _dims={self._dims!r}, _factor={self._factor!r}, _symbol={self._symbol!r})"
+        dims_repr = f", _dims={self._dims!r}" if self._dims else ""
+        factor_repr = (
+            f", factor={self._factor!r}" if self._factor != 1.0 else ""
+        )
+        symbol_repr = (
+            f", symbol={self._symbol!r}"
+            if self._symbol != _format_unit_symbol(self._dims)
+            else ""
+        )
+        return (
+            f"Unit('{self.get_symbol()}'{dims_repr}{factor_repr}{symbol_repr})"
+        )
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
