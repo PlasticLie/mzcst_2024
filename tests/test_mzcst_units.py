@@ -297,7 +297,10 @@ class TestUnit(unittest.TestCase):
         assert str(Hz) == "Hz"
 
     def test_unit_repr(self):
-        assert repr(mm) == "Unit('mm')"
+        r = repr(mm)
+        assert r.startswith("Unit('mm'")
+        assert "_dims=" in r
+        assert "factor=" in r
 
     def test_unit_eq(self):
         assert Unit("mm") == Unit("mm")
