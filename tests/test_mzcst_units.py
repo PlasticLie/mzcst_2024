@@ -348,7 +348,7 @@ class TestUnit(unittest.TestCase):
         """返回包含关键字段的调试表示。"""
         r = repr(mm)
         assert r.startswith("Unit('mm'")
-        assert "_dims=" in r
+        assert "_dimensions=" in r
         assert "factor=" in r
 
     def test_unit_eq(self):
@@ -565,5 +565,55 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
 
 
+    def test_cst_units_compatibility(self):
+        """复现CST 2026中 cst.units 模块的演示用例，验证与 mzcst_2024.units 的兼容性。"""
+        # Create quantities with units
+        l1 = 2 * mm
+        l2 = 3 * um
+        l3 = 5 * mil
+        p1 = 20 * W
+        i1 = 5 * A
+        assert str(l1) == "2 mm"
+        assert str(l2) == "3 um"
+        assert str(l3) == "5 mil"
+        assert str(p1) == "20 W"
+        assert str(i1) == "5 A"
+
+        # Create quantities with string based unit, only string variants from the Predefined units table can be used.
+        alength = 42 * Unit("mm")
+        aspeed = (
+            120 * Unit("km") / Unit("hour")
+        )  # Note that you cannot use "km/h" as it is not one of the predefined units
+        apower = 55 * Unit("GW")
+        assert str(alength) == "42 mm"
+        assert str(aspeed) == "120 km/hour"
+        assert str(apower) == "55 GW"
+
+        # Compute derived quantities with automatic unit conversions
+        l4 = l1 + l2  # add "mm" and "µm" resulting in "mm"
+        l5 = l2 + l1  # add "µm" and "mm" resulting in "µm"
+        assert str(l4) == "2.003 mm"
+        assert str(l5) == "2003 µm"
+        u1 = p1 / i1  # divide "W" by "A" resulting in "V"
+        assert str(u1) == "4 V"
+
+        # Enforce representation using a specific unit
+        l6 = l3.convert_to(um)
+        assert str(l6) == "127 µm"
+
+        # Convert to float without unit
+        # Warning: Only do this, if the exact unit of the quantity is known.
+        #          Use "convert_to" to enforce a specific unit.
+        assert math.isclose(l3.value, 5.0, rel_tol=1e-9)
+        assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
+        assert math.isclose(i1.value, 5.0, rel_tol=1e-9)
+
+
+        l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
+        print(l7.value)  # prints value with unknown/random unit
+        print(l7.convert_to(mm).value)  # prints value with known unit
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+    
