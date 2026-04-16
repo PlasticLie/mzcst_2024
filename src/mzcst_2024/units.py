@@ -245,6 +245,8 @@ class Quantity:
             return Quantity(self.value / other, self.unit)
         if isinstance(other, Quantity):
             return Quantity(self.value / other.value, self.unit / other.unit)
+        if isinstance(other, Unit):
+            return Quantity(self.value, self.unit / other)
         return NotImplemented
 
     def __str__(self) -> str:
