@@ -43,21 +43,21 @@ class Unit:
 
     def __init__(
         self,
-        unit: str,
+        unit_name: str,
         *,
-        _dims: Dict[str, Fraction] | None = None,
-        _factor: float = 1.0,
+        dimensions: Dict[str, Fraction] | None = None,
+        factor: float = 1.0,
         _symbol: str | None = None,
     ):
-        if _dims is None:
-            dims, factor, symbol = _resolve_unit_symbol(unit)
-            self._dims = dims
+        if dimensions is None:
+            dims, factor, symbol = _resolve_unit_symbol(unit_name)
+            self._dimensions = dims
             self._factor = factor
             self._symbol = symbol
         else:
-            self._dims = {k: v for k, v in _dims.items() if v != 0}
-            self._factor = float(_factor)
-            self._symbol = _symbol or _format_unit_symbol(self._dims)
+            self._dimensions = {k: v for k, v in dimensions.items() if v != 0}
+            self._factor = float(factor)
+            self._symbol = _symbol or _format_unit_symbol(self._dimensions)
 
     @staticmethod
     def decode(arg0: str) -> "Unit":
@@ -75,10 +75,10 @@ class Unit:
     def inSI(self) -> "Unit":
         """Returns the equivalent quantity expressed in strict SI-units."""
         return Unit(
-            _format_unit_symbol(self._dims),
-            _dims=self._dims,
-            _factor=1.0,
-            _symbol=_format_unit_symbol(self._dims),
+            _format_unit_symbol(self._dimensions),
+            dimensions=self._dimensions,
+            factor=1.0,
+            _symbol=_format_unit_symbol(self._dimensions),
         )
 
     def pow(self, nom: int, denom: int) -> "Unit":
@@ -87,50 +87,50 @@ class Unit:
         if denom == 0:
             raise ZeroDivisionError("denom must not be zero")
         p = Fraction(nom, denom)
-        dims = {k: v * p for k, v in self._dims.items()}
+        dims = {k: v * p for k, v in self._dimensions.items()}
         return Unit(
             _format_unit_symbol(dims),
-            _dims=dims,
-            _factor=self._factor ** float(p),
+            dimensions=dims,
+            factor=self._factor ** float(p),
             _symbol=_format_unit_symbol(dims),
         )
 
     def simplify(self) -> "Unit":
         """Tries to simplify the value and unit."""
         return Unit(
-            _format_unit_symbol(self._dims),
-            _dims=self._dims,
-            _factor=self._factor,
-            _symbol=_format_unit_symbol(self._dims),
+            _format_unit_symbol(self._dimensions),
+            dimensions=self._dimensions,
+            factor=self._factor,
+            _symbol=_format_unit_symbol(self._dimensions),
         )
 
     def __mul__(self, other: "Unit") -> "Unit":
         if not isinstance(other, Unit):
             return NotImplemented
-        dims = dict(self._dims)
-        for key, value in other._dims.items():
+        dims = dict(self._dimensions)
+        for key, value in other._dimensions.items():
             dims[key] = dims.get(key, Fraction(0)) + value
             if dims[key] == 0:
                 del dims[key]
         return Unit(
             _format_unit_symbol(dims),
-            _dims=dims,
-            _factor=self._factor * other._factor,
+            dimensions=dims,
+            factor=self._factor * other._factor,
             _symbol=_format_unit_symbol(dims),
         )
 
     def __truediv__(self, other: "Unit") -> "Unit":
         if not isinstance(other, Unit):
             return NotImplemented
-        dims = dict(self._dims)
-        for key, value in other._dims.items():
+        dims = dict(self._dimensions)
+        for key, value in other._dimensions.items():
             dims[key] = dims.get(key, Fraction(0)) - value
             if dims[key] == 0:
                 del dims[key]
         return Unit(
             _format_unit_symbol(dims),
-            _dims=dims,
-            _factor=self._factor / other._factor,
+            dimensions=dims,
+            factor=self._factor / other._factor,
             _symbol=_format_unit_symbol(dims),
         )
 
@@ -146,13 +146,13 @@ class Unit:
         return self.get_symbol()
 
     def __repr__(self) -> str:
-        dims_repr = f", _dims={self._dims!r}" if self._dims else ""
+        dims_repr = f", _dimensions={self._dimensions!r}" if self._dimensions else ""
         factor_repr = (
             f", factor={self._factor!r}" if self._factor != 1.0 else ""
         )
         symbol_repr = (
             f", symbol={self._symbol!r}"
-            if self._symbol != _format_unit_symbol(self._dims)
+            if self._symbol != _format_unit_symbol(self._dimensions)
             else ""
         )
         return (
@@ -162,12 +162,12 @@ class Unit:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
             return False
-        return self._dims == other._dims and self._factor == other._factor
+        return self._dimensions == other._dimensions and self._factor == other._factor
 
     @property
     def dims(self) -> Dict[str, Fraction]:
         """Dimension vector in SI base dimensions."""
-        return dict(self._dims)
+        return dict(self._dimensions)
 
     @property
     def factor(self) -> float:
