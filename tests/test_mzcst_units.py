@@ -614,6 +614,6 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         print(l7.convert_to(mm).value)  # prints value with known unit
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    TestCstUnitsCompatibility().test_cst_units_compatibility()
 
     
