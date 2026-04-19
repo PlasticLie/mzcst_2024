@@ -564,7 +564,6 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert l6.unit == um
         assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
 
-
     def test_cst_units_compatibility(self):
         """复现CST 2026中 cst.units 模块的演示用例，验证与 mzcst_2024.units 的兼容性。"""
         # Create quantities with units
@@ -581,8 +580,11 @@ class TestCstUnitsCompatibility(unittest.TestCase):
 
         # Create quantities with string based unit, only string variants from the Predefined units table can be used.
         alength = 42 * Unit("mm")
+        km = Unit("km")
+        hour = Unit("hour")
+        speed_unit = km / hour
         aspeed = (
-            120 * Unit("km") / Unit("hour")
+            120 * km / hour
         )  # Note that you cannot use "km/h" as it is not one of the predefined units
         apower = 55 * Unit("GW")
         assert str(alength) == "42 mm"
@@ -608,12 +610,10 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
         assert math.isclose(i1.value, 5.0, rel_tol=1e-9)
 
-
         l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
         print(l7.value)  # prints value with unknown/random unit
         print(l7.convert_to(mm).value)  # prints value with known unit
 
+
 if __name__ == "__main__":
     TestCstUnitsCompatibility().test_cst_units_compatibility()
-
-    
