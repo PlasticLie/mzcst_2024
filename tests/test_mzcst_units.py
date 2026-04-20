@@ -573,7 +573,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         p1 = 20 * W
         i1 = 5 * A
         assert str(l1) == "2 mm"
-        assert str(l2) == "3 um"
+        assert str(l2) == "3 μm"
         assert str(l3) == "5 mil"
         assert str(p1) == "20 W"
         assert str(i1) == "5 A"
