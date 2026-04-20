@@ -596,6 +596,7 @@ _register("km", {"m": Fraction(1)}, 1e3)
 _register("cm", {"m": Fraction(1)}, 1e-2)
 _register("mm", {"m": Fraction(1)}, 1e-3)
 _register("μm", {"m": Fraction(1)}, 1e-6)
+_register("um", {"m": Fraction(1)}, 1e-6)
 _register("nm", {"m": Fraction(1)}, 1e-9)
 _register("pm", {"m": Fraction(1)}, 1e-12)
 
@@ -610,8 +611,8 @@ _register("angstrom", {"m": Fraction(1)}, 1e-10)
 km = Unit("km")
 cm = Unit("cm")
 mm = Unit("mm")
-um = Unit("μm")
-μm = um  # pylint: disable=non-ascii-name
+um = Unit("um")
+μm = Unit("μm")  # pylint: disable=non-ascii-name
 nm = Unit("nm")
 pm = Unit("pm")
 

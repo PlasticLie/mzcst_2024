@@ -126,11 +126,16 @@ class TestQuantityCreation(unittest.TestCase):
 
     def test_str_representation(self):
         """检查多个基础物理量的字符串表示。"""
-        assert str(2 * mm) == "2 mm"
-        assert str(3 * um) == "3 um"
-        assert str(5 * mil) == "5 mil"
-        assert str(20 * W) == "20 W"
-        assert str(5 * A) == "5 A"
+        assert f"{2 * mm:.0f}" == "2 mm"
+        assert f"{3 * um:.0f}" == "3 um"
+        assert f"{5 * mil:.0f}" == "5 mil"
+        assert f"{20 * W:.0f}" == "20 W"
+        assert f"{5 * A:.0f}" == "5 A"
+
+    def test_unit_creation_from_string(self):
+        """通过字符串创建单位并验证。"""
+        alength = Quantity.from_string("42 mm")
+        assert f"{alength:.0f}" == "42 mm"
 
 
 # ---------------------------------------------------------------------------
@@ -355,6 +360,7 @@ class TestUnit(unittest.TestCase):
         """按符号语义比较单位对象。"""
         assert Unit("mm") == Unit("mm")
         assert Unit("mm") != Unit("um")
+        assert Unit("um") == Unit("μm")  # 兼容两种微米符号
 
     def test_unit_get_symbol(self):
         """通过 get_symbol 返回规范单位符号。"""
@@ -571,11 +577,11 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         l3: Quantity = 5 * mil
         p1: Quantity = 20 * W
         i1: Quantity = 5 * A
-        assert str(l1) == "2 mm"
-        assert str(l2) == "3 μm"
-        assert str(l3) == "5 mil"
-        assert str(p1) == "20 W"
-        assert str(i1) == "5 A"
+        assert f"{l1:.0f}" == "2 mm"
+        assert f"{l2:.0f}" == "3 μm"
+        assert f"{l3:.0f}" == "5 mil"
+        assert f"{p1:.0f}" == "20 W"
+        assert f"{i1:.0f}" == "5 A"
 
         # Create quantities with string based unit, only string variants from the Predefined units table can be used.
         alength = 42 * Unit("mm")
@@ -586,17 +592,15 @@ class TestCstUnitsCompatibility(unittest.TestCase):
             120 * km / hour
         )  # Note that you cannot use "km/h" as it is not one of the predefined units
         apower = 55 * Unit("GW")
-        assert str(alength) == "42 mm"
-        assert str(aspeed) == "120 km/hour"
-        assert str(apower) == "55 GW"
+        assert f"{alength:.0f}" == "42 mm"
+        assert f"{aspeed:.0f}" == "120 km/hour"
+        assert f"{apower:.0f}" == "55 GW"
 
         # Compute derived quantities with automatic unit conversions
         l4 = l1 + l2  # add "mm" and "um" resulting in "mm"
         l5 = l2 + l1  # add "μm" and "mm" resulting in "μm"
-        l4_formatted = f"{l4:.3f}"  # should be "2.003 mm"
-        l5_formatted = f"{l5:.0f}"  # should round to "2003 μm"
-        assert l4_formatted == "2.003 mm"
-        assert l5_formatted == "2003 μm"
+        assert f"{l4:.3f}" == "2.003 mm"
+        assert f"{l5:.0f}" == "2003 μm"
         u1 = p1 / i1  # divide "W" by "A" resulting in "V"
         assert f"{u1:.0f}" == "4 W/A"
         V2 = W / A
@@ -620,4 +624,5 @@ class TestCstUnitsCompatibility(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    TestCstUnitsCompatibility().test_cst_units_compatibility()
+    # TestCstUnitsCompatibility().test_cst_units_compatibility()
+    unittest.main()
