@@ -540,7 +540,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
 
     def test_demo_l5(self):
         """复现演示：反向相加时输出单位保持为 um。"""
-        # l5 = l2 + l1 => "2003 µm"，mzcst 使用 "um" 符号
+        # l5 = l2 + l1 => "2003 um"，mzcst 使用 "um" 符号
         l1 = 2 * mm
         l2 = 3 * um
         l5 = l2 + l1
@@ -558,7 +558,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
 
     def test_demo_l6(self):
         """复现演示：将 mil 物理量转换为 um。"""
-        # l6 = l3.convert_to(um) => "127 µm"
+        # l6 = l3.convert_to(um) => "127 um"
         l3 = 5 * mil
         l6 = l3.convert_to(um)
         assert l6.unit == um
@@ -592,16 +592,18 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert str(apower) == "55 GW"
 
         # Compute derived quantities with automatic unit conversions
-        l4 = l1 + l2  # add "mm" and "µm" resulting in "mm"
-        l5 = l2 + l1  # add "µm" and "mm" resulting in "µm"
-        assert str(l4) == "2.003 mm"
-        assert str(l5) == "2003 µm"
+        l4 = l1 + l2  # add "mm" and "um" resulting in "mm"
+        l5 = l2 + l1  # add "μm" and "mm" resulting in "μm"
+        l4_formatted = f"{l4:.3f}"  # format with 3 decimal places, should be "2.003 mm"
+        l5_formatted = f"{l5:.0f}"  # format with 0 decimal places, should round to "2003 μm"
+        assert l4_formatted == "2.003 mm"
+        assert l5_formatted == "2003 μm"
         u1 = p1 / i1  # divide "W" by "A" resulting in "V"
         assert str(u1) == "4 V"
 
         # Enforce representation using a specific unit
         l6 = l3.convert_to(um)
-        assert str(l6) == "127 µm"
+        assert str(l6) == "127 μm"
 
         # Convert to float without unit
         # Warning: Only do this, if the exact unit of the quantity is known.
@@ -610,7 +612,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
         assert math.isclose(i1.value, 5.0, rel_tol=1e-9)
 
-        l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
+        l7 = random.choice([l3, l6])  # result may use either "mil" or "um"
         print(l7.value)  # prints value with unknown/random unit
         print(l7.convert_to(mm).value)  # prints value with known unit
         pass

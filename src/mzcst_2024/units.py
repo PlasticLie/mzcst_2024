@@ -285,6 +285,10 @@ class Quantity:
     def __repr__(self) -> str:
         return f"Quantity(value={self.value!r}, unit={self.unit!r})"
 
+    def __format__(self, format_spec):
+        value_str = format(self.value, format_spec)
+        return f"{value_str} {self.unit.get_symbol()}"
+
 
 class ComplexQuantity(Quantity):
     """A quantity with a complex value, compatible with `cst.units.ComplexQuantity`.
@@ -588,7 +592,7 @@ zepto = Unit("zepto")
 _register("km", {"m": Fraction(1)}, 1e3)
 _register("cm", {"m": Fraction(1)}, 1e-2)
 _register("mm", {"m": Fraction(1)}, 1e-3)
-_register("um", {"m": Fraction(1)}, 1e-6)
+_register("μm", {"m": Fraction(1)}, 1e-6)
 _register("nm", {"m": Fraction(1)}, 1e-9)
 _register("pm", {"m": Fraction(1)}, 1e-12)
 
@@ -603,7 +607,8 @@ _register("angstrom", {"m": Fraction(1)}, 1e-10)
 km = Unit("km")
 cm = Unit("cm")
 mm = Unit("mm")
-um = Unit("um")
+um = Unit("μm")
+μm = um  # pylint: disable=non-ascii-name
 nm = Unit("nm")
 pm = Unit("pm")
 
