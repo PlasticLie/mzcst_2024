@@ -8,11 +8,10 @@ functional or documented. Therefore, this test script demonstrates how to use
 the `cst.units` module in CST 2026, where it appears to be more complete.
 """
 
-
 import random
 
 import cst.units as cu
-from cst.units import A, Unit, V, W, mil, mm, um
+from cst.units import GW, A, Unit, V, W, hour, km, mil, mm, um
 
 # Create quantities with units
 l1 = 2 * mm
@@ -32,6 +31,14 @@ print(i1)  # prints "5 A"
 #     120 * Unit("km") / Unit("hour")
 # )  # Note that you cannot use "km/h" as it is not one of the predefined units
 # apower = 55 * Unit("GW")
+alength = 42 * mm
+aspeed = 120 * km / hour
+speed_unit = km / hour
+apower = 55 * GW
+print(alength)
+print(aspeed)
+repr(speed_unit)
+print(apower)
 
 # Compute derived quantities with automatic unit conversions
 l4 = l1 + l2  # add "mm" and "µm" resulting in "mm"

@@ -613,6 +613,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         l7 = random.choice([l3, l6])  # result may use either "mil" or "µm"
         print(l7.value)  # prints value with unknown/random unit
         print(l7.convert_to(mm).value)  # prints value with known unit
+        pass
 
 
 if __name__ == "__main__":
