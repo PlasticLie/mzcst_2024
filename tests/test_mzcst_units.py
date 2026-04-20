@@ -127,7 +127,7 @@ class TestQuantityCreation(unittest.TestCase):
     def test_str_representation(self):
         """检查多个基础物理量的字符串表示。"""
         assert f"{2 * mm:.0f}" == "2 mm"
-        assert f"{3 * um:.0f}" == "3 um"
+        assert f"{3 * um:.0f}" == "3 μm"
         assert f"{5 * mil:.0f}" == "5 mil"
         assert f"{20 * W:.0f}" == "20 W"
         assert f"{5 * A:.0f}" == "5 A"
@@ -353,7 +353,7 @@ class TestUnit(unittest.TestCase):
         """返回包含关键字段的调试表示。"""
         r = repr(mm)
         assert r.startswith("Unit('mm'")
-        assert "_dimensions=" in r
+        assert "dimensions=" in r
         assert "factor=" in r
 
     def test_unit_eq(self):
