@@ -155,17 +155,26 @@ class Unit:
 
     @property
     def dims(self) -> Dict[str, Fraction]:
-        """Dimension vector in SI base dimensions."""
+        """Dimension vector in SI base dimensions.
+
+        `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性。
+        """
         return dict(self._dimensions)
 
     @property
     def factor(self) -> float:
-        """Scaling factor relative to SI representation of the same dimensions."""
+        """Scaling factor relative to SI representation of the same dimensions.
+
+        `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性。
+        """
         return self._factor
 
     @property
     def symbol(self) -> str:
-        """Symbol of the unit."""
+        """Symbol of the unit.
+
+        `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性，而应使用 `get_symbol()` 方法获取单位的符号表示。
+        """
         return self._symbol
 
 
