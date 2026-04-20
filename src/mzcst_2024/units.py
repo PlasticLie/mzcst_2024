@@ -44,10 +44,9 @@ class Unit:
     def __init__(
         self,
         unit_name: str,
-        *,
         dimensions: Dict[str, Fraction] | None = None,
         factor: float = 1.0,
-        _symbol: str | None = None,
+        symbol: str | None = None,
     ):
         if dimensions is None:
             dims, factor, symbol = _resolve_unit_symbol(unit_name)
@@ -57,7 +56,7 @@ class Unit:
         else:
             self._dimensions = {k: v for k, v in dimensions.items() if v != 0}
             self._factor = float(factor)
-            self._symbol = _symbol or _format_unit_symbol(self._dimensions)
+            self._symbol = symbol or _format_unit_symbol(self._dimensions)
 
     @staticmethod
     def decode(arg0: str) -> "Unit":
@@ -78,7 +77,7 @@ class Unit:
             _format_unit_symbol(self._dimensions),
             dimensions=self._dimensions,
             factor=1.0,
-            _symbol=_format_unit_symbol(self._dimensions),
+            symbol=_format_unit_symbol(self._dimensions),
         )
 
     def pow(self, nom: int, denom: int) -> "Unit":
@@ -92,7 +91,7 @@ class Unit:
             _format_unit_symbol(dims),
             dimensions=dims,
             factor=self._factor ** float(p),
-            _symbol=_format_unit_symbol(dims),
+            symbol=_format_unit_symbol(dims),
         )
 
     def simplify(self) -> "Unit":
@@ -101,7 +100,7 @@ class Unit:
             _format_unit_symbol(self._dimensions),
             dimensions=self._dimensions,
             factor=self._factor,
-            _symbol=_format_unit_symbol(self._dimensions),
+            symbol=_format_unit_symbol(self._dimensions),
         )
 
     def __mul__(self, other: "Unit") -> "Unit":
@@ -116,7 +115,7 @@ class Unit:
             _format_unit_symbol(dims),
             dimensions=dims,
             factor=self._factor * other._factor,
-            _symbol=_format_unit_symbol(dims),
+            symbol=_format_unit_symbol(dims),
         )
 
     def __truediv__(self, other: "Unit") -> "Unit":
@@ -131,7 +130,7 @@ class Unit:
             _format_unit_symbol(dims),
             dimensions=dims,
             factor=self._factor / other._factor,
-            _symbol=_format_unit_symbol(dims),
+            symbol=_format_unit_symbol(dims),
         )
 
     def __pow__(self, power: int) -> "Unit":
