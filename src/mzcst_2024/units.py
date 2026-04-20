@@ -611,8 +611,8 @@ _register("angstrom", {"m": Fraction(1)}, 1e-10)
 km = Unit("km")
 cm = Unit("cm")
 mm = Unit("mm")
-um = Unit("um")
-μm = Unit("μm")  # pylint: disable=non-ascii-name
+um = Unit("μm")
+μm = um  # pylint: disable=non-ascii-name
 nm = Unit("nm")
 pm = Unit("pm")
 

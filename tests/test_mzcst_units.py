@@ -625,4 +625,4 @@ class TestCstUnitsCompatibility(unittest.TestCase):
 
 if __name__ == "__main__":
     # TestCstUnitsCompatibility().test_cst_units_compatibility()
-    unittest.main()
+    unittest.main(verbosity=2)
