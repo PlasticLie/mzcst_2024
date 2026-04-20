@@ -187,6 +187,45 @@ class Quantity:
     value: Number
     unit: Unit
 
+    @classmethod
+    def from_string(cls, text: str) -> "Quantity":
+        """Builds a quantity from a string like ``"1.234 mm"``.
+
+        Parameters
+        ----------
+        text : str
+            A string containing a numeric value and a unit symbol separated by
+            whitespace, for example ``"1.234 mm"``.
+
+        Returns
+        -------
+        Quantity
+            Parsed quantity instance.
+
+        Raises
+        ------
+        ValueError
+            If the input does not match the required format or contains an
+            unknown unit symbol.
+        """
+        raw = text.strip()
+        if not raw:
+            raise ValueError("Input string must not be empty")
+
+        parts = raw.split(maxsplit=1)
+        if len(parts) != 2:
+            raise ValueError(
+                "Invalid quantity format. Expected '<value> <unit>', e.g. '1.234 mm'"
+            )
+
+        value_str, unit_str = parts
+        try:
+            value = float(value_str)
+        except ValueError as exc:
+            raise ValueError(f"Invalid numeric value: '{value_str}'") from exc
+
+        return cls(value, Unit(unit_str.strip()))
+
     def convert_to(self, dest_unit: Unit) -> "Quantity":
         """Converts the quantity to a different unit.
 
