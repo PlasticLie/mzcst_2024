@@ -107,7 +107,7 @@ class Unit:
             if dims[key] == 0:
                 del dims[key]
         return Unit(
-            f"{self._symbol()}*{other._symbol}",
+            f"{self._symbol}*{other._symbol}",
             dimensions=dims,
             factor=self._factor * other._factor,
         )
