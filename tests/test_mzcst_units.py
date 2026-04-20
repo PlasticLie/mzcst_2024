@@ -423,7 +423,7 @@ class TestUnit(unittest.TestCase):
 
     def test_unit_dimensionless_one(self):
         """无量纲单位应表示为空量纲。"""
-        assert one.dims == {}
+        assert not one.dims
 
     def test_unit_decode_bar_symbol(self):
         """解码 bar 并验证其与 Pa 量纲一致。"""
@@ -567,11 +567,11 @@ class TestCstUnitsCompatibility(unittest.TestCase):
     def test_cst_units_compatibility(self):
         """复现CST 2026中 cst.units 模块的演示用例，验证与 mzcst_2024.units 的兼容性。"""
         # Create quantities with units
-        l1 = 2 * mm
-        l2 = 3 * um
-        l3 = 5 * mil
-        p1 = 20 * W
-        i1 = 5 * A
+        l1: Quantity = 2 * mm
+        l2: Quantity = 3 * um
+        l3: Quantity = 5 * mil
+        p1: Quantity = 20 * W
+        i1: Quantity = 5 * A
         assert str(l1) == "2 mm"
         assert str(l2) == "3 μm"
         assert str(l3) == "5 mil"
@@ -594,8 +594,8 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         # Compute derived quantities with automatic unit conversions
         l4 = l1 + l2  # add "mm" and "um" resulting in "mm"
         l5 = l2 + l1  # add "μm" and "mm" resulting in "μm"
-        l4_formatted = f"{l4:.3f}"  # format with 3 decimal places, should be "2.003 mm"
-        l5_formatted = f"{l5:.0f}"  # format with 0 decimal places, should round to "2003 μm"
+        l4_formatted = f"{l4:.3f}"  # should be "2.003 mm"
+        l5_formatted = f"{l5:.0f}"  # should round to "2003 μm"
         assert l4_formatted == "2.003 mm"
         assert l5_formatted == "2003 μm"
         u1 = p1 / i1  # divide "W" by "A" resulting in "V"
