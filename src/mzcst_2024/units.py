@@ -163,6 +163,11 @@ class Unit:
         """Scaling factor relative to SI representation of the same dimensions."""
         return self._factor
 
+    @property
+    def symbol(self) -> str:
+        """Symbol of the unit."""
+        return self._symbol
+
 
 @dataclass(frozen=True)
 class Quantity:
