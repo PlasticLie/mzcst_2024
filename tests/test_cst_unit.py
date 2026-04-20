@@ -47,6 +47,8 @@ print(l4)  # prints "2.003 mm"
 print(l5)  # prints "2003 µm"
 u1 = p1 / i1  # divide "W" by "A" resulting in "V"
 print(u1)  # prints "4 V"
+V2 = W / A
+print(f"W/A == V: {V2 == V}")  # prints "W/A == V: True"
 
 # Enforce representation using a specific unit
 l6 = l3.convert_to(um)

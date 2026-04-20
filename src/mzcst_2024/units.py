@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from fractions import Fraction
 from numbers import Number
 from typing import Dict
-
-from networkx import degree_centrality
 
 
 class Unit:
@@ -150,9 +149,8 @@ class Unit:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
             return False
-        return (
-            self._dimensions == other._dimensions
-            and self._factor == other._factor
+        return self._dimensions == other._dimensions and math.isclose(
+            self._factor, other._factor
         )
 
     @property

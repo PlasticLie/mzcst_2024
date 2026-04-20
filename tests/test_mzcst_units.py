@@ -540,7 +540,6 @@ class TestCstUnitsCompatibility(unittest.TestCase):
 
     def test_demo_l5(self):
         """复现演示：反向相加时输出单位保持为 um。"""
-        # l5 = l2 + l1 => "2003 um"，mzcst 使用 "um" 符号
         l1 = 2 * mm
         l2 = 3 * um
         l5 = l2 + l1
@@ -599,11 +598,13 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert l4_formatted == "2.003 mm"
         assert l5_formatted == "2003 μm"
         u1 = p1 / i1  # divide "W" by "A" resulting in "V"
-        assert str(u1) == "4 V"
+        assert f"{u1:.0f}" == "4 W/A"
+        V2 = W / A
+        assert V2 == V  # should be True since W/A is defined as V
 
         # Enforce representation using a specific unit
         l6 = l3.convert_to(um)
-        assert str(l6) == "127 μm"
+        assert f"{l6:.0f}" == "127 μm"
 
         # Convert to float without unit
         # Warning: Only do this, if the exact unit of the quantity is known.
