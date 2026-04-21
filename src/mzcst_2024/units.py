@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import cmath
 import math
 from dataclasses import dataclass
 from fractions import Fraction
@@ -300,6 +301,21 @@ class Quantity:
     def __format__(self, format_spec):
         value_str = format(self.value, format_spec)
         return f"{value_str} {self.unit.get_symbol()}"
+
+    def __eq__(self, other):
+        """Checks for approximate equality of two quantities, considering unit conversion."""
+        if not isinstance(other, Quantity):
+            return NotImplemented
+        try:
+            converted = other.convert_to(self.unit)
+        except ValueError:
+            return False
+
+        if isinstance(self.value, complex) or isinstance(
+            converted.value, complex
+        ):
+            return cmath.isclose(self.value, converted.value)
+        return math.isclose(self.value, converted.value)
 
 
 class ComplexQuantity(Quantity):
