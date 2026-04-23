@@ -21,24 +21,17 @@ class Unit:
 
     Parameters
     ----------
-    unit : str
-        The symbol of the unit to create, which must be registered in the unit
-        registry.
-    _dims : Dict[str, Fraction], optional
+    unit_name : str
+        The symbol of the unit to create.
+    dimensions : Dict[str, Fraction], optional
         The dimension vector of the unit, used for internal construction. This
         should not be provided by users directly, as it is intended for internal
         use when creating new units from arithmetic operations.
-    _factor : float, optional
+    factor : float, optional
         The scaling factor relative to the SI representation of the same
         dimensions, used for internal construction. This should not be provided
         by users directly, as it is intended for internal use when creating new
         units from arithmetic operations.
-    _symbol : str, optional
-        The symbol of the unit, used for internal construction. This should not
-        be provided by users directly, as it is intended for internal use when
-        creating new units from arithmetic operations. If not provided, it will
-        be generated from the dimension vector.
-
     """
 
     def __init__(
