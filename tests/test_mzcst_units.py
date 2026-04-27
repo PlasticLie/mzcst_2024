@@ -201,7 +201,7 @@ class TestArithmetic(unittest.TestCase):
         power = 100 * W
         current = 5 * A
         voltage = power / current
-        assert voltage.unit.dims == V.dims
+        assert voltage.unit == V
         assert math.isclose(voltage.value, 20.0, rel_tol=1e-9)
 
 
