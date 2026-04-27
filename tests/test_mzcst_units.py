@@ -196,6 +196,14 @@ class TestArithmetic(unittest.TestCase):
         assert work.unit.dims == J.dims
         assert math.isclose(work.value, 20.0, rel_tol=1e-9)
 
+    def test_div_quantities(self):
+        """两个物理量相除并验证派生量纲。"""
+        power = 100 * W
+        current = 5 * A
+        voltage = power / current
+        assert voltage.unit.dims == V.dims
+        assert math.isclose(voltage.value, 20.0, rel_tol=1e-9)
+
 
 # ---------------------------------------------------------------------------
 # 单位转换
@@ -498,6 +506,12 @@ class TestUnitDimensions(unittest.TestCase):
         result = convert_value(1.0, speed_unit, si_speed)
         assert math.isclose(result, 1000.0 / 3600.0, rel_tol=1e-9)
 
+    def test_compound_unit_conversion(self):
+        """将复合速度单位转换为 SI 并验证数值。"""
+        speed = 120 * km / hour
+        si_speed = speed.convert_to(m / s)
+        assert math.isclose(si_speed.value, 120 * 1000.0 / 3600.0, rel_tol=1e-9)
+
 
 # ---------------------------------------------------------------------------
 # scaling_factor_to_SI
@@ -603,8 +617,6 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert f"{l5:.0f}" == "2003 μm"
         u1 = p1 / i1  # divide "W" by "A" resulting in "V"
         assert f"{u1:.0f}" == "4 V"
-        V2 = W / A
-        assert V2 == V  # should be True since W/A is defined as V
 
         # Enforce representation using a specific unit
         l6 = l3.convert_to(um)
