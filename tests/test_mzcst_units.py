@@ -173,7 +173,7 @@ class TestArithmetic(unittest.TestCase):
     def test_div_W_by_A_gives_V(self):
         """功率除以电流并验证电压量纲。"""
         u1 = (20 * W) / (5 * A)
-        assert u1.unit.dims == V.dims
+        assert u1.unit == V
         assert math.isclose(u1.value, 4.0, rel_tol=1e-9)
 
     def test_mul_scalar(self):
@@ -193,7 +193,7 @@ class TestArithmetic(unittest.TestCase):
         force = 10 * N
         distance = 2 * m
         work = force * distance
-        assert work.unit.dims == J.dims
+        assert work.unit == J
         assert math.isclose(work.value, 20.0, rel_tol=1e-9)
 
     def test_div_quantities(self):
