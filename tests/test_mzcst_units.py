@@ -602,7 +602,7 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         assert f"{l4:.3f}" == "2.003 mm"
         assert f"{l5:.0f}" == "2003 μm"
         u1 = p1 / i1  # divide "W" by "A" resulting in "V"
-        assert f"{u1:.0f}" == "4 W/A"
+        assert f"{u1:.0f}" == "4 V"
         V2 = W / A
         assert V2 == V  # should be True since W/A is defined as V
 

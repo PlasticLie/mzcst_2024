@@ -86,6 +86,9 @@ class Unit:
 
     def simplify(self) -> "Unit":
         """Tries to simplify the value and unit."""
+        known = _find_registered_unit(self._dimensions, self._factor)
+        if known:
+            return Unit(known[0], dimensions=self._dimensions, factor=self._factor)
         return Unit(
             _format_unit_symbol(self._dimensions),
             dimensions=self._dimensions,
@@ -100,11 +103,13 @@ class Unit:
             dims[key] = dims.get(key, Fraction(0)) + value
             if dims[key] == 0:
                 del dims[key]
-        return Unit(
-            f"{self._symbol}*{other._symbol}",
-            dimensions=dims,
-            factor=self._factor * other._factor,
-        )
+        factor = self._factor * other._factor
+        known = _find_registered_unit(dims, factor)
+        if known:
+            symbol, factor = known
+        else:
+            symbol = f"{self._symbol}*{other._symbol}"
+        return Unit(symbol, dimensions=dims, factor=factor)
 
     def __truediv__(self, other: "Unit") -> "Unit":
         if not isinstance(other, Unit):
@@ -114,11 +119,13 @@ class Unit:
             dims[key] = dims.get(key, Fraction(0)) - value
             if dims[key] == 0:
                 del dims[key]
-        return Unit(
-            f"{self._symbol}/{other._symbol}",
-            dimensions=dims,
-            factor=self._factor / other._factor,
-        )
+        factor = self._factor / other._factor
+        known = _find_registered_unit(dims, factor)
+        if known:
+            symbol, factor = known
+        else:
+            symbol = f"{self._symbol}/{other._symbol}"
+        return Unit(symbol, dimensions=dims, factor=factor)
 
     def __pow__(self, power: int) -> "Unit":
         return self.pow(power, 1)
@@ -416,6 +423,21 @@ def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
     if not den_terms:
         return num_str
     return f"{num_str}/{'*'.join(den_terms)}"
+
+
+def _find_registered_unit(
+    dims: Dict[str, Fraction], factor: float
+) -> tuple[str, float] | None:
+    """Find a registered unit matching the given dimensions and factor.
+
+    Returns (symbol, factor) if found, None otherwise.
+    """
+    for (reg_dims, reg_factor, reg_symbol) in _UNIT_REGISTRY.values():
+        if reg_dims == dims and math.isclose(
+            reg_factor, factor, rel_tol=1e-9
+        ):
+            return reg_symbol, reg_factor
+    return None
 
 
 def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
