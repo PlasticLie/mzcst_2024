@@ -5,7 +5,6 @@ from __future__ import annotations
 import cmath
 import math
 from dataclasses import dataclass
-from decimal import Decimal
 from fractions import Fraction
 from numbers import Number
 from typing import Dict
@@ -28,7 +27,7 @@ class Unit:
         The dimension vector of the unit, used for internal construction. This
         should not be provided by users directly, as it is intended for internal
         use when creating new units from arithmetic operations.
-    factor : Decimal , optional
+    factor : float, optional
         The scaling factor relative to the SI representation of the same
         dimensions, used for internal construction. This should not be provided
         by users directly, as it is intended for internal use when creating new
@@ -39,7 +38,7 @@ class Unit:
         self,
         unit_name: str,
         dimensions: Dict[str, Fraction] | None = None,
-        factor: Decimal = Decimal(1),
+        factor: float = 1.0,
     ):
         if dimensions is None:
             dims, factor, symbol = _resolve_unit_symbol(unit_name)
@@ -48,9 +47,7 @@ class Unit:
             self._symbol = symbol
         else:
             self._dimensions = {k: v for k, v in dimensions.items() if v != 0}
-            self._factor = (
-                factor if isinstance(factor, Decimal) else Decimal(str(factor))
-            )
+            self._factor = float(factor)
             self._symbol = unit_name
 
     @staticmethod
@@ -71,7 +68,7 @@ class Unit:
         return Unit(
             _format_unit_symbol(self._dimensions),
             dimensions=self._dimensions,
-            factor=Decimal(1),
+            factor=1.0,
         )
 
     def pow(self, nom: int, denom: int) -> "Unit":
@@ -84,7 +81,7 @@ class Unit:
         return Unit(
             _format_unit_symbol(dims),
             dimensions=dims,
-            factor=Decimal(str(float(self._factor) ** float(p))),
+            factor=self._factor ** float(p),
         )
 
     def simplify(self) -> "Unit":
@@ -148,16 +145,15 @@ class Unit:
             f", dimensions={self._dimensions!r}" if self._dimensions else ""
         )
         factor_repr = (
-            f", factor={self._factor!r}" if self._factor != Decimal(1) else ""
+            f", factor={self._factor!r}" if self._factor != 1.0 else ""
         )
         return f"Unit('{self.get_symbol()}'{dims_repr}{factor_repr})"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
             return False
-        return (
-            self._dimensions == other._dimensions
-            and self._factor == other._factor
+        return self._dimensions == other._dimensions and math.isclose(
+            self._factor, other._factor
         )
 
     @property
@@ -169,7 +165,7 @@ class Unit:
         return dict(self._dimensions)
 
     @property
-    def factor(self) -> Decimal:
+    def factor(self) -> float:
         """Scaling factor relative to SI representation of the same dimensions.
 
         `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性。
@@ -267,7 +263,7 @@ class Quantity:
             raise ValueError(
                 f"Cannot convert from '{self.unit.get_symbol()}' to '{dest_unit.get_symbol()}'"
             )
-        scale = float(self.unit.factor / dest_unit.factor)
+        scale = self.unit.factor / dest_unit.factor
         return Quantity(self.value * scale, dest_unit)
 
     def __add__(self, other: "Quantity") -> "Quantity":
@@ -432,19 +428,21 @@ def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
 
 
 def _find_registered_unit(
-    dims: Dict[str, Fraction], factor: Decimal
-) -> tuple[str, Decimal] | None:
+    dims: Dict[str, Fraction], factor: float
+) -> tuple[str, float] | None:
     """Find a registered unit matching the given dimensions and factor.
 
     Returns (symbol, factor) if found, None otherwise.
     """
-    for reg_dims, reg_factor, reg_symbol in _UNIT_REGISTRY.values():
-        if reg_dims == dims and reg_factor == factor:
+    for (reg_dims, reg_factor, reg_symbol) in _UNIT_REGISTRY.values():
+        if reg_dims == dims and math.isclose(
+            reg_factor, factor, rel_tol=1e-9
+        ):
             return reg_symbol, reg_factor
     return None
 
 
-def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
+def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
     """Resolves a unit symbol to its dimensions, factor, and canonical symbol.
 
     Parameters
@@ -454,7 +452,7 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
 
     Returns
     -------
-    tuple[Dict[str, Fraction], Decimal, str]
+    tuple[Dict[str, Fraction], float, str]
         A tuple containing the dimensions, factor, and canonical symbol of the unit.
 
     Raises
@@ -468,7 +466,7 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
     return dict(dims), factor, symbol
 
 
-_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], Decimal, str]] = {}
+_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], float, str]] = {}
 
 
 def _register(
@@ -483,14 +481,10 @@ def _register(
 
     dims : Dict[str, Fraction]
         The dimensions of the unit.
-    factor : Decimal | float, optional
+    factor : float, optional
         The conversion factor to the base unit, by default 1.0
     """
-    _UNIT_REGISTRY[symbol] = (
-        dict(dims),
-        factor if isinstance(factor, Decimal) else Decimal(str(factor)),
-        symbol,
-    )
+    _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
 
 
 # Time and length convenience units
