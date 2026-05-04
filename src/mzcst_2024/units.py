@@ -5,6 +5,7 @@ from __future__ import annotations
 import cmath
 import math
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from fractions import Fraction
 from numbers import Number
 from typing import Dict
@@ -38,7 +39,7 @@ class Unit:
         self,
         unit_name: str,
         dimensions: Dict[str, Fraction] | None = None,
-        factor: float = 1.0,
+        factor: Decimal | Number = Decimal("1"),
     ):
         if dimensions is None:
             dims, factor, symbol = _resolve_unit_symbol(unit_name)
@@ -47,7 +48,9 @@ class Unit:
             self._symbol = symbol
         else:
             self._dimensions = {k: v for k, v in dimensions.items() if v != 0}
-            self._factor = float(factor)
+            self._factor = (
+                factor if isinstance(factor, Decimal) else Decimal(str(factor))
+            )
             self._symbol = unit_name
 
     @staticmethod
@@ -77,11 +80,17 @@ class Unit:
         if denom == 0:
             raise ZeroDivisionError("denom must not be zero")
         p = Fraction(nom, denom)
+        exponent = Decimal(p.numerator) / Decimal(p.denominator)
         dims = {k: v * p for k, v in self._dimensions.items()}
+        try:
+            factor = self._factor**exponent
+        except InvalidOperation:
+            # Fallback for cases where Decimal cannot represent the power directly.
+            factor = Decimal(str(float(self._factor) ** float(exponent)))
         return Unit(
             _format_unit_symbol(dims),
             dimensions=dims,
-            factor=self._factor ** float(p),
+            factor=factor,
         )
 
     def simplify(self) -> "Unit":
@@ -152,8 +161,9 @@ class Unit:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
             return False
-        return self._dimensions == other._dimensions and math.isclose(
-            self._factor, other._factor
+        return (
+            self._dimensions == other._dimensions
+            and self._factor == other._factor
         )
 
     @property
@@ -165,7 +175,7 @@ class Unit:
         return dict(self._dimensions)
 
     @property
-    def factor(self) -> float:
+    def factor(self) -> Decimal:
         """Scaling factor relative to SI representation of the same dimensions.
 
         `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性。
@@ -264,7 +274,7 @@ class Quantity:
                 f"Cannot convert from '{self.unit.get_symbol()}' to '{dest_unit.get_symbol()}'"
             )
         scale = self.unit.factor / dest_unit.factor
-        return Quantity(self.value * scale, dest_unit)
+        return Quantity(_multiply_by_scale(self.value, scale), dest_unit)
 
     def __add__(self, other: "Quantity") -> "Quantity":
         if not isinstance(other, Quantity):
@@ -362,7 +372,7 @@ def convert_value(value: Number, from_unit: Unit, to_unit: Unit) -> Number:
     return Quantity(value, from_unit).convert_to(to_unit).value
 
 
-def scaling_factor_to_SI(unit: Unit) -> float:
+def scaling_factor_to_SI(unit: Unit) -> Decimal:
     """Compute scaling factor into equivalent SI unit.
 
     Parameters
@@ -372,10 +382,19 @@ def scaling_factor_to_SI(unit: Unit) -> float:
 
     Returns
     -------
-    float
+    Decimal
         numerical scaling factor for converting into SI units.
     """
-    return float(convert_value(1.0, unit, unit.inSI()))
+    return convert_value(Decimal("1"), unit, unit.inSI())
+
+
+def _multiply_by_scale(value: Number, scale: Decimal) -> Number:
+    """Multiplies a numeric value by a Decimal scale while keeping numeric compatibility."""
+    if isinstance(value, Decimal):
+        return value * scale
+    if isinstance(value, complex):
+        return value * float(scale)
+    return value * float(scale)
 
 
 def _format_power(power: Fraction) -> str:
@@ -428,21 +447,19 @@ def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
 
 
 def _find_registered_unit(
-    dims: Dict[str, Fraction], factor: float
-) -> tuple[str, float] | None:
+    dims: Dict[str, Fraction], factor: Decimal
+) -> tuple[str, Decimal] | None:
     """Find a registered unit matching the given dimensions and factor.
 
     Returns (symbol, factor) if found, None otherwise.
     """
-    for (reg_dims, reg_factor, reg_symbol) in _UNIT_REGISTRY.values():
-        if reg_dims == dims and math.isclose(
-            reg_factor, factor, rel_tol=1e-9
-        ):
+    for reg_dims, reg_factor, reg_symbol in _UNIT_REGISTRY.values():
+        if reg_dims == dims and reg_factor == factor:
             return reg_symbol, reg_factor
     return None
 
 
-def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
+def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
     """Resolves a unit symbol to its dimensions, factor, and canonical symbol.
 
     Parameters
@@ -466,11 +483,13 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
     return dict(dims), factor, symbol
 
 
-_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], float, str]] = {}
+_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], Decimal, str]] = {}
 
 
 def _register(
-    symbol: str, dims: Dict[str, Fraction], factor: float = 1.0
+    symbol: str,
+    dims: Dict[str, Fraction],
+    factor: Decimal | Number = Decimal("1"),
 ) -> None:
     """Registers a unit in the unit registry.
 
@@ -484,7 +503,11 @@ def _register(
     factor : float, optional
         The conversion factor to the base unit, by default 1.0
     """
-    _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
+    _UNIT_REGISTRY[symbol] = (
+        dict(dims),
+        factor if isinstance(factor, Decimal) else Decimal(factor),
+        symbol,
+    )
 
 
 # Time and length convenience units
@@ -802,21 +825,21 @@ kN = Unit("kN")
 # region pressure units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1.0)
-_register(
-    "hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 100.0
-)
+_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)})
+_register("hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 100)
 _register("kPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e3)
 _register("bar", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e5)
 _register("MPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e6)
 
 _register(
-    "psi", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 6894.75729
+    "psi",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Decimal("6894.75729"),
 )
 _register(
     "mmHg",
     {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
-    133.322368,
+    Decimal("133.322368"),
 )
 
 Pa = Unit("Pa")
@@ -936,13 +959,13 @@ uV = Unit("uV")
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 
-_register("Bq", {"s": Fraction(-1)}, 1.0)
+_register("Bq", {"s": Fraction(-1)}, 1)
 Bq = Unit("Bq")
 
-_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
+_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1)
 Sv = Unit("Sv")
 
-_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
+_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1)
 Gy = Unit("Gy")
 
 
@@ -951,18 +974,18 @@ Gy = Unit("Gy")
 
 #######################################
 # region data types
-# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("bit", {}, 1.0)
-_register("byte", {}, 8.0)
+_register("bit", {}, 1)
+_register("byte", {}, 8)
 bit = Unit("bit")
 byte = Unit("byte")
 
-_register("kibi", {}, 1024.0)
-_register("mebi", {}, 1024.0**2)
-_register("gibi", {}, 1024.0**3)
-_register("tebi", {}, 1024.0**4)
-_register("pebi", {}, 1024.0**5)
+_register("kibi", {}, 1024)
+_register("mebi", {}, 1024**2)
+_register("gibi", {}, 1024**3)
+_register("tebi", {}, 1024**4)
+_register("pebi", {}, 1024**5)
 
 kibi = Unit("kibi")
 mebi = Unit("mebi")

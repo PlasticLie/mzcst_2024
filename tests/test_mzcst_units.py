@@ -30,7 +30,7 @@ import random
 import unittest
 from fractions import Fraction
 
-import mzcst_2024.units as mu
+import mzcst_2024.units as mzu
 from mzcst_2024.units import (
     A,
     C,
