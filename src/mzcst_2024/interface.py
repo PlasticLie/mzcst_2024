@@ -1,3 +1,4 @@
+# pylint: disable=missing-docstring
 """提供与`cst.interface`的接口。
 
 The `cst.interface` module offers a general interface to the CST Studio Suite.
@@ -14,7 +15,7 @@ from pathlib import PurePath
 from typing import Optional, overload
 
 import cst
-import cst.interface
+import cst.interface  # pylint: disable=wrong-import-position
 
 from . import global_
 
