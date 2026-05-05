@@ -436,7 +436,7 @@ def _find_registered_unit(
     Returns (symbol, factor) if found, None otherwise.
     """
     for reg_dims, reg_factor, reg_symbol in _UNIT_REGISTRY.values():
-        if reg_dims == dims and math.isclose(reg_factor, factor, rel_tol=1e-9):
+        if reg_dims == dims and reg_factor == factor:
             return reg_symbol, reg_factor
     return None
 
