@@ -264,7 +264,7 @@ class Quantity:
             raise ValueError(
                 f"Cannot convert from '{self.unit.get_symbol()}' to '{dest_unit.get_symbol()}'"
             )
-        scale = self.unit.factor / dest_unit.factor
+        scale = float(self.unit.factor / dest_unit.factor)
         return Quantity(self.value * scale, dest_unit)
 
     def __add__(self, other: "Quantity") -> "Quantity":

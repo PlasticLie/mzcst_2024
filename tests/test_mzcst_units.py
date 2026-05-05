@@ -625,9 +625,9 @@ class TestCstUnitsCompatibility(unittest.TestCase):
         # Convert to float without unit
         # Warning: Only do this, if the exact unit of the quantity is known.
         #          Use "convert_to" to enforce a specific unit.
-        assert math.isclose(l3.value, 5.0, rel_tol=1e-9)
-        assert math.isclose(l6.value, 127.0, rel_tol=1e-9)
-        assert math.isclose(i1.value, 5.0, rel_tol=1e-9)
+        assert math.isclose(l3.value, 5.0)
+        assert math.isclose(l6.value, 127.0)
+        assert math.isclose(i1.value, 5.0)
 
         l7 = random.choice([l3, l6])  # result may use either "mil" or "um"
         print(l7.value)  # prints value with unknown/random unit
