@@ -6,7 +6,6 @@ import cmath
 import math
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from fractions import Fraction
 from numbers import Number
 from typing import Dict
 
@@ -24,7 +23,7 @@ class Unit:
     ----------
     unit_name : str
         The symbol of the unit to create.
-    dimensions : Dict[str, Fraction], optional
+    dimensions : Dict[str, Decimal], optional
         The dimension vector of the unit, used for internal construction. This
         should not be provided by users directly, as it is intended for internal
         use when creating new units from arithmetic operations.
@@ -38,7 +37,7 @@ class Unit:
     def __init__(
         self,
         unit_name: str,
-        dimensions: Dict[str, Fraction] | None = None,
+        dimensions: Dict[str, Decimal] | None = None,
         factor: Decimal | Number = Decimal("1"),
     ):
         if dimensions is None:
@@ -79,9 +78,8 @@ class Unit:
         operator to raise to round integer values."""
         if denom == 0:
             raise ZeroDivisionError("denom must not be zero")
-        p = Fraction(nom, denom)
-        exponent = Decimal(p.numerator) / Decimal(p.denominator)
-        dims = {k: v * p for k, v in self._dimensions.items()}
+        exponent = Decimal(nom) / Decimal(denom)
+        dims = {k: v * exponent for k, v in self._dimensions.items()}
         try:
             factor = self._factor**exponent
         except InvalidOperation:
@@ -111,7 +109,7 @@ class Unit:
             return NotImplemented
         dims = dict(self._dimensions)
         for key, value in other._dimensions.items():
-            dims[key] = dims.get(key, Fraction(0)) + value
+            dims[key] = dims.get(key, Decimal(0)) + value
             if dims[key] == 0:
                 del dims[key]
         factor = self._factor * other._factor
@@ -127,7 +125,7 @@ class Unit:
             return NotImplemented
         dims = dict(self._dimensions)
         for key, value in other._dimensions.items():
-            dims[key] = dims.get(key, Fraction(0)) - value
+            dims[key] = dims.get(key, Decimal(0)) - value
             if dims[key] == 0:
                 del dims[key]
         factor = self._factor / other._factor
@@ -167,7 +165,7 @@ class Unit:
         )
 
     @property
-    def dims(self) -> Dict[str, Fraction]:
+    def dims(self) -> Dict[str, Decimal]:
         """Dimension vector in SI base dimensions.
 
         `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性。
@@ -397,12 +395,12 @@ def _multiply_by_scale(value: Number, scale: Decimal) -> Number:
     return value * float(scale)
 
 
-def _format_power(power: Fraction) -> str:
+def _format_power(power: Decimal) -> str:
     """Formats the power for a unit symbol.
 
     Parameters
     ----------
-    power : Fraction
+    power : Decimal
         The power to format.
 
     Returns
@@ -417,12 +415,12 @@ def _format_power(power: Fraction) -> str:
     return f"^({power.numerator}/{power.denominator})"
 
 
-def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
+def _format_unit_symbol(dims: Dict[str, Decimal]) -> str:
     """Formats a unit symbol from its dimension vector.
 
     Parameters
     ----------
-    dims : Dict[str, Fraction]
+    dims : Dict[str, Decimal]
         The dimension vector of the unit.
 
     Returns
@@ -447,7 +445,7 @@ def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
 
 
 def _find_registered_unit(
-    dims: Dict[str, Fraction], factor: Decimal
+    dims: Dict[str, Decimal], factor: Decimal
 ) -> tuple[str, Decimal] | None:
     """Find a registered unit matching the given dimensions and factor.
 
@@ -459,7 +457,7 @@ def _find_registered_unit(
     return None
 
 
-def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
+def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Decimal], Decimal, str]:
     """Resolves a unit symbol to its dimensions, factor, and canonical symbol.
 
     Parameters
@@ -469,7 +467,7 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
 
     Returns
     -------
-    tuple[Dict[str, Fraction], float, str]
+    tuple[Dict[str, Decimal], Decimal, str]
         A tuple containing the dimensions, factor, and canonical symbol of the unit.
 
     Raises
@@ -483,13 +481,13 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], Decimal, str]:
     return dict(dims), factor, symbol
 
 
-_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], Decimal, str]] = {}
+_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Decimal], Decimal, str]] = {}
 
 
 def _register(
     symbol: str,
-    dims: Dict[str, Fraction],
-    factor: Decimal | Number = Decimal("1"),
+    dims: Dict[str, Decimal],
+    factor: Decimal | Number = Decimal(1),
 ) -> None:
     """Registers a unit in the unit registry.
 
@@ -498,7 +496,7 @@ def _register(
     symbol : str
         The symbol of the unit.
 
-    dims : Dict[str, Fraction]
+    dims : Dict[str, Decimal]
         The dimensions of the unit.
     factor : float, optional
         The conversion factor to the base unit, by default 1.0
@@ -517,13 +515,13 @@ def _register(
 # region SI base Units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("m", {"m": Fraction(1)})
-_register("kg", {"kg": Fraction(1)})
-_register("s", {"s": Fraction(1)})
-_register("A", {"A": Fraction(1)})
-_register("K", {"K": Fraction(1)})
-_register("mol", {"mol": Fraction(1)})
-_register("cd", {"cd": Fraction(1)})
+_register("m", {"m": Decimal(1)})
+_register("kg", {"kg": Decimal(1)})
+_register("s", {"s": Decimal(1)})
+_register("A", {"A": Decimal(1)})
+_register("K", {"K": Decimal(1)})
+_register("mol", {"mol": Decimal(1)})
+_register("cd", {"cd": Decimal(1)})
 
 m = Unit("m")
 kg = Unit("kg")
@@ -559,37 +557,37 @@ degree = Unit("degree")
 # region SI derived units with special names and symbols
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("Hz", {"s": Fraction(-1)})
-_register("N", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)})
-_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)})
-_register("J", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)})
-_register("W", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)})
-_register("C", {"A": Fraction(1), "s": Fraction(1)})
+_register("Hz", {"s": Decimal(-1)})
+_register("N", {"kg": Decimal(1), "m": Decimal(1), "s": Decimal(-2)})
+_register("Pa", {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)})
+_register("J", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)})
+_register("W", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3)})
+_register("C", {"A": Decimal(1), "s": Decimal(1)})
 _register(
     "V",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3), "A": Decimal(-1)},
 )
 _register(
     "Ohm",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-2)},
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3), "A": Decimal(-2)},
 )
 _register(
     "S",
-    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(3), "A": Fraction(2)},
+    {"kg": Decimal(-1), "m": Decimal(-2), "s": Decimal(3), "A": Decimal(2)},
 )
 _register(
     "F",
-    {"kg": Fraction(-1), "m": Fraction(-2), "s": Fraction(4), "A": Fraction(2)},
+    {"kg": Decimal(-1), "m": Decimal(-2), "s": Decimal(4), "A": Decimal(2)},
 )
 _register(
     "H",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-2)},
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2), "A": Decimal(-2)},
 )
 _register(
     "Wb",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2), "A": Fraction(-1)},
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2), "A": Decimal(-1)},
 )
-_register("T", {"kg": Fraction(1), "s": Fraction(-2), "A": Fraction(-1)})
+_register("T", {"kg": Decimal(1), "s": Decimal(-2), "A": Decimal(-1)})
 
 Hz = Unit("Hz")
 N = Unit("N")
@@ -613,23 +611,23 @@ T = Unit("T")
 # region SI prefixes
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("yotta", {}, 1e24)
-_register("zetta", {}, 1e21)
-_register("exa", {}, 1e18)
-_register("peta", {}, 1e15)
-_register("tera", {}, 1e12)
-_register("giga", {}, 1e9)
-_register("mega", {}, 1e6)
-_register("kilo", {}, 1e3)
-_register("deci", {}, 1e-1)
-_register("centi", {}, 1e-2)
-_register("milli", {}, 1e-3)
-_register("micro", {}, 1e-6)
-_register("nano", {}, 1e-9)
-_register("pico", {}, 1e-12)
-_register("femto", {}, 1e-15)
-_register("atto", {}, 1e-18)
-_register("zepto", {}, 1e-21)
+_register("yotta", {}, Decimal("1e24"))
+_register("zetta", {}, Decimal("1e21"))
+_register("exa", {}, Decimal("1e18"))
+_register("peta", {}, Decimal("1e15"))
+_register("tera", {}, Decimal("1e12"))
+_register("giga", {}, Decimal("1e9"))
+_register("mega", {}, Decimal("1e6"))
+_register("kilo", {}, Decimal("1e3"))
+_register("deci", {}, Decimal("1e-1"))
+_register("centi", {}, Decimal("1e-2"))
+_register("milli", {}, Decimal("1e-3"))
+_register("micro", {}, Decimal("1e-6"))
+_register("nano", {}, Decimal("1e-9"))
+_register("pico", {}, Decimal("1e-12"))
+_register("femto", {}, Decimal("1e-15"))
+_register("atto", {}, Decimal("1e-18"))
+_register("zepto", {}, Decimal("1e-21"))
 
 yotta = Unit("yotta")
 zetta = Unit("zetta")
@@ -657,21 +655,21 @@ zepto = Unit("zepto")
 # region length units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("km", {"m": Fraction(1)}, 1e3)
-_register("cm", {"m": Fraction(1)}, 1e-2)
-_register("mm", {"m": Fraction(1)}, 1e-3)
-_register("μm", {"m": Fraction(1)}, 1e-6)
-_register("um", {"m": Fraction(1)}, 1e-6)
-_register("nm", {"m": Fraction(1)}, 1e-9)
-_register("pm", {"m": Fraction(1)}, 1e-12)
+_register("km", {"m": Decimal(1)}, Decimal("1e3"))
+_register("cm", {"m": Decimal(1)}, Decimal("1e-2"))
+_register("mm", {"m": Decimal(1)}, Decimal("1e-3"))
+_register("μm", {"m": Decimal(1)}, Decimal("1e-6"))
+_register("um", {"m": Decimal(1)}, Decimal("1e-6"))
+_register("nm", {"m": Decimal(1)}, Decimal("1e-9"))
+_register("pm", {"m": Decimal(1)}, Decimal("1e-12"))
 
-_register("mil", {"m": Fraction(1)}, 2.54e-5)
-_register("inch", {"m": Fraction(1)}, 0.0254)
-_register("foot", {"m": Fraction(1)}, 0.3048)
-_register("yard", {"m": Fraction(1)}, 0.9144)
-_register("mile", {"m": Fraction(1)}, 1609.344)
+_register("mil", {"m": Decimal(1)}, Decimal("2.54e-5"))
+_register("inch", {"m": Decimal(1)}, Decimal("0.0254"))
+_register("foot", {"m": Decimal(1)}, Decimal("0.3048"))
+_register("yard", {"m": Decimal(1)}, Decimal("0.9144"))
+_register("mile", {"m": Decimal(1)}, Decimal("1609.344"))
 
-_register("angstrom", {"m": Fraction(1)}, 1e-10)
+_register("angstrom", {"m": Decimal(1)}, Decimal("1e-10"))
 
 km = Unit("km")
 cm = Unit("cm")
@@ -697,13 +695,13 @@ angstrom = Unit("angstrom")
 # region area units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("km^2", {"m": Fraction(2)}, 1e6)
-_register("ha", {"m": Fraction(2)}, 1e4)
-_register("m^2", {"m": Fraction(2)}, 1.0)
-_register("cm^2", {"m": Fraction(2)}, 1e-4)
-_register("mm^2", {"m": Fraction(2)}, 1e-6)
+_register("km^2", {"m": Decimal(2)}, Decimal("1e6"))
+_register("ha", {"m": Decimal(2)}, Decimal("1e4"))
+_register("m^2", {"m": Decimal(2)}, Decimal("1.0"))
+_register("cm^2", {"m": Decimal(2)}, Decimal("1e-4"))
+_register("mm^2", {"m": Decimal(2)}, Decimal("1e-6"))
 
-_register("acre", {"m": Fraction(2)}, 4046.8564224)
+_register("acre", {"m": Decimal(2)}, Decimal("4046.8564224"))
 
 km2 = Unit("km^2")
 ha = Unit("ha")
@@ -721,11 +719,11 @@ acre = Unit("acre")
 # region volume units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("m^3", {"m": Fraction(3)}, 1.0)
-_register("cm^3", {"m": Fraction(3)}, 1e-6)
+_register("m^3", {"m": Decimal(3)}, Decimal("1.0"))
+_register("cm^3", {"m": Decimal(3)}, Decimal("1e-6"))
 
-_register("L", {"m": Fraction(3)}, 1e-3)
-_register("mL", {"m": Fraction(3)}, 1e-6)
+_register("L", {"m": Decimal(3)}, Decimal("1e-3"))
+_register("mL", {"m": Decimal(3)}, Decimal("1e-6"))
 
 m3 = Unit("m^3")
 cm3 = Unit("cm^3")
@@ -741,9 +739,9 @@ mL = Unit("mL")
 # region Mass units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("g", {"kg": Fraction(1)}, 1e-3)
-_register("mg", {"kg": Fraction(1)}, 1e-6)
-_register("ug", {"kg": Fraction(1)}, 1e-9)
+_register("g", {"kg": Decimal(1)}, Decimal("1e-3"))
+_register("mg", {"kg": Decimal(1)}, Decimal("1e-6"))
+_register("ug", {"kg": Decimal(1)}, Decimal("1e-9"))
 
 g = Unit("g")
 mg = Unit("mg")
@@ -757,18 +755,18 @@ ug = Unit("ug")
 # region Time units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("min", {"s": Fraction(1)}, 60.0)
-_register("hour", {"s": Fraction(1)}, 3600.0)
-_register("day", {"s": Fraction(1)}, 86400.0)
+_register("min", {"s": Decimal(1)}, Decimal("60"))
+_register("hour", {"s": Decimal(1)}, Decimal("3600"))
+_register("day", {"s": Decimal(1)}, Decimal("86400"))
 
 minute = Unit("min")
 hour = Unit("hour")
 day = Unit("day")
 
-_register("ps", {"s": Fraction(1)}, 1e-12)
-_register("ns", {"s": Fraction(1)}, 1e-9)
-_register("us", {"s": Fraction(1)}, 1e-6)
-_register("ms", {"s": Fraction(1)}, 1e-3)
+_register("ps", {"s": Decimal(1)}, Decimal("1e-12"))
+_register("ns", {"s": Decimal(1)}, Decimal("1e-9"))
+_register("us", {"s": Decimal(1)}, Decimal("1e-6"))
+_register("ms", {"s": Decimal(1)}, Decimal("1e-3"))
 
 ps = Unit("ps")
 ns = Unit("ns")
@@ -782,10 +780,10 @@ ms = Unit("ms")
 # region frequency units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kHz", {"s": Fraction(-1)}, 1e3)
-_register("MHz", {"s": Fraction(-1)}, 1e6)
-_register("GHz", {"s": Fraction(-1)}, 1e9)
-_register("THz", {"s": Fraction(-1)}, 1e12)
+_register("kHz", {"s": Decimal(-1)}, Decimal("1e3"))
+_register("MHz", {"s": Decimal(-1)}, Decimal("1e6"))
+_register("GHz", {"s": Decimal(-1)}, Decimal("1e9"))
+_register("THz", {"s": Decimal(-1)}, Decimal("1e12"))
 
 kHz = Unit("kHz")
 MHz = Unit("MHz")
@@ -800,8 +798,8 @@ THz = Unit("THz")
 # region temperature units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("degC", {"K": Fraction(1)}, 1.0)
-_register("degF", {"K": Fraction(1)}, 5.0 / 9.0)
+_register("degC", {"K": Decimal(1)}, Decimal("1"))
+_register("degF", {"K": Decimal(1)}, Decimal("5") / Decimal("9"))
 
 degC = Unit("degC")
 degF = Unit("degF")
@@ -814,7 +812,9 @@ degF = Unit("degF")
 # region force units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kN", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)}, 1e3)
+_register(
+    "kN", {"kg": Decimal(1), "m": Decimal(1), "s": Decimal(-2)}, Decimal("1e3")
+)
 
 kN = Unit("kN")
 
@@ -825,20 +825,38 @@ kN = Unit("kN")
 # region pressure units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)})
-_register("hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 100)
-_register("kPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e3)
-_register("bar", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e5)
-_register("MPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e6)
+_register(
+    "Pa", {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)}, Decimal("1")
+)
+_register(
+    "hPa",
+    {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)},
+    Decimal("100"),
+)
+_register(
+    "kPa",
+    {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)},
+    Decimal("1e3"),
+)
+_register(
+    "bar",
+    {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)},
+    Decimal("1e5"),
+)
+_register(
+    "MPa",
+    {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)},
+    Decimal("1e6"),
+)
 
 _register(
     "psi",
-    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)},
     Decimal("6894.75729"),
 )
 _register(
     "mmHg",
-    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    {"kg": Decimal(1), "m": Decimal(-1), "s": Decimal(-2)},
     Decimal("133.322368"),
 )
 
@@ -858,34 +876,40 @@ mmHg = Unit("mmHg")
 # region energy units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e3)
-_register("MJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e6)
-_register("GJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e9)
+_register(
+    "kJ", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)}, Decimal("1e3")
+)
+_register(
+    "MJ", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)}, Decimal("1e6")
+)
+_register(
+    "GJ", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)}, Decimal("1e9")
+)
 
 _register(
     "eV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-19,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)},
+    Decimal("1.602176634e-19"),
 )
 _register(
     "keV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-16,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)},
+    Decimal("1.602176634e-16"),
 )
 _register(
     "MeV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-13,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)},
+    Decimal("1.602176634e-13"),
 )
 _register(
     "GeV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-10,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)},
+    Decimal("1.602176634e-10"),
 )
 _register(
     "TeV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-7,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)},
+    Decimal("1.602176634e-7"),
 )
 
 kJ = Unit("kJ")
@@ -905,9 +929,15 @@ TeV = Unit("TeV")
 # region power units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e3)
-_register("MW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e6)
-_register("GW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e9)
+_register(
+    "kW", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3)}, Decimal("1e3")
+)
+_register(
+    "MW", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3)}, Decimal("1e6")
+)
+_register(
+    "GW", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3)}, Decimal("1e9")
+)
 
 kW = Unit("kW")
 MW = Unit("MW")
@@ -921,9 +951,9 @@ GW = Unit("GW")
 # region Electrical units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kA", {"A": Fraction(1)}, 1e3)
-_register("mA", {"A": Fraction(1)}, 1e-3)
-_register("uA", {"A": Fraction(1)}, 1e-6)
+_register("kA", {"A": Decimal(1)}, Decimal("1e3"))
+_register("mA", {"A": Decimal(1)}, Decimal("1e-3"))
+_register("uA", {"A": Decimal(1)}, Decimal("1e-6"))
 
 kA = Unit("kA")
 mA = Unit("mA")
@@ -931,18 +961,18 @@ uA = Unit("uA")
 
 _register(
     "kV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-    1e3,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3), "A": Decimal(-1)},
+    Decimal("1e3"),
 )
 _register(
     "mV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-    1e-3,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3), "A": Decimal(-1)},
+    Decimal("1e-3"),
 )
 _register(
     "uV",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-    1e-6,
+    {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-3), "A": Decimal(-1)},
+    Decimal("1e-6"),
 )
 
 kV = Unit("kV")
@@ -959,13 +989,17 @@ uV = Unit("uV")
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 
-_register("Bq", {"s": Fraction(-1)}, 1)
+_register("Bq", {"s": Decimal(-1)}, Decimal(1))
 Bq = Unit("Bq")
 
-_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1)
+_register(
+    "Sv", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)}, Decimal(1)
+)
 Sv = Unit("Sv")
 
-_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1)
+_register(
+    "Gy", {"kg": Decimal(1), "m": Decimal(2), "s": Decimal(-2)}, Decimal(1)
+)
 Gy = Unit("Gy")
 
 
@@ -976,16 +1010,16 @@ Gy = Unit("Gy")
 # region data types
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("bit", {}, 1)
-_register("byte", {}, 8)
+_register("bit", {}, Decimal(1))
+_register("byte", {}, Decimal(8))
 bit = Unit("bit")
 byte = Unit("byte")
 
-_register("kibi", {}, 1024)
-_register("mebi", {}, 1024**2)
-_register("gibi", {}, 1024**3)
-_register("tebi", {}, 1024**4)
-_register("pebi", {}, 1024**5)
+_register("kibi", {}, Decimal(1024))
+_register("mebi", {}, Decimal(1024**2))
+_register("gibi", {}, Decimal(1024**3))
+_register("tebi", {}, Decimal(1024**4))
+_register("pebi", {}, Decimal(1024**5))
 
 kibi = Unit("kibi")
 mebi = Unit("mebi")

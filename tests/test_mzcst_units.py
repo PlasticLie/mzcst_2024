@@ -28,7 +28,7 @@
 import math
 import random
 import unittest
-from fractions import Fraction
+from decimal import Decimal
 
 import mzcst_2024.units as mzu
 from mzcst_2024.units import (
@@ -378,8 +378,8 @@ class TestUnit(unittest.TestCase):
     def test_unit_dims(self):
         """暴露简单单位的基础量纲。"""
 
-        assert mm.dims == {"m": Fraction(1)}
-        assert A.dims == {"A": Fraction(1)}
+        assert mm.dims == {"m": Decimal(1)}
+        assert A.dims == {"A": Decimal(1)}
 
     def test_unit_factor(self):
         """暴露相对 SI 的数值缩放因子。"""
@@ -390,22 +390,22 @@ class TestUnit(unittest.TestCase):
     def test_unit_mul(self):
         """单位相乘并验证结果量纲。"""
         area_unit = m * m
-        assert area_unit.dims == {"m": Fraction(2)}
+        assert area_unit.dims == {"m": Decimal(2)}
 
     def test_unit_div(self):
         """单位相除并验证结果量纲。"""
         speed_unit = m / s
-        assert speed_unit.dims == {"m": Fraction(1), "s": Fraction(-1)}
+        assert speed_unit.dims == {"m": Decimal(1), "s": Decimal(-1)}
 
     def test_unit_pow(self):
         """单位的整数次幂运算。"""
         vol_unit = m**3
-        assert vol_unit.dims == {"m": Fraction(3)}
+        assert vol_unit.dims == {"m": Decimal(3)}
 
-    def test_unit_pow_fraction(self):
+    def test_unit_pow_Decimal(self):
         """单位的分数次幂运算。"""
         sqrt_m = m.pow(1, 2)
-        assert sqrt_m.dims == {"m": Fraction(1, 2)}
+        assert sqrt_m.dims == {"m": Decimal(1, 2)}
 
     def test_unit_pow_zero_denom_raises(self):
         """分数幂分母为 0 时应拒绝并抛错。"""
@@ -492,7 +492,7 @@ class TestUnitDimensions(unittest.TestCase):
 
     def test_frequency_dims(self):
         """频率应具有时间负一次量纲。"""
-        assert Hz.dims == {"s": Fraction(-1)}
+        assert Hz.dims == {"s": Decimal(-1)}
 
     def test_dimensionless_after_cancellation(self):
         """相同量纲约消后应得到无量纲单位。"""

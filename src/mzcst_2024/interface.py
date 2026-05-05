@@ -1,4 +1,3 @@
-# pylint: disable=missing-docstring
 """提供与`cst.interface`的接口。
 
 The `cst.interface` module offers a general interface to the CST Studio Suite.
