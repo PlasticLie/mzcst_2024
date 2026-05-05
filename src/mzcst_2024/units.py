@@ -1,4 +1,9 @@
-"""仿照`cst.units`，实现与之兼容的单位处理。"""
+"""仿照`cst.units`，实现与之兼容的单位处理。
+
+注：本模块实际上并不直接依赖于`cst.units`，而是通过定义与其兼容的接口来实现功能。这种设计允许用户在不安装CST Studio Suite的环境中使用本模块进行单位处理，同时也能在安装了CST Studio Suite的环境中无缝替换`cst.units`。
+
+
+"""
 
 from __future__ import annotations
 
