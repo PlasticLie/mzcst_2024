@@ -30,7 +30,7 @@ import random
 import unittest
 from fractions import Fraction
 
-import mzcst_2024.units as mu
+import mzcst_2024.units as mzu
 from mzcst_2024.units import (
     A,
     C,
@@ -96,7 +96,7 @@ class TestQuantityCreation(unittest.TestCase):
 
     def test_length_mm(self):
         """创建毫米量并验证数值与单位。"""
-        l1 = 2 * mm
+        l1: Quantity = 2 * mm
         assert l1.value == 2
         assert l1.unit == mm
 

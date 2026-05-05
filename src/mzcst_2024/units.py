@@ -520,7 +520,7 @@ cd = Unit("cd")
 _register("one", {})
 _register("rad", {})
 _register("sr", {})
-_register("degree", {}, Fraction(3.141592653589793, 180))
+_register("degree", {}, Fraction(3.141592653589793 / 180))
 
 one = Unit("one")
 rad = Unit("rad")
@@ -777,7 +777,7 @@ THz = Unit("THz")
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 _register("degC", {"K": Fraction(1)}, Fraction("1"))
-_register("degF", {"K": Fraction(1)}, Fraction(5,9))
+_register("degF", {"K": Fraction(1)}, Fraction(5, 9))
 
 degC = Unit("degC")
 degF = Unit("degF")
@@ -790,7 +790,11 @@ degF = Unit("degF")
 # region force units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kN", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)}, Fraction("1e3"))
+_register(
+    "kN",
+    {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)},
+    Fraction("1e3"),
+)
 
 kN = Unit("kN")
 
@@ -801,16 +805,34 @@ kN = Unit("kN")
 # region pressure units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction(1))
 _register(
-    "hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction(100)
+    "Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction(1)
 )
-_register("kPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("1e3"))
-_register("bar", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("1e5"))
-_register("MPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("1e6"))
+_register(
+    "hPa",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction(100),
+)
+_register(
+    "kPa",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction("1e3"),
+)
+_register(
+    "bar",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction("1e5"),
+)
+_register(
+    "MPa",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction("1e6"),
+)
 
 _register(
-    "psi", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("6894.75729")
+    "psi",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction("6894.75729"),
 )
 _register(
     "mmHg",
@@ -834,9 +856,21 @@ mmHg = Unit("mmHg")
 # region energy units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1e3"))
-_register("MJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1e6"))
-_register("GJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1e9"))
+_register(
+    "kJ",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1e3"),
+)
+_register(
+    "MJ",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1e6"),
+)
+_register(
+    "GJ",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1e9"),
+)
 
 _register(
     "eV",
@@ -881,9 +915,21 @@ TeV = Unit("TeV")
 # region power units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, Fraction("1e3"))
-_register("MW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, Fraction("1e6"))
-_register("GW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, Fraction("1e9"))
+_register(
+    "kW",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)},
+    Fraction("1e3"),
+)
+_register(
+    "MW",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)},
+    Fraction("1e6"),
+)
+_register(
+    "GW",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)},
+    Fraction("1e9"),
+)
 
 kW = Unit("kW")
 MW = Unit("MW")
@@ -938,10 +984,18 @@ uV = Unit("uV")
 _register("Bq", {"s": Fraction(-1)})
 Bq = Unit("Bq")
 
-_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1.0"))
+_register(
+    "Sv",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1.0"),
+)
 Sv = Unit("Sv")
 
-_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1.0"))
+_register(
+    "Gy",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1.0"),
+)
 Gy = Unit("Gy")
 
 
