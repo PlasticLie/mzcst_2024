@@ -429,8 +429,8 @@ def _format_unit_symbol(dims: Dict[str, Fraction]) -> str:
 
 
 def _find_registered_unit(
-    dims: Dict[str, Fraction], factor: float
-) -> tuple[str, float] | None:
+    dims: Dict[str, Fraction], factor: Fraction
+) -> tuple[str, Fraction] | None:
     """Find a registered unit matching the given dimensions and factor.
 
     Returns (symbol, factor) if found, None otherwise.
@@ -441,7 +441,9 @@ def _find_registered_unit(
     return None
 
 
-def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
+def _resolve_unit_symbol(
+    unit: str,
+) -> tuple[Dict[str, Fraction], Fraction, str]:
     """Resolves a unit symbol to its dimensions, factor, and canonical symbol.
 
     Parameters
@@ -465,11 +467,13 @@ def _resolve_unit_symbol(unit: str) -> tuple[Dict[str, Fraction], float, str]:
     return dict(dims), factor, symbol
 
 
-_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], float, str]] = {}
+_UNIT_REGISTRY: Dict[str, tuple[Dict[str, Fraction], Fraction, str]] = {}
 
 
 def _register(
-    symbol: str, dims: Dict[str, Fraction], factor: float = 1.0
+    symbol: str,
+    dims: Dict[str, Fraction],
+    factor: Fraction | Number = Fraction(1),
 ) -> None:
     """Registers a unit in the unit registry.
 
@@ -480,10 +484,10 @@ def _register(
 
     dims : Dict[str, Fraction]
         The dimensions of the unit.
-    factor : float, optional
-        The conversion factor to the base unit, by default 1.0
+    factor : Fraction | Number, optional
+        The conversion factor to the base unit, by default 1
     """
-    _UNIT_REGISTRY[symbol] = (dict(dims), float(factor), symbol)
+    _UNIT_REGISTRY[symbol] = (dict(dims), Fraction(factor), symbol)
 
 
 # Time and length convenience units
@@ -641,12 +645,6 @@ _register("um", {"m": Fraction(1)}, Fraction("1e-6"))
 _register("nm", {"m": Fraction(1)}, Fraction("1e-9"))
 _register("pm", {"m": Fraction(1)}, Fraction("1e-12"))
 
-_register("mil", {"m": Fraction(1)}, Fraction("2.54e-5"))
-_register("inch", {"m": Fraction(1)}, Fraction("0.0254"))
-_register("foot", {"m": Fraction(1)}, Fraction("0.3048"))
-_register("yard", {"m": Fraction(1)}, Fraction("0.9144"))
-_register("mile", {"m": Fraction(1)}, Fraction("1609.344"))
-
 _register("angstrom", {"m": Fraction(1)}, Fraction("1e-10"))
 
 km = Unit("km")
@@ -657,11 +655,6 @@ um = Unit("μm")
 nm = Unit("nm")
 pm = Unit("pm")
 
-mil = Unit("mil")
-inch = Unit("inch")
-foot = Unit("foot")
-yard = Unit("yard")
-mile = Unit("mile")
 
 angstrom = Unit("angstrom")
 
@@ -679,15 +672,11 @@ _register("m^2", {"m": Fraction(2)}, Fraction("1.0"))
 _register("cm^2", {"m": Fraction(2)}, Fraction("1e-4"))
 _register("mm^2", {"m": Fraction(2)}, Fraction("1e-6"))
 
-_register("acre", {"m": Fraction(2)}, Fraction("4046.8564224"))
-
 km2 = Unit("km^2")
 ha = Unit("ha")
 m2 = Unit("m^2")
 cm2 = Unit("cm^2")
 mm2 = Unit("mm^2")
-
-acre = Unit("acre")
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -777,10 +766,9 @@ THz = Unit("THz")
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 _register("degC", {"K": Fraction(1)}, Fraction("1"))
-_register("degF", {"K": Fraction(1)}, Fraction(5, 9))
 
 degC = Unit("degC")
-degF = Unit("degF")
+
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -829,25 +817,12 @@ _register(
     Fraction("1e6"),
 )
 
-_register(
-    "psi",
-    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
-    Fraction("6894.75729"),
-)
-_register(
-    "mmHg",
-    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
-    133.322368,
-)
 
 Pa = Unit("Pa")
 hPa = Unit("hPa")
 kPa = Unit("kPa")
 bar_ = Unit("bar")
 MPa = Unit("MPa")
-
-psi = Unit("psi")
-mmHg = Unit("mmHg")
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -984,20 +959,6 @@ uV = Unit("uV")
 _register("Bq", {"s": Fraction(-1)})
 Bq = Unit("Bq")
 
-_register(
-    "Sv",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    Fraction("1.0"),
-)
-Sv = Unit("Sv")
-
-_register(
-    "Gy",
-    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    Fraction("1.0"),
-)
-Gy = Unit("Gy")
-
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -1022,6 +983,68 @@ mebi = Unit("mebi")
 gibi = Unit("gibi")
 tebi = Unit("tebi")
 pebi = Unit("pebi")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region imperial units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("mil", {"m": Fraction(1)}, Fraction("2.54e-5"))
+_register("inch", {"m": Fraction(1)}, Fraction("0.0254"))
+_register("foot", {"m": Fraction(1)}, Fraction("0.3048"))
+_register("yard", {"m": Fraction(1)}, Fraction("0.9144"))
+_register("mile", {"m": Fraction(1)}, Fraction("1609.344"))
+mil = Unit("mil")
+inch = Unit("inch")
+foot = Unit("foot")
+yard = Unit("yard")
+mile = Unit("mile")
+
+_register("acre", {"m": Fraction(2)}, Fraction("4046.8564224"))
+acre = Unit("acre")
+
+_register(
+    "psi",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction("6894.75729"),
+)
+psi = Unit("psi")
+
+# endregion
+# ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+
+#######################################
+# region other non-SI units
+# ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+_register("degF", {"K": Fraction(1)}, Fraction(5, 9))
+degF = Unit("degF")
+
+_register(
+    "mmHg",
+    {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)},
+    Fraction("133.322368"),
+)
+mmHg = Unit("mmHg")
+
+_register(
+    "Sv",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1.0"),
+)
+Sv = Unit("Sv")
+
+_register(
+    "Gy",
+    {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
+    Fraction("1.0"),
+)
+Gy = Unit("Gy")
+
 
 # endregion
 # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
