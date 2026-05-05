@@ -38,7 +38,7 @@ class Unit:
         self,
         unit_name: str,
         dimensions: Dict[str, Fraction] | None = None,
-        factor: float = 1.0,
+        factor: Fraction | Number = Fraction(1),
     ):
         if dimensions is None:
             dims, factor, symbol = _resolve_unit_symbol(unit_name)
@@ -47,7 +47,7 @@ class Unit:
             self._symbol = symbol
         else:
             self._dimensions = {k: v for k, v in dimensions.items() if v != 0}
-            self._factor = float(factor)
+            self._factor = Fraction(factor)
             self._symbol = unit_name
 
     @staticmethod
@@ -68,7 +68,7 @@ class Unit:
         return Unit(
             _format_unit_symbol(self._dimensions),
             dimensions=self._dimensions,
-            factor=1.0,
+            factor=Fraction(1),
         )
 
     def pow(self, nom: int, denom: int) -> "Unit":
@@ -81,7 +81,7 @@ class Unit:
         return Unit(
             _format_unit_symbol(dims),
             dimensions=dims,
-            factor=self._factor ** float(p),
+            factor=self._factor**p,
         )
 
     def simplify(self) -> "Unit":
@@ -145,15 +145,16 @@ class Unit:
             f", dimensions={self._dimensions!r}" if self._dimensions else ""
         )
         factor_repr = (
-            f", factor={self._factor!r}" if self._factor != 1.0 else ""
+            f", factor={self._factor!r}" if self._factor != Fraction(1) else ""
         )
         return f"Unit('{self.get_symbol()}'{dims_repr}{factor_repr})"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Unit):
             return False
-        return self._dimensions == other._dimensions and math.isclose(
-            self._factor, other._factor
+        return (
+            self._dimensions == other._dimensions
+            and self._factor == other._factor
         )
 
     @property
@@ -165,7 +166,7 @@ class Unit:
         return dict(self._dimensions)
 
     @property
-    def factor(self) -> float:
+    def factor(self) -> Fraction:
         """Scaling factor relative to SI representation of the same dimensions.
 
         `cst.units.Unit`不包含本属性，用户代码中不应直接访问此属性。
@@ -434,10 +435,8 @@ def _find_registered_unit(
 
     Returns (symbol, factor) if found, None otherwise.
     """
-    for (reg_dims, reg_factor, reg_symbol) in _UNIT_REGISTRY.values():
-        if reg_dims == dims and math.isclose(
-            reg_factor, factor, rel_tol=1e-9
-        ):
+    for reg_dims, reg_factor, reg_symbol in _UNIT_REGISTRY.values():
+        if reg_dims == dims and math.isclose(reg_factor, factor, rel_tol=1e-9):
             return reg_symbol, reg_factor
     return None
 
@@ -521,7 +520,7 @@ cd = Unit("cd")
 _register("one", {})
 _register("rad", {})
 _register("sr", {})
-_register("degree", {}, 3.141592653589793 / 180.0)
+_register("degree", {}, Fraction(3.141592653589793, 180))
 
 one = Unit("one")
 rad = Unit("rad")
@@ -590,23 +589,23 @@ T = Unit("T")
 # region SI prefixes
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("yotta", {}, 1e24)
-_register("zetta", {}, 1e21)
-_register("exa", {}, 1e18)
-_register("peta", {}, 1e15)
-_register("tera", {}, 1e12)
-_register("giga", {}, 1e9)
-_register("mega", {}, 1e6)
-_register("kilo", {}, 1e3)
-_register("deci", {}, 1e-1)
-_register("centi", {}, 1e-2)
-_register("milli", {}, 1e-3)
-_register("micro", {}, 1e-6)
-_register("nano", {}, 1e-9)
-_register("pico", {}, 1e-12)
-_register("femto", {}, 1e-15)
-_register("atto", {}, 1e-18)
-_register("zepto", {}, 1e-21)
+_register("yotta", {}, Fraction("1e24"))
+_register("zetta", {}, Fraction("1e21"))
+_register("exa", {}, Fraction("1e18"))
+_register("peta", {}, Fraction("1e15"))
+_register("tera", {}, Fraction("1e12"))
+_register("giga", {}, Fraction("1e9"))
+_register("mega", {}, Fraction("1e6"))
+_register("kilo", {}, Fraction("1e3"))
+_register("deci", {}, Fraction("1e-1"))
+_register("centi", {}, Fraction("1e-2"))
+_register("milli", {}, Fraction("1e-3"))
+_register("micro", {}, Fraction("1e-6"))
+_register("nano", {}, Fraction("1e-9"))
+_register("pico", {}, Fraction("1e-12"))
+_register("femto", {}, Fraction("1e-15"))
+_register("atto", {}, Fraction("1e-18"))
+_register("zepto", {}, Fraction("1e-21"))
 
 yotta = Unit("yotta")
 zetta = Unit("zetta")
@@ -634,21 +633,21 @@ zepto = Unit("zepto")
 # region length units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("km", {"m": Fraction(1)}, 1e3)
-_register("cm", {"m": Fraction(1)}, 1e-2)
-_register("mm", {"m": Fraction(1)}, 1e-3)
-_register("μm", {"m": Fraction(1)}, 1e-6)
-_register("um", {"m": Fraction(1)}, 1e-6)
-_register("nm", {"m": Fraction(1)}, 1e-9)
-_register("pm", {"m": Fraction(1)}, 1e-12)
+_register("km", {"m": Fraction(1)}, Fraction("1e3"))
+_register("cm", {"m": Fraction(1)}, Fraction("1e-2"))
+_register("mm", {"m": Fraction(1)}, Fraction("1e-3"))
+_register("μm", {"m": Fraction(1)}, Fraction("1e-6"))
+_register("um", {"m": Fraction(1)}, Fraction("1e-6"))
+_register("nm", {"m": Fraction(1)}, Fraction("1e-9"))
+_register("pm", {"m": Fraction(1)}, Fraction("1e-12"))
 
-_register("mil", {"m": Fraction(1)}, 2.54e-5)
-_register("inch", {"m": Fraction(1)}, 0.0254)
-_register("foot", {"m": Fraction(1)}, 0.3048)
-_register("yard", {"m": Fraction(1)}, 0.9144)
-_register("mile", {"m": Fraction(1)}, 1609.344)
+_register("mil", {"m": Fraction(1)}, Fraction("2.54e-5"))
+_register("inch", {"m": Fraction(1)}, Fraction("0.0254"))
+_register("foot", {"m": Fraction(1)}, Fraction("0.3048"))
+_register("yard", {"m": Fraction(1)}, Fraction("0.9144"))
+_register("mile", {"m": Fraction(1)}, Fraction("1609.344"))
 
-_register("angstrom", {"m": Fraction(1)}, 1e-10)
+_register("angstrom", {"m": Fraction(1)}, Fraction("1e-10"))
 
 km = Unit("km")
 cm = Unit("cm")
@@ -674,13 +673,13 @@ angstrom = Unit("angstrom")
 # region area units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("km^2", {"m": Fraction(2)}, 1e6)
-_register("ha", {"m": Fraction(2)}, 1e4)
-_register("m^2", {"m": Fraction(2)}, 1.0)
-_register("cm^2", {"m": Fraction(2)}, 1e-4)
-_register("mm^2", {"m": Fraction(2)}, 1e-6)
+_register("km^2", {"m": Fraction(2)}, Fraction("1e6"))
+_register("ha", {"m": Fraction(2)}, Fraction("1e4"))
+_register("m^2", {"m": Fraction(2)}, Fraction("1.0"))
+_register("cm^2", {"m": Fraction(2)}, Fraction("1e-4"))
+_register("mm^2", {"m": Fraction(2)}, Fraction("1e-6"))
 
-_register("acre", {"m": Fraction(2)}, 4046.8564224)
+_register("acre", {"m": Fraction(2)}, Fraction("4046.8564224"))
 
 km2 = Unit("km^2")
 ha = Unit("ha")
@@ -698,11 +697,11 @@ acre = Unit("acre")
 # region volume units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("m^3", {"m": Fraction(3)}, 1.0)
-_register("cm^3", {"m": Fraction(3)}, 1e-6)
+_register("m^3", {"m": Fraction(3)}, Fraction("1"))
+_register("cm^3", {"m": Fraction(3)}, Fraction("1e-6"))
 
-_register("L", {"m": Fraction(3)}, 1e-3)
-_register("mL", {"m": Fraction(3)}, 1e-6)
+_register("L", {"m": Fraction(3)}, Fraction("1e-3"))
+_register("mL", {"m": Fraction(3)}, Fraction("1e-6"))
 
 m3 = Unit("m^3")
 cm3 = Unit("cm^3")
@@ -718,9 +717,9 @@ mL = Unit("mL")
 # region Mass units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("g", {"kg": Fraction(1)}, 1e-3)
-_register("mg", {"kg": Fraction(1)}, 1e-6)
-_register("ug", {"kg": Fraction(1)}, 1e-9)
+_register("g", {"kg": Fraction(1)}, Fraction("1e-3"))
+_register("mg", {"kg": Fraction(1)}, Fraction("1e-6"))
+_register("ug", {"kg": Fraction(1)}, Fraction("1e-9"))
 
 g = Unit("g")
 mg = Unit("mg")
@@ -734,18 +733,18 @@ ug = Unit("ug")
 # region Time units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("min", {"s": Fraction(1)}, 60.0)
-_register("hour", {"s": Fraction(1)}, 3600.0)
-_register("day", {"s": Fraction(1)}, 86400.0)
+_register("min", {"s": Fraction(1)}, Fraction("60"))
+_register("hour", {"s": Fraction(1)}, Fraction("3600"))
+_register("day", {"s": Fraction(1)}, Fraction("86400"))
 
 minute = Unit("min")
 hour = Unit("hour")
 day = Unit("day")
 
-_register("ps", {"s": Fraction(1)}, 1e-12)
-_register("ns", {"s": Fraction(1)}, 1e-9)
-_register("us", {"s": Fraction(1)}, 1e-6)
-_register("ms", {"s": Fraction(1)}, 1e-3)
+_register("ps", {"s": Fraction(1)}, Fraction("1e-12"))
+_register("ns", {"s": Fraction(1)}, Fraction("1e-9"))
+_register("us", {"s": Fraction(1)}, Fraction("1e-6"))
+_register("ms", {"s": Fraction(1)}, Fraction("1e-3"))
 
 ps = Unit("ps")
 ns = Unit("ns")
@@ -759,10 +758,10 @@ ms = Unit("ms")
 # region frequency units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kHz", {"s": Fraction(-1)}, 1e3)
-_register("MHz", {"s": Fraction(-1)}, 1e6)
-_register("GHz", {"s": Fraction(-1)}, 1e9)
-_register("THz", {"s": Fraction(-1)}, 1e12)
+_register("kHz", {"s": Fraction(-1)}, Fraction("1e3"))
+_register("MHz", {"s": Fraction(-1)}, Fraction("1e6"))
+_register("GHz", {"s": Fraction(-1)}, Fraction("1e9"))
+_register("THz", {"s": Fraction(-1)}, Fraction("1e12"))
 
 kHz = Unit("kHz")
 MHz = Unit("MHz")
@@ -777,8 +776,8 @@ THz = Unit("THz")
 # region temperature units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("degC", {"K": Fraction(1)}, 1.0)
-_register("degF", {"K": Fraction(1)}, 5.0 / 9.0)
+_register("degC", {"K": Fraction(1)}, Fraction("1"))
+_register("degF", {"K": Fraction(1)}, Fraction(5,9))
 
 degC = Unit("degC")
 degF = Unit("degF")
@@ -791,7 +790,7 @@ degF = Unit("degF")
 # region force units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kN", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)}, 1e3)
+_register("kN", {"kg": Fraction(1), "m": Fraction(1), "s": Fraction(-2)}, Fraction("1e3"))
 
 kN = Unit("kN")
 
@@ -802,16 +801,16 @@ kN = Unit("kN")
 # region pressure units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1.0)
+_register("Pa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction(1))
 _register(
-    "hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 100.0
+    "hPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction(100)
 )
-_register("kPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e3)
-_register("bar", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e5)
-_register("MPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 1e6)
+_register("kPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("1e3"))
+_register("bar", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("1e5"))
+_register("MPa", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("1e6"))
 
 _register(
-    "psi", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, 6894.75729
+    "psi", {"kg": Fraction(1), "m": Fraction(-1), "s": Fraction(-2)}, Fraction("6894.75729")
 )
 _register(
     "mmHg",
@@ -835,34 +834,34 @@ mmHg = Unit("mmHg")
 # region energy units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e3)
-_register("MJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e6)
-_register("GJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1e9)
+_register("kJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1e3"))
+_register("MJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1e6"))
+_register("GJ", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1e9"))
 
 _register(
     "eV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-19,
+    Fraction("1.602176634e-19"),
 )
 _register(
     "keV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-16,
+    Fraction("1.602176634e-16"),
 )
 _register(
     "MeV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-13,
+    Fraction("1.602176634e-13"),
 )
 _register(
     "GeV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-10,
+    Fraction("1.602176634e-10"),
 )
 _register(
     "TeV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)},
-    1.602176634e-7,
+    Fraction("1.602176634e-7"),
 )
 
 kJ = Unit("kJ")
@@ -882,9 +881,9 @@ TeV = Unit("TeV")
 # region power units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e3)
-_register("MW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e6)
-_register("GW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, 1e9)
+_register("kW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, Fraction("1e3"))
+_register("MW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, Fraction("1e6"))
+_register("GW", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3)}, Fraction("1e9"))
 
 kW = Unit("kW")
 MW = Unit("MW")
@@ -898,9 +897,9 @@ GW = Unit("GW")
 # region Electrical units
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("kA", {"A": Fraction(1)}, 1e3)
-_register("mA", {"A": Fraction(1)}, 1e-3)
-_register("uA", {"A": Fraction(1)}, 1e-6)
+_register("kA", {"A": Fraction(1)}, Fraction("1e3"))
+_register("mA", {"A": Fraction(1)}, Fraction("1e-3"))
+_register("uA", {"A": Fraction(1)}, Fraction("1e-6"))
 
 kA = Unit("kA")
 mA = Unit("mA")
@@ -909,17 +908,17 @@ uA = Unit("uA")
 _register(
     "kV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-    1e3,
+    Fraction("1e3"),
 )
 _register(
     "mV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-    1e-3,
+    Fraction("1e-3"),
 )
 _register(
     "uV",
     {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-3), "A": Fraction(-1)},
-    1e-6,
+    Fraction("1e-6"),
 )
 
 kV = Unit("kV")
@@ -936,13 +935,13 @@ uV = Unit("uV")
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 
-_register("Bq", {"s": Fraction(-1)}, 1.0)
+_register("Bq", {"s": Fraction(-1)})
 Bq = Unit("Bq")
 
-_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
+_register("Sv", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1.0"))
 Sv = Unit("Sv")
 
-_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, 1.0)
+_register("Gy", {"kg": Fraction(1), "m": Fraction(2), "s": Fraction(-2)}, Fraction("1.0"))
 Gy = Unit("Gy")
 
 
@@ -953,16 +952,16 @@ Gy = Unit("Gy")
 # region data types
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
-_register("bit", {}, 1.0)
-_register("byte", {}, 8.0)
+_register("bit", {}, Fraction(1))
+_register("byte", {}, Fraction(8))
 bit = Unit("bit")
 byte = Unit("byte")
 
-_register("kibi", {}, 1024.0)
-_register("mebi", {}, 1024.0**2)
-_register("gibi", {}, 1024.0**3)
-_register("tebi", {}, 1024.0**4)
-_register("pebi", {}, 1024.0**5)
+_register("kibi", {}, Fraction(1024))
+_register("mebi", {}, Fraction(1024**2))
+_register("gibi", {}, Fraction(1024**3))
+_register("tebi", {}, Fraction(1024**4))
+_register("pebi", {}, Fraction(1024**5))
 
 kibi = Unit("kibi")
 mebi = Unit("mebi")
