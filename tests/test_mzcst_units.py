@@ -479,16 +479,18 @@ class TestUnitDimensions(unittest.TestCase):
         """由力除以面积推导压力量纲。"""
         pressure_unit = N / (m**2)
         assert pressure_unit.dims == Pa.dims
+        assert pressure_unit == Pa
 
     def test_voltage_dims_from_power_over_current(self):
         """由功率除以电流推导电压量纲。"""
         voltage_unit = W / A
-        assert voltage_unit.dims == V.dims
+        assert voltage_unit == V
 
     def test_magnetic_flux_density_dims(self):
         """由磁通除以面积推导磁通密度量纲。"""
         magnetic_flux_density = Wb / (m**2)
         assert magnetic_flux_density.dims == T.dims
+        assert magnetic_flux_density == T
 
     def test_frequency_dims(self):
         """频率应具有时间负一次量纲。"""
