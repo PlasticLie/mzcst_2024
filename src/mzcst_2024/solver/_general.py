@@ -460,7 +460,7 @@ class ParameterSweep(BaseObject):
         self._simulation_type = simulation_type
         self._sequence: list[str] = []
         self._parameter_samples: list[dict[str, str]] = []
-        self._parameter_step_with: list[dict[str, str]] = []
+        self._parameter_step_width: list[dict[str, str]] = []
         self._parameter_arbitrary_points: list[dict[str, str]] = []
         return
 
@@ -559,7 +559,7 @@ class ParameterSweep(BaseObject):
             raise ValueError(
                 f"Sequence {sequence_name} does not exist. Please add it first."
             )
-        self._parameter_step_with.append(
+        self._parameter_step_width.append(
             {
                 "sequence_name": sequence_name,
                 "parameter_name": f"{parameter_name}",
@@ -569,12 +569,12 @@ class ParameterSweep(BaseObject):
             }
         )
         self._modeler.add_to_history(
-            f"add parameter step with for {parameter_name} in {sequence_name}",
-            f'ParameterSweep.AddParameter_Stepwidth "{sequence_name}", "{parameter_name}", "{from_value}", "{to_value}", "{width}"',
+            f"add parameter step width for {parameter_name} in {sequence_name}",
+            f'ParameterSweep.AddParameter_StepWidth "{sequence_name}", "{parameter_name}", "{from_value}", "{to_value}", "{width}"',
         )
         _logger.info(
             "%s",
-            f"Added parameter step with for {parameter_name} in {sequence_name}.",
+            f"Added parameter step width for {parameter_name} in {sequence_name}.",
         )
         return self
 
@@ -628,9 +628,9 @@ class ParameterSweep(BaseObject):
                 and ps["parameter_name"] == f"{parameter_name}"
             )
         ]
-        self._parameter_step_with = [
+        self._parameter_step_width = [
             psw
-            for psw in self._parameter_step_with
+            for psw in self._parameter_step_width
             if not (
                 psw["sequence_name"] == sequence_name
                 and psw["parameter_name"] == f"{parameter_name}"
