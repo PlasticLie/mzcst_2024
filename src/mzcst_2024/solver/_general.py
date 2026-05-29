@@ -645,24 +645,24 @@ class ParameterSweep(BaseObject):
             ps
             for ps in self._parameter_samples
             if not (
-                ps["sequence_name"] == sequence_name
-                and ps["parameter_name"] == f"{parameter_name}"
+                ps.sequence_name == sequence_name
+                and ps.parameter_name == f"{parameter_name}"
             )
         ]
         self._parameter_step_width = [
             psw
             for psw in self._parameter_step_width
             if not (
-                psw["sequence_name"] == sequence_name
-                and psw["parameter_name"] == f"{parameter_name}"
+                psw.sequence_name == sequence_name
+                and psw.parameter_name == f"{parameter_name}"
             )
         ]
         self._parameter_arbitrary_points = [
             pap
             for pap in self._parameter_arbitrary_points
             if not (
-                pap["sequence_name"] == sequence_name
-                and pap["parameter_name"] == f"{parameter_name}"
+                pap.sequence_name == sequence_name
+                and pap.parameter_name == f"{parameter_name}"
             )
         ]
         self._modeler.add_to_history(
