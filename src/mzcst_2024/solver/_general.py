@@ -1,5 +1,6 @@
 """通用绘图对象。"""
 
+import dataclasses
 import logging
 import typing
 
@@ -435,12 +436,32 @@ _parameter_sweep_type = typing.Literal[
     "Particle Tracking",
 ]
 
-class ParameterSweepSequence:
-    def __init__(self, name: str):
-        self.name = name
-        self.parameter_samples: list[dict[str, str]] = []
-        self.parameter_step_with: list[dict[str, str]] = []
-        self.parameter_arbitrary_points: list[dict[str, str]] = []
+
+@dataclasses.dataclass
+class ParameterSamples:
+    sequence_name: str
+    parameter_name: str
+    from_value: str
+    to_value: str
+    steps: str
+    logarithmic_sweep: str
+
+
+@dataclasses.dataclass
+class ParameterStepWidth:
+    sequence_name: str
+    parameter_name: str
+    from_value: str
+    to_value: str
+    width: str
+
+
+@dataclasses.dataclass
+class ParameterArbitraryPoints:
+    sequence_name: str
+    parameter_name: str
+    points: str
+
 
 class ParameterSweep(BaseObject):
     """Allows to automatically perform several simulations with varying
@@ -459,9 +480,9 @@ class ParameterSweep(BaseObject):
         self._modeler = modeler
         self._simulation_type = simulation_type
         self._sequence: list[str] = []
-        self._parameter_samples: list[dict[str, str]] = []
-        self._parameter_step_width: list[dict[str, str]] = []
-        self._parameter_arbitrary_points: list[dict[str, str]] = []
+        self._parameter_samples: list[ParameterSamples] = []
+        self._parameter_step_width: list[ParameterStepWidth] = []
+        self._parameter_arbitrary_points: list[ParameterArbitraryPoints] = []
         return
 
     @property
@@ -519,14 +540,14 @@ class ParameterSweep(BaseObject):
                 f"Sequence {sequence_name} does not exist. Please add it first."
             )
         self._parameter_samples.append(
-            {
-                "sequence_name": sequence_name,
-                "parameter_name": f"{parameter_name}",
-                "from_value": f"{from_value}",
-                "to_value": f"{to_value}",
-                "steps": f"{steps}",
-                "logarithmic_sweep": f"{logarithmic_sweep}",
-            }
+            ParameterSamples(
+                sequence_name=sequence_name,
+                parameter_name=f"{parameter_name}",
+                from_value=f"{from_value}",
+                to_value=f"{to_value}",
+                steps=f"{steps}",
+                logarithmic_sweep=f"{logarithmic_sweep}",
+            )
         )
         self._modeler.add_to_history(
             f"add parameter samples for {parameter_name} in {sequence_name}",
@@ -560,13 +581,13 @@ class ParameterSweep(BaseObject):
                 f"Sequence {sequence_name} does not exist. Please add it first."
             )
         self._parameter_step_width.append(
-            {
-                "sequence_name": sequence_name,
-                "parameter_name": f"{parameter_name}",
-                "from_value": f"{from_value}",
-                "to_value": f"{to_value}",
-                "width": f"{width}",
-            }
+            ParameterStepWidth(
+                sequence_name=sequence_name,
+                parameter_name=f"{parameter_name}",
+                from_value=f"{from_value}",
+                to_value=f"{to_value}",
+                width=f"{width}",
+            )
         )
         self._modeler.add_to_history(
             f"add parameter step width for {parameter_name} in {sequence_name}",
@@ -595,11 +616,11 @@ class ParameterSweep(BaseObject):
                 f"Sequence {sequence_name} does not exist. Please add it first."
             )
         self._parameter_arbitrary_points.append(
-            {
-                "sequence_name": sequence_name,
-                "parameter_name": f"{parameter_name}",
-                "points": f"{points}",
-            }
+            ParameterArbitraryPoints(
+                sequence_name=sequence_name,
+                parameter_name=f"{parameter_name}",
+                points=f"{points}",
+            )
         )
         self._modeler.add_to_history(
             f"add parameter arbitrary points for {parameter_name} in {sequence_name}",
