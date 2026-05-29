@@ -435,6 +435,12 @@ _parameter_sweep_type = typing.Literal[
     "Particle Tracking",
 ]
 
+class ParameterSweepSequence:
+    def __init__(self, name: str):
+        self.name = name
+        self.parameter_samples: list[dict[str, str]] = []
+        self.parameter_step_with: list[dict[str, str]] = []
+        self.parameter_arbitrary_points: list[dict[str, str]] = []
 
 class ParameterSweep(BaseObject):
     """Allows to automatically perform several simulations with varying
