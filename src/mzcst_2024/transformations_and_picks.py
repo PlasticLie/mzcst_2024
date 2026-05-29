@@ -12,6 +12,15 @@ __all__: list[str] = []
 _logger = logging.getLogger(__name__)
 
 
+class Align(BaseObject):
+    """Offers a set of tools to align solids to other solids or to the working
+    coordinate system."""
+
+    def __init__(self, vba=None):
+        super().__init__(vba=vba)
+        return
+
+
 class WCS_Type(enum.Enum):
     GLOBAL = enum.auto()
     LOCAL = enum.auto()
@@ -48,10 +57,6 @@ class WCS:
 
         return
 
-    #######################################
-    # region 类方法
-    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
     @classmethod
     def activate(
         cls, modeler: "interface.Model3D", c: typing.Literal["local", "global"]
@@ -79,13 +84,6 @@ class WCS:
             case _:
                 _logger.error("Invalid WCS type.")
         return
-
-    # endregion
-    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
-    #######################################
-    # region 属性方法
-    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
     @property
     def name(self) -> str:
@@ -127,13 +125,6 @@ class WCS:
     def uVector_z(self) -> str:
         return self._uVector_z
 
-    # endregion
-    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
-    #######################################
-    # region 特殊方法
-    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
     def __str__(self):
         s0 = [
             f"Name: {self._name}",
@@ -154,9 +145,6 @@ class WCS:
             + f"{quoted(self._origin_x)}, {quoted(self._origin_y)}, {quoted(self._origin_z)}, "
             + f"{quoted(self._uVector_x)}, {quoted(self._uVector_y)}, {quoted(self._uVector_z)})"
         )
-
-    # endregion
-    # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     def store(self, modeler: "interface.Model3D") -> "WCS":
         """存储坐标系。
@@ -291,3 +279,226 @@ def clear_all_picks(modeler: "interface.Model3D") -> None:
     modeler.add_to_history("clear picks", NEW_LINE.join(sCommand))
     _logger.info(OPERATION_SUCCESS, "clear all picks")
     return
+
+
+_transform_origin_type = typing.Literal["ShapeCenter", "CommonCenter", "Free"]
+_transform_object_type = typing.Literal[
+    "Anchorpoint",
+    "Coil",
+    "Currentdistribution",
+    "CurrentMonitor",
+    "CurrentWire",
+    "Face",
+    "FFS",
+    "HF3DMonitor",
+    "Mixed",
+    "Port",
+    "Probe",
+    "Shape",
+    "VoltageMonitor",
+    "VoltageWire",
+    "Voxeldata",
+]
+_transform_method_type = typing.Literal[
+    "Translate",
+    "Rotate",
+    "Scale",
+    "Mirror",
+    "Matrix",
+    "GlobalToLocal",
+    "LocalToGlobal",
+]
+
+
+class BaseTransform(BaseObject):
+    """Offers a set of tools that change a solid by transformations."""
+
+    def __init__(self):
+        super().__init__()
+        self._use_picked_points: bool = False
+        self._invert_picked_points: bool = False
+        self._multiple_objects: bool = False
+        self._group_objects: bool = False
+        self._origin: _transform_origin_type = "ShapeCenter"
+        self._multiple_selection: bool = False
+        self._repetitions: int = 1
+        self._touch: bool = False
+        self._touch_tolerance: str = "1e-6"
+        self._touch_max_iterations: int = 500
+        self._touch_heuristic: bool = True
+        self._touch_offset: str = "0.0"
+        self._what: _transform_object_type = "Shape"
+        self._how: _transform_method_type = "Translate"
+        return
+
+
+class Translate(BaseTransform):
+    """Moves the object along a given vector.
+
+    Attributes:
+        name (str): Name of the transformation.
+        vector (list[str]): The translation vector. The three components of the vector have to be given as strings, e.g. ["10", "0", "5"].
+        use_picked_points (bool): Whether to use picked points for the translation.
+        invert_picked_points (bool): Whether to invert the picked points for the translation.
+        multiple_objects (bool): Whether to apply the transformation to multiple objects.
+        group_objects (bool): Whether to group the objects after transformation.
+        repetitions (int): Number of repetitions of the transformation.
+        multiple_selection (bool): Whether to allow multiple selection of objects for the transformation.
+        auto_destination (bool): Whether to automatically determine the destination of the transformation.
+        what (_transform_object_type): The type of object to be transformed, e.g. "Shape", "Face", etc.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        vector: list[str] | None = None,
+        use_picked_points: bool = False,
+        invert_picked_points: bool = False,
+        multiple_objects: bool = False,
+        group_objects: bool = False,
+        repetitions: int = 1,
+        multiple_selection: bool = False,
+        auto_destination: bool = True,
+        what: _transform_object_type = "Shape",
+    ):
+        super().__init__()
+        self._name: str = name
+        self._vector: list[str] = ["0", "0", "0"] if vector is None else vector
+        self._use_picked_points: bool = use_picked_points
+        self._invert_picked_points: bool = invert_picked_points
+        self._multiple_objects: bool = multiple_objects
+        self._group_objects: bool = group_objects
+        self._repetitions: int = repetitions
+        self._multiple_selection: bool = multiple_selection
+        self._auto_destination: bool = auto_destination
+        self._what: _transform_object_type = what
+        self._how: _transform_method_type = "Translate"
+        return
+
+    def create(self, modeler: "interface.Model3D") -> "Translate":
+        """Creates the transformation.
+
+        Args:
+            modeler (interface.Model3D): 当前建模环境
+
+        Returns:
+            Translate: self
+        """
+        sCommand = [
+            "With Translate",
+            f'    .Name "{self._name}"',
+            f'    .Vector "{self._vector[0]}", "{self._vector[1]}", "{self._vector[2]}"',
+            f'    .UsePickedPoints "{self._use_picked_points}"',
+            f'    .InvertPickedPoints "{self._invert_picked_points}"',
+            f'    .MultipleObjects "{self._multiple_objects}"',
+            f'    .GroupObjects "{self._group_objects}"',
+            f'    .Repetitions "{self._repetitions}"',
+            f'    .MultipleSelection "{self._multiple_selection}"',
+            f'    .AutoDestination "{self._auto_destination}"',
+            f'    .Transform "{self._what}", "{self._how}" ',
+            "End With",
+        ]
+        modeler.add_to_history(
+            f"translate: {self._name}", NEW_LINE.join(sCommand)
+        )
+        _logger.info("Created translate transformation %s", self._name)
+        return self
+
+
+class Rotate(BaseTransform):
+    """Rotates the object around one main axis, given the angle and an offset for the rotation axis (origin).
+
+    Attributes:
+        name (str): Name of the transformation.
+        origin (_transform_origin_type): The origin of the rotation, e.g. "ShapeCenter", "CommonCenter", or "Free".
+        center (list[str]): The center of rotation, given as a list of three strings representing the x, y, and z coordinates, e.g. ["10", "0", "5"].
+        angle (list[str]): The rotation angles around the x, y, and z axes, given as a list of three strings, e.g. ["90", "0", "0"].
+        multiple_objects (bool): Whether to apply the transformation to multiple objects.
+        group_objects (bool): Whether to group the objects after transformation.
+        repetitions (int): Number of repetitions of the transformation.
+        multiple_selection (bool): Whether to allow multiple selection of objects for the transformation.
+        auto_destination (bool): Whether to automatically determine the destination of the transformation.
+        what (_transform_object_type): The type of object to be transformed, e.g. "Shape", "Face", etc.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        origin: _transform_origin_type = "ShapeCenter",
+        center: list[str] | None = None,
+        angle: list[str] | None = None,
+        multiple_objects: bool = False,
+        group_objects: bool = False,
+        repetitions: int = 1,
+        multiple_selection: bool = False,
+        auto_destination: bool = True,
+        what: _transform_object_type = "Shape",
+    ):
+        super().__init__()
+        self._name: str = name
+        self._origin: _transform_origin_type = origin
+        self._center: list[str] = ["0", "0", "0"] if center is None else center
+        self._angle: list[str] = ["0", "0", "0"] if angle is None else angle
+        self._multiple_objects: bool = multiple_objects
+        self._group_objects: bool = group_objects
+        self._repetitions: int = repetitions
+        self._multiple_selection: bool = multiple_selection
+        self._auto_destination: bool = auto_destination
+        self._what: _transform_object_type = what
+        self._how: _transform_method_type = "Rotate"
+        return
+
+    def create(self, modeler: "interface.Model3D") -> "Rotate":
+        """Creates the transformation.
+
+        Args:
+            modeler (interface.Model3D): 当前建模环境
+
+        Returns:
+            Rotate: self
+        """
+        sCommand = [
+            "With Rotate",
+            f'    .Name "{self._name}"',
+            f'    .Origin "{self._origin}"',
+            f'    .Center "{self._center[0]}", "{self._center[1]}", "{self._center[2]}"',
+            f'    .Angle "{self._angle[0]}", "{self._angle[1]}", "{self._angle[2]}"',
+            f'    .MultipleObjects "{self._multiple_objects}"',
+            f'    .GroupObjects "{self._group_objects}"',
+            f'    .Repetitions "{self._repetitions}"',
+            f'    .MultipleSelection "{self._multiple_selection}"',
+            f'    .AutoDestination "{self._auto_destination}"',
+            f'    .Transform "{self._what}", "{self._how}" ',
+            "End With",
+        ]
+        modeler.add_to_history(f"rotate: {self._name}", NEW_LINE.join(sCommand))
+        _logger.info("Created rotate transformation %s", self._name)
+        return self
+
+
+class Scale(BaseTransform):
+    """scales the object. The scaling center can be specified as well. For some
+    types, only uniform scaling is allowed."""
+
+
+class Mirror(BaseTransform):
+    """mirrors the object on a mirror plane whose normal and offset is given"""
+
+
+class Matrix(BaseTransform):
+    """this applies a general matrix transformation onto a given object. Input
+    is a 3 by 3 Matrix and an additional translation vector."""
+
+
+class LocalToGlobal(BaseTransform):
+    """After this transform that consists of translates and rotates internally,
+    the position and orientation of the object  in regard to the global
+    coordinate system will match its position and rotation that it had to the
+    local coordinate system before."""
+
+
+class GlobalToLocal(BaseTransform):
+    """This is the inverse operation to the one above. An object aligned to the
+    x-y plane in the origin of the global coordinate system will afterwards be
+    aligned to the u-v plane and translated to be in the origin of the local
+    coordinate system."""
