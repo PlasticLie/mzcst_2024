@@ -463,6 +463,123 @@ class ParameterArbitraryPoints:
     points: str
 
 
+class ParameterSweepSequence:
+    def __init__(self, name: str, modeler: interface.Model3D):
+        self._name: str = name
+        self._modeler = modeler
+        self._parameter_samples: list[ParameterSamples] = []
+        self._parameter_step_width: list[ParameterStepWidth] = []
+        self._parameter_arbitrary_points: list[ParameterArbitraryPoints] = []
+
+    def add_parameter_samples(
+        self,
+        parameter_name: str | Parameter,
+        from_value: ParameterLike,
+        to_value: ParameterLike,
+        steps: ParameterLike,
+        logarithmic_sweep: bool = False,
+    ) -> "ParameterSweepSequence":
+        """Adds a parameter sample to the sequence.
+
+        Args:
+            parameter_name (str | Parameter): The name of the parameter.
+            from_value (ParameterLike): The starting value of the parameter.
+            to_value (ParameterLike): The ending value of the parameter.
+            steps (ParameterLike): The number of steps for the parameter sweep.
+            logarithmic_sweep (bool, optional): Whether to use a logarithmic sweep. Defaults to False.
+
+        Returns:
+            ParameterSweepSequence: The updated parameter sweep sequence.
+        """
+        self._parameter_samples.append(
+            ParameterSamples(
+                sequence_name=self._name,
+                parameter_name=f"{parameter_name}",
+                from_value=f"{from_value}",
+                to_value=f"{to_value}",
+                steps=f"{steps}",
+                logarithmic_sweep=f"{logarithmic_sweep}",
+            )
+        )
+        self._modeler.add_to_history(
+            f"add parameter samples for {parameter_name} in {self._name}",
+            f'ParameterSweep.AddParameter_Samples "{self._name}", "{parameter_name}", "{from_value}", "{to_value}", "{steps}", "{logarithmic_sweep}"',
+        )
+        _logger.info(
+            "%s",
+            f"Added parameter samples for {parameter_name} in {self._name}.",
+        )
+        return self
+
+    def add_parameter_step_width(
+        self,
+        parameter_name: str | Parameter,
+        from_value: ParameterLike,
+        to_value: ParameterLike,
+        width: ParameterLike,
+    ) -> "ParameterSweepSequence":
+        """Adds a parameter step width to the sequence.
+
+        Args:
+            parameter_name (str | Parameter): The name of the parameter.
+            from_value (ParameterLike): The starting value of the parameter.
+            to_value (ParameterLike): The ending value of the parameter.
+            width (ParameterLike): The width between the samples for the parameter variation.
+
+        Returns:
+            ParameterSweepSequence: _description_
+        """
+        self._parameter_step_width.append(
+            ParameterStepWidth(
+                sequence_name=self._name,
+                parameter_name=f"{parameter_name}",
+                from_value=f"{from_value}",
+                to_value=f"{to_value}",
+                width=f"{width}",
+            )
+        )
+        self._modeler.add_to_history(
+            f"add parameter step width for {parameter_name} in {self._name}",
+            f'ParameterSweep.AddParameter_StepWidth "{self._name}", "{parameter_name}", "{from_value}", "{to_value}", "{width}"',
+        )
+        _logger.info(
+            "%s",
+            f"Added parameter step width for {parameter_name} in {self._name}.",
+        )
+        return self
+
+    def add_parameter_arbitrary_points(
+        self,
+        parameter_name: str | Parameter,
+        points: str,
+    ) -> "ParameterSweepSequence":
+        """Adds parameter arbitrary points to the sequence.
+
+        Args:
+            parameter_name (str | Parameter): The name of the parameter.
+            points (str): The value of the sample. Use semicolon as a separator to specify multiple values. e.g. `2 ; 3 ; 3.1 ; 3.2 ; 3.3`
+
+        Returns:
+            ParameterSweepSequence: The updated parameter sweep sequence.
+        """
+        self._parameter_arbitrary_points.append(
+            ParameterArbitraryPoints(
+                sequence_name=self._name,
+                parameter_name=f"{parameter_name}",
+                points=f"{points}",
+            )
+        )
+        self._modeler.add_to_history(
+            f"add parameter arbitrary points for {parameter_name} in {self._name}",
+            f'ParameterSweep.AddParameter_ArbitraryPoints "{self._name}", "{parameter_name}", "{points}"',
+        )
+        _logger.info(
+            "%s",
+            f"Added parameter arbitrary points for {parameter_name} in {self._name}.",
+        )
+        return self
+
+
 class ParameterSweep(BaseObject):
     """Allows to automatically perform several simulations with varying
     parameters.
@@ -474,25 +591,32 @@ class ParameterSweep(BaseObject):
     def __init__(
         self,
         modeler: interface.Model3D,
-        simulation_type: _parameter_sweep_type,
+        simulation_type: _parameter_sweep_type = "Transient",
     ):
         super().__init__()
         self._modeler = modeler
         self._simulation_type = simulation_type
-        self._sequence: list[str] = []
-        self._parameter_samples: list[ParameterSamples] = []
-        self._parameter_step_width: list[ParameterStepWidth] = []
-        self._parameter_arbitrary_points: list[ParameterArbitraryPoints] = []
+        self._sequence: list[ParameterSweepSequence] = []
+        self._use_distributed_computing: bool = False
+
+        self._modeler.add_to_history(
+            f"initialize parameter sweep with simulation type {self._simulation_type}",
+            f'ParameterSweep.SetSimulationType "{self._simulation_type}"',
+        )
+        _logger.info(
+            "%s",
+            f"Initialized parameter sweep with simulation type {self._simulation_type}.",
+        )
         return
 
     @property
-    def sequence(self) -> list[str]:
+    def sequence(self) -> list[ParameterSweepSequence]:
         """The sequence of parameter values to be swept. The format of the
         individual entries depends on the type of the parameter sweep and the
         solver type. Please refer to the CST documentation for more details.
 
         Returns:
-            list[str]: The sequence of parameter values to be swept.
+            list[ParameterSweepSequence]: The sequence of parameter values to be swept.
         """
         return self._sequence
 
@@ -505,7 +629,9 @@ class ParameterSweep(BaseObject):
         automatically simulate it for each set."""
         if sequence_name is None:
             sequence_name = f"Sequence {len(self._sequence) + 1}"
-        self._sequence.append(sequence_name)
+        self._sequence.append(
+            ParameterSweepSequence(sequence_name, self._modeler)
+        )
         self._modeler.add_to_history(
             f"add sequence {sequence_name}",
             f'ParameterSweep.AddSequence "{sequence_name}"',
@@ -513,165 +639,6 @@ class ParameterSweep(BaseObject):
         _logger.info(
             "%s",
             f"Added sequence {sequence_name}.",
-        )
-        return self
-
-    def add_parameter_samples(
-        self,
-        sequence_name: str,
-        parameter_name: str | Parameter,
-        from_value: ParameterLike,
-        to_value: ParameterLike,
-        steps: ParameterLike,
-        logarithmic_sweep: bool = False,
-    ) -> "ParameterSweep":
-        """Defines a set of parameter samples for a given sequence.
-
-        Parameters:
-            sequence_name (str): The name of the sequence to which the parameter samples should be added.
-            parameter_name (str | Parameter): The name of the parameter for which the samples should be defined.
-            from_value (ParameterLike): The starting value of the parameter sweep.
-            to_value (ParameterLike): The ending value of the parameter sweep.
-            steps (ParameterLike): The number of steps in the parameter sweep.
-            logarithmic_sweep (bool): Whether to use a logarithmic scale for the sweep.
-        """
-        if sequence_name not in self._sequence:
-            raise ValueError(
-                f"Sequence {sequence_name} does not exist. Please add it first."
-            )
-        self._parameter_samples.append(
-            ParameterSamples(
-                sequence_name=sequence_name,
-                parameter_name=f"{parameter_name}",
-                from_value=f"{from_value}",
-                to_value=f"{to_value}",
-                steps=f"{steps}",
-                logarithmic_sweep=f"{logarithmic_sweep}",
-            )
-        )
-        self._modeler.add_to_history(
-            f"add parameter samples for {parameter_name} in {sequence_name}",
-            f'ParameterSweep.AddParameter_Samples "{sequence_name}", "{parameter_name}", "{from_value}", "{to_value}", "{steps}", "{logarithmic_sweep}"',
-        )
-        _logger.info(
-            "%s",
-            f"Added parameter samples for {parameter_name} in {sequence_name}.",
-        )
-        return self
-
-    def add_parameter_step_width(
-        self,
-        sequence_name: str,
-        parameter_name: str | Parameter,
-        from_value: ParameterLike,
-        to_value: ParameterLike,
-        width: ParameterLike,
-    ) -> "ParameterSweep":
-        """Adds a parameter to a sequence.
-
-        Parameters:
-            sequence_name (str): The name of the sequence to which the parameter step width should be added.
-            parameter_name (str | Parameter): The name of the parameter for which the step width should be defined.
-            from_value (ParameterLike): Specify the lower bound of the parameter variation.
-            to_value (ParameterLike): Specify  the upper bound of the parameter variation.
-            width (ParameterLike):  Specify the width between the samples for the parameter variation.
-        """
-        if sequence_name not in self._sequence:
-            raise ValueError(
-                f"Sequence {sequence_name} does not exist. Please add it first."
-            )
-        self._parameter_step_width.append(
-            ParameterStepWidth(
-                sequence_name=sequence_name,
-                parameter_name=f"{parameter_name}",
-                from_value=f"{from_value}",
-                to_value=f"{to_value}",
-                width=f"{width}",
-            )
-        )
-        self._modeler.add_to_history(
-            f"add parameter step width for {parameter_name} in {sequence_name}",
-            f'ParameterSweep.AddParameter_StepWidth "{sequence_name}", "{parameter_name}", "{from_value}", "{to_value}", "{width}"',
-        )
-        _logger.info(
-            "%s",
-            f"Added parameter step width for {parameter_name} in {sequence_name}.",
-        )
-        return self
-
-    def add_parameter_arbitary_points(
-        self,
-        sequence_name: str,
-        parameter_name: str | Parameter,
-        points: str,
-    ) -> "ParameterSweep":
-        """Defines a set of parameter samples for a given sequence.
-        Parameters:
-            sequence_name (str): The name of the sequence to which the parameter samples should be added.
-            parameter_name (str | Parameter): The name of the parameter for which the samples should be defined.
-            points (str): Specify the value of the sample. Use semicolon as a separator to specify multiple values. e.g. `2 ; 3 ; 3.1 ; 3.2 ; 3.3`
-        """
-        if sequence_name not in self._sequence:
-            raise ValueError(
-                f"Sequence {sequence_name} does not exist. Please add it first."
-            )
-        self._parameter_arbitrary_points.append(
-            ParameterArbitraryPoints(
-                sequence_name=sequence_name,
-                parameter_name=f"{parameter_name}",
-                points=f"{points}",
-            )
-        )
-        self._modeler.add_to_history(
-            f"add parameter arbitrary points for {parameter_name} in {sequence_name}",
-            f'ParameterSweep.AddParameter_ArbitraryPoints "{sequence_name}", "{parameter_name}", "{points}"',
-        )
-        _logger.info(
-            "%s",
-            f"Added parameter arbitrary points for {parameter_name} in {sequence_name}.",
-        )
-        return self
-
-    def delete_parameter(
-        self, sequence_name: str, parameter_name: str | Parameter
-    ) -> "ParameterSweep":
-        """Deletes a parameter from a sequence.
-
-        Parameters:
-            sequence_name (str): The name of the sequence from which the parameter should be deleted.
-            parameter_name (str | Parameter): The name of the parameter to be deleted.
-        """
-        self._parameter_samples = [
-            ps
-            for ps in self._parameter_samples
-            if not (
-                ps.sequence_name == sequence_name
-                and ps.parameter_name == f"{parameter_name}"
-            )
-        ]
-        self._parameter_step_width = [
-            psw
-            for psw in self._parameter_step_width
-            if not (
-                psw.sequence_name == sequence_name
-                and psw.parameter_name == f"{parameter_name}"
-            )
-        ]
-        self._parameter_arbitrary_points = [
-            pap
-            for pap in self._parameter_arbitrary_points
-            if not (
-                pap.sequence_name == sequence_name
-                and pap.parameter_name == f"{parameter_name}"
-            )
-        ]
-        self._modeler.add_to_history(
-            f"delete parameter {parameter_name} from {sequence_name}",
-            f'ParameterSweep.DeleteParameter "{sequence_name}", "{parameter_name}"',
-        )
-        _logger.info(
-            "%s",
-            f"Deleted parameter {parameter_name} from {sequence_name}.",
         )
         return self
 
@@ -693,6 +660,7 @@ class ParameterSweep(BaseObject):
         Parameters:
             use (bool): Whether to use distributed computing. Default is True.
         """
+        self._use_distributed_computing = use
         self._modeler.add_to_history(
             f"{'enable' if use else 'disable'} distributed computing for parameter sweep",
             f'ParameterSweep.UseDistributedComputing "{use}"',

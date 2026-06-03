@@ -408,17 +408,53 @@ class Translate(BaseTransform):
 class Rotate(BaseTransform):
     """Rotates the object around one main axis, given the angle and an offset for the rotation axis (origin).
 
-    Attributes:
-        name (str): Name of the transformation.
-        origin (_transform_origin_type): The origin of the rotation, e.g. "ShapeCenter", "CommonCenter", or "Free".
-        center (list[str]): The center of rotation, given as a list of three strings representing the x, y, and z coordinates, e.g. ["10", "0", "5"].
-        angle (list[str]): The rotation angles around the x, y, and z axes, given as a list of three strings, e.g. ["90", "0", "0"].
-        multiple_objects (bool): Whether to apply the transformation to multiple objects.
-        group_objects (bool): Whether to group the objects after transformation.
-        repetitions (int): Number of repetitions of the transformation.
-        multiple_selection (bool): Whether to allow multiple selection of objects for the transformation.
-        auto_destination (bool): Whether to automatically determine the destination of the transformation.
-        what (_transform_object_type): The type of object to be transformed, e.g. "Shape", "Face", etc.
+    Attributes
+    ----------
+    name : str
+        Name of the object to be rotated.
+    origin : _transform_origin_type, optional
+        For scale, rotate and mirror transformations, this method defines,
+        whether the origin for the transformation should be the shape center,
+        the center of all named shapes (see .AddName), or a free point defined
+        by the `.Center` method. by default `"ShapeCenter"`
+    center : list[str] | None, optional
+        Sets the center for scale, rotate and mirror transformations. The
+        working coordinate system will be used, if activated. Only applicable,
+        if `.Origin` is set to `"free"`. by default `None`
+    angle : list[str] | None, optional
+        Sets the rotation angles around the x, y, and z axes, given as a list of
+        three strings, e.g. `["90", "0", "0"]`. by default `None`
+    multiple_objects : bool, optional
+        If switch is True, the new solid will be copied and the original will
+        remain untouched. Else (`copy = False`), the original object will be
+        deleted. In case of repeated execution by usage of the `.Repetitions`
+        method, `copy = True` will result in number new objects plus the
+        original object. by default `False`
+    group_objects : bool, optional
+        If new objects are created during the transformation (`.MultipleObjects`
+        enabled), `unite = True` defines that every new object will be a united
+        with the original object after the transformation. If `unite = False`
+        all new objects will stay separately. by default `False`
+    repetitions : int, optional
+        Defines the number of repetitions, the transformation will be applied to
+        the selected object. by default `1`
+    multiple_selection : bool, optional
+        This setting specifies whether the transformation should be performed
+        only to one solid or to multiple selected objects. If you transform
+        multiple objects history entries are created for every shape and if you
+        transform by selected points the pick-points will be deleted after an
+        operation. This flag prevents the pickpoints from being deleted. If
+        there are still solids to transform the flag is 'true' and in the last
+        transform block it is 'false' so the pick-points will be deleted.
+        by default `False`
+    auto_destination : bool, optional
+        **Note:** This attribute is not listed in the documentation. This 
+        setting specifies whether the transformation should be automatically 
+        applied to the destination object. by default `True`
+    what : _transform_object_type, optional
+        This execute a specified transform onto the given type of objects (named
+        via Name and AddName). Note that not all transformations are applicable
+        to all types of objects. by default `"Shape"`
     """
 
     def __init__(
@@ -434,6 +470,7 @@ class Rotate(BaseTransform):
         auto_destination: bool = True,
         what: _transform_object_type = "Shape",
     ):
+
         super().__init__()
         self._name: str = name
         self._origin: _transform_origin_type = origin
