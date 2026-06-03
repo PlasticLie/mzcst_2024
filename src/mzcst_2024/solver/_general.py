@@ -644,6 +644,10 @@ class ParameterSweep(BaseObject):
 
     def start(self) -> "ParameterSweep":
         """Starts the parameter sweep."""
+        _logger.info(
+            "%s",
+            "Starting parameter sweep...",
+        )
         self._modeler.add_to_history(
             "start parameter sweep",
             "ParameterSweep.Start",
