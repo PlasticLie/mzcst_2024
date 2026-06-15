@@ -155,8 +155,28 @@ class VbaObject:
 # region General Methods
 # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
+_solver_types = typing.Literal[
+    "HF Time Domain",
+    "HF Eigenmode",
+    "HF Frequency Domain",
+    "HF IntegralEq",
+    "HF Multilayer",
+    "HF Asymptotic",
+    "LF EStatic",
+    "LF MStatic",
+    "LF Stationary Current",
+    "LF Frequency Domain",
+    "LF Time Domain (MQS)",
+    "PT Tracking",
+    "PT Wakefields",
+    "PT PIC",
+    "Thermal Steady State",
+    "Thermal Transient",
+    "Mechanics",
+]
 
-def change_solver_type(modeler: "interface.Model3D", solver_type: str) -> None:
+
+def change_solver_type(modeler: "interface.Model3D", solver_type: _solver_types) -> None:
     """设置求解器类型
 
     Valid solver types are: "HF Time Domain", "HF Eigenmode", "HF Frequency
@@ -166,7 +186,7 @@ def change_solver_type(modeler: "interface.Model3D", solver_type: str) -> None:
     State", "Thermal Transient",  "Mechanics".
 
     Args:
-        solver_type (str): 求解器类型。
+        solver_type (solver_types): 求解器类型。
 
     Returns:
         None:

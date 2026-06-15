@@ -579,6 +579,30 @@ class ParameterSweepSequence:
         )
         return self
 
+    def enable(self) -> "ParameterSweepSequence":
+        """Enables the sequence."""
+        self._modeler.add_to_history(
+            f'enable sequence "{self._name}"',
+            f'ParameterSweep.EnableSequence "{self._name}", "True"',
+        )
+        _logger.info(
+            "%s",
+            f"Enabled sequence {self._name}.",
+        )
+        return self
+
+    def disable(self) -> "ParameterSweepSequence":
+        """Disables the sequence."""
+        self._modeler.add_to_history(
+            f'disable sequence "{self._name}"',
+            f'ParameterSweep.EnableSequence "{self._name}", "False"',
+        )
+        _logger.info(
+            "%s",
+            f"Disabled sequence {self._name}.",
+        )
+        return self
+
 
 class ParameterSweep(BaseObject):
     """Allows to automatically perform several simulations with varying

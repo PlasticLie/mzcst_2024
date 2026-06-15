@@ -210,6 +210,26 @@ class clock:
         return 0
 
 
+def frange(start: float, stop: float, step: float):
+    """生成一个浮点数范围列表，从start到stop，步长为step。
+
+    Parameters
+    ----------
+    start : float
+        范围起始值。
+    stop : float
+        范围结束值。
+    step : float
+        步长。
+    """
+    values = []
+    current = start
+    while current < stop:
+        yield current
+        current += step
+    return
+
+
 if __name__ == "__main__":
     # create_folder("folder_demo")
     # print_log("1", "hello")

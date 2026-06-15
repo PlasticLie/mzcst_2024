@@ -3,7 +3,7 @@
 import enum
 import logging
 
-from . import interface  # type:ignore
+from . import interface  # type: ignore
 from .common import NEW_LINE, quoted
 from .global_ import BaseObject
 
@@ -72,9 +72,8 @@ class Material(BaseObject):
         folder: str = "",
         *,
         properties: dict[str, str] = None,
-        vba: list[str] = None,
     ):
-        super().__init__(attributes=properties, vba=vba)
+        super().__init__(attributes=properties)
         self._name: str = name
         self._folder: str = folder
         # self._properties: dict[str, str] = properties
