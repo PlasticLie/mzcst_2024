@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.linalg as npl
 from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D  # type:ignore
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
+from mpl_toolkits.mplot3d import Axes3D  # type: ignore
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type: ignore
 
 from .. import Parameter, common, component, interface, material
 from .. import profiles_to_shapes as p2s
@@ -108,5 +108,86 @@ class WR90:
         _logger.info(
             "%s",
             f'Waveguide "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
+        )
+        return self
+
+
+class WaveguideHornAntenna:
+    def __init__(
+        self,
+        name: str,
+        port_config: Port,
+        *,
+        taper_angle: Parameter,
+        horn_length: Parameter,
+        wall_thickness: Parameter,
+        waveguide_width: Parameter,
+        waveguide_height: Parameter,
+    ):
+        self._name = name
+        self._port = port_config
+        self._taper_angle = taper_angle
+        self._horn_length = horn_length
+        self._wall_thickness = wall_thickness
+        self._waveguide_width = waveguide_width
+        self._waveguide_height = waveguide_height
+
+    def create(
+        self, modeler: "interface.Model3D"
+    ) -> "WaveguideHornAntenna":
+        t0 = time.perf_counter()
+
+        horn_comp = component.Component(self._name)
+
+        solid1_down = Brick(
+            "solid1",  # 实体名
+            f"{self._waveguide_width / -2}",  # xmin
+            f"{self._waveguide_width / 2}",  # xmax
+            f"{self._waveguide_height / -2}",  # ymin
+            f"{self._waveguide_height / 2}",  # ymax
+            "0",  # zmin
+            "10.92",  # zmax
+            f"{horn_comp}",  # 分组名
+            material.PEC_,  # 材料名
+        ).create(modeler)
+
+        # 选择顶面
+        tp.pick_face_from_id(modeler, solid1_down, 1)
+        solid2_down = p2s.Extrude(
+            "solid2",
+            horn_comp.name,
+            "PEC",
+            properties={
+                "Mode": ' "Picks"',
+                "Height": f' "{self._horn_length}"',
+                "Twist": ' "0.0"',
+                "Taper": f' "{self._taper_angle}"',
+                "UsePicksForHeight": ' "False"',
+                "DeleteBaseFaceSolid": ' "False"',
+                "ClearPickedFace": ' "True"',
+            },
+        ).create_from_attributes(modeler)
+        solid1_down.add(modeler, solid2_down)
+
+        # 选择外壳面
+        tp.pick_face_from_id(modeler, solid1_down, 5)
+        tp.pick_face_from_id(modeler, solid1_down, 8)
+        so.advanced_shell(modeler, solid1_down, "Outside", self._wall_thickness)
+
+        # pick end point
+        tp.pick_end_point_from_id(modeler, solid1_down, 16)
+        tp.pick_end_point_from_id(modeler, solid1_down, 15)
+        tp.pick_end_point_from_id(modeler, solid1_down, 13)
+
+        # define port:
+        self._port.create_from_attributes(modeler)
+
+        # clear picks
+        tp.clear_all_picks(modeler)
+
+        t1 = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Waveguide "{self._name}" created, execution time: {common.time_to_string(t1-t0)}',
         )
         return self

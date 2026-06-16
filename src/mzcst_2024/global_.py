@@ -326,7 +326,7 @@ class Parameter:
     def __init__(
         self,
         name: ConvertableToParameter | "Parameter",
-        expression: ConvertableToExpression = "",
+        expression: ConvertableToExpression| "Parameter" = "",
         description: str = "",
     ) -> None:
         super().__init__()
