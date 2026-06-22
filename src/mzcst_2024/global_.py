@@ -176,7 +176,9 @@ _solver_types = typing.Literal[
 ]
 
 
-def change_solver_type(modeler: "interface.Model3D", solver_type: _solver_types) -> None:
+def change_solver_type(
+    modeler: "interface.Model3D", solver_type: _solver_types
+) -> None:
     """设置求解器类型
 
     Valid solver types are: "HF Time Domain", "HF Eigenmode", "HF Frequency
@@ -326,7 +328,7 @@ class Parameter:
     def __init__(
         self,
         name: ConvertableToParameter | "Parameter",
-        expression: ConvertableToExpression| "Parameter" = "",
+        expression: ConvertableToExpression | "Parameter" = "",
         description: str = "",
     ) -> None:
         super().__init__()
@@ -714,11 +716,11 @@ class Parameter:
         """
         old_name = self._name
         self._name = n
-        if modeler is not None:
-            modeler.add_to_history(
-                f"Rename parameter: {old_name} to {self._name}",
-                f'RenameParameter "{old_name}", "{self._name}"',
-            )
+        modeler.add_to_history(
+            f"Rename parameter: {old_name} to {self._name}",
+            f'RenameParameter "{old_name}", "{self._name}"',
+        )
+        _logger.info("%s", f"Rename parameter: {old_name} to {self._name}")
         return self
 
     def redescribe(
@@ -734,11 +736,14 @@ class Parameter:
             self (Parameter): 对象自身的引用。
         """
         self._description = description
-        if modeler is not None:
-            modeler.add_to_history(
-                f"Set parameter description: {self.name}",
-                f'SetParameterDescription("{self.name}","{self._description}")',
-            )
+        modeler.add_to_history(
+            f"Set parameter description: {self.name}",
+            f'SetParameterDescription("{self.name}","{self._description}")',
+        )
+        _logger.info(
+            "%s",
+            f"Modify description of parameter {self.name}:  {self._description}",
+        )
         return self
 
     def modify_expression(
@@ -756,11 +761,14 @@ class Parameter:
             self (Parameter): 对象自身的引用。
         """
         self._expression = str(e)
-        if modeler is not None:
-            modeler.add_to_history(
-                f"Set parameter expression: {self.name}",
-                f'StoreParameter ("{self.name}","{self._expression}")',
-            )
+
+        modeler.add_to_history(
+            f"Set parameter expression: {self.name}",
+            f'StoreParameter ("{self.name}","{self._expression}")',
+        )
+        _logger.info(
+            "%s", f"Modify parameter: {self.name} = {self._expression}"
+        )
         return self
 
     def bracket(self) -> "Parameter":
@@ -801,6 +809,11 @@ class Parameter:
                 f'SetParameterDescription("{self.name}","{self.description}")',
                 timeout=1,
             )
+            _logger.info(
+                "%s",
+                f"Set parameter description: {self.name} = {self._description}",
+            )
+        _logger.info("%s", f"Store parameter: {self.name} = {self.expression}")
         return self
 
     def delete(self, modeler: "interface.Model3D") -> "Parameter":
@@ -816,7 +829,7 @@ class Parameter:
             f"Delete parameter: {self.name}",
             f'DeleteParameter("{self.name}")',
         )
-
+        _logger.info("%s", f"Delete parameter: {self.name}")
         return self
 
     def isnumber(self) -> bool:
