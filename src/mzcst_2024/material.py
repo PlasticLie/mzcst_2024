@@ -222,7 +222,7 @@ class Material(BaseObject):
 
 # 自带的材料
 PEC_: str = "PEC"
-VACUUM_: str = "Vaccum"
+VACUUM_: str = "Vacuum"
 
 
 PEC = Material("PEC")

@@ -703,23 +703,24 @@ class Parameter:
     # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     def rename(
-        self, n: str, modeler: "interface.Model3D" = None
+        self, new_name: str, modeler: "interface.Model3D" = None
     ) -> "Parameter":
         """重命名参数，【可选】然后保存到CST建模环境中。
 
         Args:
-            n (str): 新名字。
+            new_name (str): 新名字。
             modeler (interface.Model3D | None): 建模环境，如果不为None，则会将修改保存到建模环境中。
 
         Returns:
             self (Parameter): 对象自身的引用。
         """
         old_name = self._name
-        self._name = n
-        modeler.add_to_history(
-            f"Rename parameter: {old_name} to {self._name}",
-            f'RenameParameter "{old_name}", "{self._name}"',
-        )
+        self._name = new_name
+        if modeler is not None:
+            modeler.add_to_history(
+                f"Rename parameter: {old_name} to {self._name}",
+                f'RenameParameter "{old_name}", "{self._name}"',
+            )
         _logger.info("%s", f"Rename parameter: {old_name} to {self._name}")
         return self
 
@@ -736,10 +737,11 @@ class Parameter:
             self (Parameter): 对象自身的引用。
         """
         self._description = description
-        modeler.add_to_history(
-            f"Set parameter description: {self.name}",
-            f'SetParameterDescription("{self.name}","{self._description}")',
-        )
+        if modeler is not None:
+            modeler.add_to_history(
+                f"Set parameter description: {self.name}",
+                f'SetParameterDescription("{self.name}","{self._description}")',
+            )
         _logger.info(
             "%s",
             f"Modify description of parameter {self.name}:  {self._description}",
@@ -762,10 +764,11 @@ class Parameter:
         """
         self._expression = str(e)
 
-        modeler.add_to_history(
-            f"Set parameter expression: {self.name}",
-            f'StoreParameter ("{self.name}","{self._expression}")',
-        )
+        if modeler is not None:
+            modeler.add_to_history(
+                f"Set parameter expression: {self.name}",
+                f'StoreParameter ("{self.name}","{self._expression}")',
+            )
         _logger.info(
             "%s", f"Modify parameter: {self.name} = {self._expression}"
         )
@@ -795,24 +798,25 @@ class Parameter:
         Returns:
             self (Parameter): 对象自身的引用。
         """
-        modeler.add_to_history(
-            f"Store parameter: {self.name}",
-            'MakeSureParameterExists("'
-            + self.name
-            + '", "'
-            + self.expression
-            + '")',
-        )
-        if self.description != "":
+        if modeler is not None:
             modeler.add_to_history(
-                f"Set parameter description: {self.name}",
-                f'SetParameterDescription("{self.name}","{self.description}")',
-                timeout=1,
+                f"Store parameter: {self.name}",
+                'MakeSureParameterExists("'
+                + self.name
+                + '", "'
+                + self.expression
+                + '")',
             )
-            _logger.info(
-                "%s",
-                f"Set parameter description: {self.name} = {self._description}",
-            )
+            if self.description != "":
+                modeler.add_to_history(
+                    f"Set parameter description: {self.name}",
+                    f'SetParameterDescription("{self.name}","{self.description}")',
+                    # timeout=1,
+                )
+                _logger.info(
+                    "%s",
+                    f"Set description of parameter {self.name}:  {self._description}",
+                )
         _logger.info("%s", f"Store parameter: {self.name} = {self.expression}")
         return self
 

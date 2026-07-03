@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.linalg as npl
 from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D  # type:ignore
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type:ignore
+from mpl_toolkits.mplot3d import Axes3D  # type: ignore
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection  # type: ignore
 
 _logger = logging.getLogger(__name__)
 
@@ -143,7 +143,7 @@ class BinarySurface(BaseSurfaceObject):
         return 0.0
 
     def set_resolution(
-        self, res_x: float, res_y: float | None = None
+        self, res_x: float = 0.1, res_y: float | None = None
     ) -> "BinarySurface":
         """设置网格分辨率。
 
@@ -153,7 +153,7 @@ class BinarySurface(BaseSurfaceObject):
         Parameters
         ----------
         res_x : float
-            x轴分辨率
+            x轴分辨率，默认0.1
         res_y : float
             y轴分辨率
 
@@ -256,7 +256,7 @@ class EllipticalParaboloidDome(BinarySurface):
         r = max(self._semi_x, self._semi_y)
         self._x_range = [-r, r]
         self._y_range = [-r, r]
-        super().set_resolution(0.1)
+        super().set_resolution()
         return
 
     # 属性方法
