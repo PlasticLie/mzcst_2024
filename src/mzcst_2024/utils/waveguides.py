@@ -24,7 +24,7 @@ from ..sources_and_ports.hf import Port
 _logger = logging.getLogger(__name__)
 
 
-class BasicWaveguide(abc.ABC):
+class BasicWaveguideHornAntenna(abc.ABC):
     def __init__(self, name: str, port_config: Port):
         """初始化波导。
 
@@ -48,7 +48,7 @@ class BasicWaveguide(abc.ABC):
     @abc.abstractmethod
     def create_waveguide(
         self, modeler: "interface.Model3D"
-    ) -> "BasicWaveguide":
+    ) -> "BasicWaveguideHornAntenna":
         """在给定的建模器中创建波导。
 
         Args:
@@ -57,7 +57,7 @@ class BasicWaveguide(abc.ABC):
         pass
 
 
-class WR90(BasicWaveguide):
+class WR90(BasicWaveguideHornAntenna):
     """标准WR-90波导的参数和建模方法。
 
     Parameters
@@ -150,36 +150,42 @@ class WR90(BasicWaveguide):
         return self
 
 
-class WR817(BasicWaveguide):
+class RWHA187_10(BasicWaveguideHornAntenna):
+    """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99GHz, 增益10dB, FDP48矩形平法兰"""
+
+    wall_thickness = Parameter(2)
+    
+    waveguide_width = Parameter(47.5)
+    waveguide_height = Parameter(22.15)
+    waveguide_length = Parameter(40)
+
+    total_length = Parameter(440)
+
+    taper_angle = Parameter(15)
+    horn_length = total_length - waveguide_length
+
     def __init__(self, name: str, port_config: Port):
         super().__init__(name, port_config)
         return
 
-    def create_waveguide(self, modeler: "interface.Model3D") -> "WR817":
-        """在给定的建模器中创建WR-817波导。包含FDP48法兰。
+    def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA187_10":
+        """在给定的建模器中创建WRR187(BJ48)标准增益喇叭天线。包含FDP48法兰。
 
         Args:
             modeler (interface.Model3D): 建模环境。
         """
         t0 = time.perf_counter()
 
-        taper_angle = Parameter(20)
-        horn_length = Parameter(110 - 40)
-        wall_thickness = Parameter(2)
-        waveguide_width = Parameter(47.5)
-        waveguide_height = Parameter(22.15)
-        waveguide_length = Parameter(40)
-
         horn_down_comp = component.Component(self._name)
 
         solid1_down = Brick(
             "solid1",  # 实体名
-            f"{waveguide_width / (-2)}",  # xmin
-            f"{waveguide_width / (2)}",  # xmax
-            f"{waveguide_height / (-2)}",  # ymin
-            f"{waveguide_height / (2)}",  # ymax
+            f"{self.waveguide_width / (-2)}",  # xmin
+            f"{self.waveguide_width / (2)}",  # xmax
+            f"{self.waveguide_height / (-2)}",  # ymin
+            f"{self.waveguide_height / (2)}",  # ymax
             "0",  # zmin
-            f'{waveguide_length}',  # zmax
+            f"{self.waveguide_length}",  # zmax
             horn_down_comp.name,  # 分组名
             material.PEC_,  # 材料名
         ).create(modeler)
@@ -192,9 +198,9 @@ class WR817(BasicWaveguide):
             "PEC",
             properties={
                 "Mode": ' "Picks"',
-                "Height": f' "{horn_length}"',
+                "Height": f' "{self.horn_length}"',
                 "Twist": ' "0.0"',
-                "Taper": f' "{taper_angle}"',
+                "Taper": f' "{self.taper_angle}"',
                 "UsePicksForHeight": ' "False"',
                 "DeleteBaseFaceSolid": ' "False"',
                 "ClearPickedFace": ' "True"',
@@ -205,7 +211,7 @@ class WR817(BasicWaveguide):
         # pick face
         tp.pick_face_from_id(modeler, solid1_down, 5)
         tp.pick_face_from_id(modeler, solid1_down, 8)
-        so.advanced_shell(modeler, solid1_down, "Outside", wall_thickness)
+        so.advanced_shell(modeler, solid1_down, "Outside", self.wall_thickness)
 
         # pick end point
         tp.pick_end_point_from_id(modeler, solid1_down, 16)
@@ -226,7 +232,7 @@ class WR817(BasicWaveguide):
         return self
 
 
-class WaveguideHornAntenna(BasicWaveguide):
+class WaveguideHornAntenna(BasicWaveguideHornAntenna):
     def __init__(
         self,
         name: str,
@@ -237,7 +243,7 @@ class WaveguideHornAntenna(BasicWaveguide):
         wall_thickness: Parameter,
         waveguide_width: Parameter,
         waveguide_height: Parameter,
-        waveguide_length: Parameter,
+        waveguide_length: Parameter=Parameter(20),
     ):
         super().__init__(name, port_config)
         self._taper_angle = taper_angle
@@ -307,3 +313,4 @@ class WaveguideHornAntenna(BasicWaveguide):
             f'Waveguide "{self._name}" created, execution time: {common.time_to_string(t1-t0)}',
         )
         return self
+

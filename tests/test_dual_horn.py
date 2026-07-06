@@ -519,7 +519,7 @@ class TestWR817:
         theta = Parameter("theta", "0", "入射俯仰角").store(m3d)
         phi = Parameter("phi", "0", "入射方位角").store(m3d)
 
-        horn_gap = (25 * wavelength).rename("horn_gap").store(m3d)
+        horn_gap = (0 * wavelength).rename("horn_gap").store(m3d)
 
         self.timestamps.append(time.perf_counter())
         self.logger.info(
@@ -570,7 +570,7 @@ class TestWR817:
                 "-1",  # normal_z
                 "0",  # origin_x
                 "0",  # origin_y
-                f"{horn_gap}",  # origin_z
+                f"{waveguides.RWHA187_10.total_length + horn_gap}",  # origin_z
                 "1",  # uVector_x
                 "0",  # uVector_y
                 "0",  # uVector_z
@@ -595,7 +595,7 @@ class TestWR817:
             },
         )
 
-        horn_up = waveguides.WR817("horn_up", port_up).create_waveguide(m3d)
+        horn_up = waveguides.RWHA187_10("horn_up", port_up).create_waveguide(m3d)
 
         self.timestamps.append(time.perf_counter())
         self.logger.info(
@@ -611,7 +611,7 @@ class TestWR817:
                 "1",  # normal_z
                 "0",  # origin_x
                 "0",  # origin_y
-                f"{- horn_gap}",  # origin_z
+                f"{- waveguides.RWHA187_10.total_length - horn_gap}",  # origin_z
                 "1",  # uVector_x
                 "0",  # uVector_y
                 "0",  # uVector_z
@@ -636,7 +636,9 @@ class TestWR817:
             },
         )
 
-        horn_down = waveguides.WR817("horn_down", port_down).create_waveguide(m3d)
+        horn_down = waveguides.RWHA187_10("horn_down", port_down).create_waveguide(
+            m3d
+        )
 
         self.timestamps.append(time.perf_counter())
         self.logger.info(
