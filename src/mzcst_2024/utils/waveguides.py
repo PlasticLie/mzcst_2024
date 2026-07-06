@@ -143,6 +143,82 @@ class WR90(BasicWaveguide):
         return self
 
 
+class WR817(BasicWaveguide):
+    def __init__(self, name: str, port_config: Port):
+        super().__init__(name, port_config)
+        return
+
+    def create_waveguide(self, modeler: "interface.Model3D") -> "WR817":
+        """在给定的建模器中创建WR-817波导。包含FDP48法兰。
+
+        Args:
+            modeler (interface.Model3D): 建模环境。
+        """
+        t0 = time.perf_counter()
+
+        taper_angle = Parameter(20)
+        horn_length = Parameter(110 - 40)
+        wall_thickness = Parameter(2)
+        waveguide_width = Parameter(47.5)
+        waveguide_height = Parameter(22.15)
+        waveguide_length = Parameter(40)
+
+        horn_down_comp = component.Component(self._name)
+
+        solid1_down = Brick(
+            "solid1",  # 实体名
+            f"{waveguide_width / (-2)}",  # xmin
+            f"{waveguide_width / (2)}",  # xmax
+            f"{waveguide_height / (-2)}",  # ymin
+            f"{waveguide_height / (2)}",  # ymax
+            "0",  # zmin
+            f' "{waveguide_length}"',  # zmax
+            horn_down_comp.name,  # 分组名
+            material.PEC_,  # 材料名
+        ).create(modeler)
+
+        # 选择顶面
+        tp.pick_face_from_id(modeler, solid1_down, 1)
+        solid2_down = p2s.Extrude(
+            "solid2",
+            horn_down_comp.name,
+            "PEC",
+            properties={
+                "Mode": ' "Picks"',
+                "Height": f' "{horn_length}"',
+                "Twist": ' "0.0"',
+                "Taper": f' "{taper_angle}"',
+                "UsePicksForHeight": ' "False"',
+                "DeleteBaseFaceSolid": ' "False"',
+                "ClearPickedFace": ' "True"',
+            },
+        ).create_from_attributes(modeler)
+        solid1_down.add(modeler, solid2_down)
+
+        # pick face
+        tp.pick_face_from_id(modeler, solid1_down, 5)
+        tp.pick_face_from_id(modeler, solid1_down, 8)
+        so.advanced_shell(modeler, solid1_down, "Outside", wall_thickness)
+
+        # pick end point
+        tp.pick_end_point_from_id(modeler, solid1_down, 16)
+        tp.pick_end_point_from_id(modeler, solid1_down, 15)
+        tp.pick_end_point_from_id(modeler, solid1_down, 13)
+
+        # define port:
+        self._port.create_from_attributes(modeler)
+
+        # clear picks
+        tp.clear_all_picks(modeler)
+
+        t1 = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Waveguide "{self._name}" created, execution time: {common.time_to_string(t1-t0)}',
+        )
+        return self
+
+
 class WaveguideHornAntenna(BasicWaveguide):
     def __init__(
         self,
