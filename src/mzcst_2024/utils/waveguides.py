@@ -71,6 +71,12 @@ class WR90(BasicWaveguide):
     def __init__(self, name: str, port_config: Port):
         """根据结构参数初始化WR-90波导。"""
         super().__init__(name, port_config)
+        self._taper_angle = 11.2
+        self._horn_length = 218.16
+        self._wall_thickness = 3.78
+        self._waveguide_width = 37.38
+        self._waveguide_height = 16.38
+        self._waveguide_length = 10.92
         return
 
     def create_waveguide(self, modeler: "interface.Model3D") -> "WR90":
@@ -81,11 +87,12 @@ class WR90(BasicWaveguide):
         """
         t0 = time.perf_counter()
 
-        taper_angle = Parameter("11.2")
-        horn_length = Parameter("218.16")
-        wall_thickness = Parameter("3.78")
-        waveguide_width = Parameter("37.38")
-        waveguide_height = Parameter("16.38")
+        taper_angle = Parameter(f"{self._taper_angle}")
+        horn_length = Parameter(f"{self._horn_length}")
+        wall_thickness = Parameter(f"{self._wall_thickness}")
+        waveguide_width = Parameter(f"{self._waveguide_width}")
+        waveguide_height = Parameter(f"{self._waveguide_height}")
+        waveguide_length = Parameter(f"{self._waveguide_length}")
 
         horn_down_comp = component.Component(self._name)
 
@@ -96,7 +103,7 @@ class WR90(BasicWaveguide):
             (waveguide_height / Parameter(-2)).name,  # ymin
             (waveguide_height / Parameter(2)).name,  # ymax
             "0",  # zmin
-            "10.92",  # zmax
+            waveguide_length.name,  # zmax
             horn_down_comp.name,  # 分组名
             material.PEC_,  # 材料名
         ).create(modeler)
@@ -172,7 +179,7 @@ class WR817(BasicWaveguide):
             f"{waveguide_height / (-2)}",  # ymin
             f"{waveguide_height / (2)}",  # ymax
             "0",  # zmin
-            f' "{waveguide_length}"',  # zmax
+            f'{waveguide_length}',  # zmax
             horn_down_comp.name,  # 分组名
             material.PEC_,  # 材料名
         ).create(modeler)
@@ -230,6 +237,7 @@ class WaveguideHornAntenna(BasicWaveguide):
         wall_thickness: Parameter,
         waveguide_width: Parameter,
         waveguide_height: Parameter,
+        waveguide_length: Parameter,
     ):
         super().__init__(name, port_config)
         self._taper_angle = taper_angle
@@ -237,6 +245,8 @@ class WaveguideHornAntenna(BasicWaveguide):
         self._wall_thickness = wall_thickness
         self._waveguide_width = waveguide_width
         self._waveguide_height = waveguide_height
+        self._waveguide_length = waveguide_length
+        return
 
     def create_waveguide(
         self, modeler: "interface.Model3D"
@@ -252,7 +262,7 @@ class WaveguideHornAntenna(BasicWaveguide):
             f"{self._waveguide_height / -2}",  # ymin
             f"{self._waveguide_height / 2}",  # ymax
             "0",  # zmin
-            "10.92",  # zmax
+            f"{self._waveguide_length}",  # zmax
             f"{horn_comp}",  # 分组名
             material.PEC_,  # 材料名
         ).create(modeler)
