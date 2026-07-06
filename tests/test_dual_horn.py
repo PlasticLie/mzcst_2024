@@ -434,7 +434,7 @@ class TestWR90:
 
 
 @dataclasses.dataclass
-class TestWR817:
+class TestWaveguideHornAntenna:
     """测试WR90波导的创建。"""
 
     current_time: str = common.current_time_string()
@@ -480,9 +480,15 @@ class TestWR817:
     RUN_PARAMETER_SWEEP: bool = False
     BUILD_SHELL: bool = True  # 是否建模壳体
 
+    horn_type = waveguides.RWHA187_10
+
     @property
     def cst_file_name(self) -> str:
-        return f"dual-WR817-{self.current_time}.cst"
+        return f"dual-{self.horn_type.__name__}-{self.current_time}.cst"
+
+    # 求解设置
+    f_center = 5
+    f_test_band = 4
 
     def test_waveguide_performance(self):
 
@@ -502,8 +508,12 @@ class TestWR817:
             common.time_to_string(self.timestamps[-1] - self.timestamps[-2]),
         )
 
-        fcenter = Parameter("fcenter", "5", "频带中心(GHz)").store(m3d)
-        f_test_band = Parameter("f_test_band", "4", "测试频带(GHz)").store(m3d)
+        fcenter = Parameter(
+            "fcenter", f"{self.f_center}", "频带中心(GHz)"
+        ).store(m3d)
+        f_test_band = Parameter(
+            "f_test_band", f"{self.f_test_band}", "测试频带(GHz)"
+        ).store(m3d)
         fmin = Parameter(
             "fmin", f"{fcenter - f_test_band / 2}", "频带下限(GHz)"
         ).store(m3d)
@@ -570,7 +580,7 @@ class TestWR817:
                 "-1",  # normal_z
                 "0",  # origin_x
                 "0",  # origin_y
-                f"{waveguides.RWHA187_10.total_length + horn_gap}",  # origin_z
+                f"{self.horn_type.total_length + horn_gap}",  # origin_z
                 "1",  # uVector_x
                 "0",  # uVector_y
                 "0",  # uVector_z
@@ -595,7 +605,7 @@ class TestWR817:
             },
         )
 
-        horn_up = waveguides.RWHA187_10("horn_up", port_up).create_waveguide(m3d)
+        horn_up = self.horn_type("horn_up", port_up).create_waveguide(m3d)
 
         self.timestamps.append(time.perf_counter())
         self.logger.info(
@@ -611,7 +621,7 @@ class TestWR817:
                 "1",  # normal_z
                 "0",  # origin_x
                 "0",  # origin_y
-                f"{- waveguides.RWHA187_10.total_length - horn_gap}",  # origin_z
+                f"{- self.horn_type.total_length - horn_gap}",  # origin_z
                 "1",  # uVector_x
                 "0",  # uVector_y
                 "0",  # uVector_z
@@ -636,9 +646,7 @@ class TestWR817:
             },
         )
 
-        horn_down = waveguides.RWHA187_10("horn_down", port_down).create_waveguide(
-            m3d
-        )
+        horn_down = self.horn_type("horn_down", port_down).create_waveguide(m3d)
 
         self.timestamps.append(time.perf_counter())
         self.logger.info(
@@ -836,6 +844,43 @@ class TestWR817:
         # ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 
+class TestRWHA159_20(TestWaveguideHornAntenna):
+    """测试RWHA159-20波导的创建。"""
+
+    horn_type = waveguides.RWHA159_20
+    f_center = 5
+    f_test_band = 4
+
+
+class TestRWHA159_15(TestWaveguideHornAntenna):
+    """测试RWHA159-15波导的创建。"""
+
+    horn_type = waveguides.RWHA159_15
+    f_center = 5
+    f_test_band = 4
+
+
+class TestRWHA159_10(TestWaveguideHornAntenna):
+    """测试RWHA159-10波导的创建。"""
+
+    horn_type = waveguides.RWHA159_10
+    f_center = 5
+    f_test_band = 4
+
+class TestPEWAN090_20(TestWaveguideHornAntenna):
+    """测试PEWAN090-20波导的创建。"""
+
+    horn_type = waveguides.PEWAN090_20
+    f_center = 10
+    f_test_band = 4
+
+class TestRWHA187_10(TestWaveguideHornAntenna):
+    """测试RWHA187-10波导的创建。"""
+
+    horn_type = waveguides.RWHA187_10
+    f_center = 5
+    f_test_band = 4
+
 if __name__ == "__main__":
-    test = TestWR817()
+    test = TestRWHA187_10()
     test.test_waveguide_performance()
