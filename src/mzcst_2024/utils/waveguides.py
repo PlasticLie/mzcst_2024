@@ -24,7 +24,40 @@ from ..sources_and_ports.hf import Port
 _logger = logging.getLogger(__name__)
 
 
-class WR90:
+class BasicWaveguide(abc.ABC):
+    def __init__(self, name: str, port_config: Port):
+        """初始化波导。
+
+        Args:
+            name (str): 波导名称。
+            port_config (Port): 波导对应的端口对象。
+        """
+        self._name = name
+        self._port = port_config
+
+    @property
+    def name(self) -> str:
+        """返回波导名称。"""
+        return self._name
+
+    @property
+    def port(self) -> Port:
+        """返回波导对应的端口对象。"""
+        return self._port
+
+    @abc.abstractmethod
+    def create_waveguide(
+        self, modeler: "interface.Model3D"
+    ) -> "BasicWaveguide":
+        """在给定的建模器中创建波导。
+
+        Args:
+            modeler (interface.Model3D): 建模环境。
+        """
+        pass
+
+
+class WR90(BasicWaveguide):
     """标准WR-90波导的参数和建模方法。
 
     Parameters
@@ -37,9 +70,7 @@ class WR90:
 
     def __init__(self, name: str, port_config: Port):
         """根据结构参数初始化WR-90波导。"""
-        self.name = name
-
-        self.port = port_config
+        super().__init__(name, port_config)
         return
 
     def create_waveguide(self, modeler: "interface.Model3D") -> "WR90":
@@ -56,7 +87,7 @@ class WR90:
         waveguide_width = Parameter("37.38")
         waveguide_height = Parameter("16.38")
 
-        horn_down_comp = component.Component(self.name)
+        horn_down_comp = component.Component(self._name)
 
         solid1_down = Brick(
             "solid1",  # 实体名
@@ -99,7 +130,7 @@ class WR90:
         tp.pick_end_point_from_id(modeler, solid1_down, 13)
 
         # define port:
-        self.port.create_from_attributes(modeler)
+        self._port.create_from_attributes(modeler)
 
         # clear picks
         tp.clear_all_picks(modeler)
@@ -107,12 +138,12 @@ class WR90:
         t1 = time.perf_counter()
         _logger.info(
             "%s",
-            f'Waveguide "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
+            f'Waveguide "{self._name}" created, execution time: {common.time_to_string(t1-t0)}',
         )
         return self
 
 
-class WaveguideHornAntenna:
+class WaveguideHornAntenna(BasicWaveguide):
     def __init__(
         self,
         name: str,
@@ -124,15 +155,14 @@ class WaveguideHornAntenna:
         waveguide_width: Parameter,
         waveguide_height: Parameter,
     ):
-        self._name = name
-        self._port = port_config
+        super().__init__(name, port_config)
         self._taper_angle = taper_angle
         self._horn_length = horn_length
         self._wall_thickness = wall_thickness
         self._waveguide_width = waveguide_width
         self._waveguide_height = waveguide_height
 
-    def create(
+    def create_waveguide(
         self, modeler: "interface.Model3D"
     ) -> "WaveguideHornAntenna":
         t0 = time.perf_counter()
