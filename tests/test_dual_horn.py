@@ -908,7 +908,6 @@ class TestPEWAN090_20(TestWaveguideHornAntenna):
 
 class TestRWHA187_10(TestWaveguideHornAntenna):
     """测试RWHA187-10波导的创建。"""
-
     def __init__(self):
         super().__init__()
         self.horn_type = waveguides.RWHA187_10
@@ -927,5 +926,5 @@ class TestWR159(TestWaveguideHornAntenna):
 
 
 if __name__ == "__main__":
-    test = TestRWHA159_10()
+    test = TestWaveguideHornAntenna(horn_type=waveguides.RWHA187)
     test.test_waveguide_performance()
