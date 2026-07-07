@@ -441,20 +441,17 @@ class TestWaveguideHornAntenna:
 
     timestamps: list[float] = dataclasses.field(default_factory=list)
 
-    # settings for saving files and logging
-    # file_name_prefix = os.path.splitext(os.path.basename(__file__))[0].replace(
-    #     "_", "-"
-    # )
-    file_name_prefix: str = "svl-PLA"
-    file_name_prefix_unit_cell: str = "svl-PLA-unit-cell"
+    horn_type = waveguides.RWHA187_10
+
+    @property
+    def file_name_prefix(self) -> str:
+        return f"dual-{self.horn_type.__name__}"
+
     CURRENT_PATH: str = os.path.dirname(os.path.abspath(__file__))
     PARENT_PATH: str = os.path.dirname(CURRENT_PATH)
     RESULT_PATH: str = os.path.join(CURRENT_PATH, "results")
     PROJECT_ABSOLUTE_PATH: str = r"D:\CST-2024-local\fss-PLA-local"
 
-    SAVE_CSV: dict[str, bool] = dataclasses.field(
-        default_factory=lambda: {"x": False, "y": False, "all": False}
-    )  # 是否保存csv
 
     logger = logging.getLogger(__name__)
     LOG_PATH: str = os.path.join(PROJECT_ABSOLUTE_PATH, "00-logs")
@@ -480,11 +477,9 @@ class TestWaveguideHornAntenna:
     RUN_PARAMETER_SWEEP: bool = False
     BUILD_SHELL: bool = True  # 是否建模壳体
 
-    horn_type = waveguides.RWHA187_10
-
     @property
     def cst_file_name(self) -> str:
-        return f"dual-{self.horn_type.__name__}-{self.current_time}.cst"
+        return f"{self.file_name_prefix}-{self.current_time}.cst"
 
     # 求解设置
     f_center = 5
@@ -494,6 +489,32 @@ class TestWaveguideHornAntenna:
 
         time_all_start: float = time.perf_counter()
         self.timestamps.append(time_all_start)
+
+        common.create_folder(self.LOG_PATH)
+        logging.basicConfig(
+            format=self.FMT,
+            datefmt=self.DATEFMT,
+            level=self.LOG_LEVEL,
+            force=True,
+        )
+        root_logger = logging.getLogger()
+        root_logger.setLevel(self.LOG_LEVEL)
+
+        self.logger.setLevel(self.LOG_LEVEL)
+        file_handler = logging.FileHandler(self.LOG_FILE_FULL_PATH)
+        file_handler.setFormatter(self.LOG_FORMATTER)
+        file_handler.setLevel(self.LOG_LEVEL)
+        root_logger.addHandler(file_handler)
+        self.logger.info("Start logging.")
+        self.logger.info("Python file: %s", __file__)
+        self.logger.info("Log file: %s", self.LOG_FILE_FULL_PATH)
+        self.logger.info("Result path: %s", self.RESULT_PATH)
+
+        self.timestamps.append(time.perf_counter())
+        self.logger.info(
+            "warm up: %s",
+            common.time_to_string(self.timestamps[-1] - self.timestamps[-2]),
+        )
 
         filename: str = self.cst_file_name
         fullname: str = os.path.join(self.PROJECT_ABSOLUTE_PATH, filename)
@@ -530,7 +551,7 @@ class TestWaveguideHornAntenna:
         phi = Parameter("phi", "0", "入射方位角").store(m3d)
 
         horn_gap_scale = Parameter(
-            "horn_gap_scale", "15", "horn gap scale"
+            "horn_gap_scale", "1", "horn gap scale"
         ).store(m3d)
         horn_gap = (horn_gap_scale * wavelength).rename("horn_gap").store(m3d)
 
@@ -813,9 +834,9 @@ class TestWaveguideHornAntenna:
 
         parameter_sweep_setup = mz.solver.ParameterSweep(
             m3d, "Transient"
-        ).add_sequence("incident angle sweep")
-        parameter_sweep_setup.sequence[0].add_parameter_step_width(
-            theta, "0", "40", "10"
+        ).add_sequence("horn distance sweep")
+        parameter_sweep_setup.sequence[0].add_parameter_arbitrary_points(
+            horn_gap_scale, "0;1;10"
         )
 
         if self.SAVE_BEFORE_RUNNING:
@@ -849,50 +870,62 @@ class TestWaveguideHornAntenna:
 
 class TestRWHA159_20(TestWaveguideHornAntenna):
     """测试RWHA159-20波导的创建。"""
-
-    horn_type = waveguides.RWHA159_20
-    f_center = 5
-    f_test_band = 4
+    def __init__(self):
+        super().__init__()
+        self.horn_type = waveguides.RWHA159_20
+        self.f_center = 5
+        self.f_test_band = 4
 
 
 class TestRWHA159_15(TestWaveguideHornAntenna):
     """测试RWHA159-15波导的创建。"""
 
-    horn_type = waveguides.RWHA159_15
-    f_center = 5
-    f_test_band = 4
+    def __init__(self):
+        super().__init__()
+        self.horn_type = waveguides.RWHA159_15
+        self.f_center = 5
+        self.f_test_band = 4
 
 
 class TestRWHA159_10(TestWaveguideHornAntenna):
     """测试RWHA159-10波导的创建。"""
-
-    horn_type = waveguides.RWHA159_10
-    f_center = 5
-    f_test_band = 4
+    def __init__(self):
+        super().__init__()
+        self.horn_type = waveguides.RWHA159_10
+        self.f_center = 5
+        self.f_test_band = 4
+        self.SAVE_BEFORE_RUNNING = False
 
 
 class TestPEWAN090_20(TestWaveguideHornAntenna):
     """测试PEWAN090-20波导的创建。"""
-
-    horn_type = waveguides.PEWAN090_20
-    f_center = 10
-    f_test_band = 4
+    def __init__(self):
+        super().__init__()
+        self.horn_type = waveguides.PEWAN090_20
+        self.f_center = 10
+        self.f_test_band = 4
 
 
 class TestRWHA187_10(TestWaveguideHornAntenna):
     """测试RWHA187-10波导的创建。"""
 
-    horn_type = waveguides.RWHA187_10
-    f_center = 5
-    f_test_band = 4
+    def __init__(self):
+        super().__init__()
+        self.horn_type = waveguides.RWHA187_10
+        self.f_center = 5
+        self.f_test_band = 4
+
 
 class TestWR159(TestWaveguideHornAntenna):
     """测试WR159波导的创建。"""
 
-    horn_type = waveguides.WR159
-    f_center = 5
-    f_test_band = 4
+    def __init__(self):
+        super().__init__()
+        self.horn_type = waveguides.WR159
+        self.f_center = 5
+        self.f_test_band = 4
+
 
 if __name__ == "__main__":
-    test = TestRWHA159_20()
+    test = TestRWHA159_10()
     test.test_waveguide_performance()

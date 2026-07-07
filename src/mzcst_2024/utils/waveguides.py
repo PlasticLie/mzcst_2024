@@ -18,7 +18,7 @@ from .. import profiles_to_shapes as p2s
 from .. import shape_operations as so
 from .. import transformations_and_picks as tp
 from ..common import time_decorator
-from ..shapes import Brick
+from ..shapes import Brick, Cylinder
 from ..sources_and_ports.hf import Port
 
 _logger = logging.getLogger(__name__)
@@ -38,6 +38,16 @@ class BasicWaveguideHornAntenna(abc.ABC):
     aperture_height = Parameter(0)  # 天线口径高度
 
     # taper_angle = Parameter(0)  # 喇叭角度
+
+    BUILD_FLANGE = False  # 是否构建法兰
+    flange_width = Parameter(0)  # 法兰宽度
+    flange_height = Parameter(0)  # 法兰高度
+    flange_thickness = Parameter(0)  # 法兰厚度
+    flange_hole_1_distance_in_width = Parameter(0)  # 法兰孔1在宽度方向的距离
+    flange_hole_1_distance_in_height = Parameter(0)  # 法兰孔1在高度方向的距离
+    flange_hole_2_distance_in_width = Parameter(0)  # 法兰孔2在宽度方向的距离
+    flange_hole_2_distance_in_height = Parameter(0)  # 法兰孔2在高度方向的距离
+    flange_hole_diameter = Parameter(0)  # 法兰螺丝孔直径
 
     @property
     def taper_angle(self) -> Parameter:
@@ -97,6 +107,75 @@ class BasicWaveguideHornAntenna(abc.ABC):
             horn_down_comp.name,  # 分组名
             material.PEC_,  # 材料名
         ).create(modeler)
+
+        # 法兰
+        if self.BUILD_FLANGE:
+            flange = Brick(
+                "flange",
+                f"{self.flange_width / (-2)}",  # xmin
+                f"{self.flange_width / (2)}",  # xmax
+                f"{self.flange_height / (-2)}",  # ymin
+                f"{self.flange_height / (2)}",  # ymax
+                "0",  # zmin
+                f"{self.flange_thickness}",  # zmax
+                horn_down_comp.name,  # 分组名
+                material.PEC_,  # 材料名
+            ).create(modeler)
+            flange.insert(modeler, solid1_down)
+
+            hole_positions = [
+                (
+                    self.flange_hole_1_distance_in_width / 2,
+                    self.flange_hole_1_distance_in_height / 2,
+                ),
+                (
+                    -self.flange_hole_1_distance_in_width / 2,
+                    self.flange_hole_1_distance_in_height / 2,
+                ),
+                (
+                    self.flange_hole_1_distance_in_width / 2,
+                    -self.flange_hole_1_distance_in_height / 2,
+                ),
+                (
+                    -self.flange_hole_1_distance_in_width / 2,
+                    -self.flange_hole_1_distance_in_height / 2,
+                ),
+                (
+                    self.flange_hole_2_distance_in_width / 2,
+                    self.flange_hole_2_distance_in_height / 2,
+                ),
+                (
+                    -self.flange_hole_2_distance_in_width / 2,
+                    self.flange_hole_2_distance_in_height / 2,
+                ),
+                (
+                    self.flange_hole_2_distance_in_width / 2,
+                    -self.flange_hole_2_distance_in_height / 2,
+                ),
+                (
+                    -self.flange_hole_2_distance_in_width / 2,
+                    -self.flange_hole_2_distance_in_height / 2,
+                ),
+            ]
+            holes_list: list[Cylinder] = []
+
+            for i in range(len(hole_positions)):
+                x, y = hole_positions[i]
+                holes_list.append(
+                    Cylinder(
+                        f"hole_{i}",
+                        horn_down_comp.name,
+                        "PEC",
+                        "Z",
+                        "0",
+                        f"{self.flange_hole_diameter / 2}",
+                        f"{x}",
+                        f"{y}",
+                        f"{-self.flange_thickness}",
+                        f"{self.flange_thickness + 1}",
+                    ).create(modeler)
+                )
+                flange.subtract(modeler, holes_list[i])
 
         # 选择顶面
         tp.pick_face_from_id(modeler, solid1_down, 1)
@@ -279,12 +358,49 @@ class PEWAN090_20(BasicWaveguideHornAntenna):
         return self
 
 
-class RWHA187_10(BasicWaveguideHornAntenna):
-    """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99GHz, 增益10dB, FDP48矩形平法兰"""
+class RWHA187(BasicWaveguideHornAntenna):
+    """WR187(BJ48)标准增益喇叭天线的基类。直接实例化时只生成波导，没有喇叭。
+    3.94-5.99 GHz, 增益10dB, FDP48矩形平法兰。"""
 
     waveguide_width = Parameter(47.5)
     waveguide_height = Parameter(22.15)
     waveguide_length = Parameter(15)
+
+    total_length = waveguide_length
+
+    aperture_width = waveguide_width
+    aperture_height = waveguide_height
+
+    # FDP48矩形平法兰
+    BUILD_FLANGE = True
+    flange_width = Parameter(88.9)  # 法兰宽度
+    flange_height = Parameter(63.5)  # 法兰高度
+    flange_thickness = Parameter(7)  # 法兰厚度
+    flange_hole_1_distance_in_width = Parameter(
+        28.58
+    )  # 法兰孔1在宽度方向的距离
+    flange_hole_1_distance_in_height = Parameter(
+        22.22
+    )  # 法兰孔1在高度方向的距离
+    flange_hole_2_distance_in_width = Parameter(
+        71.82
+    )  # 法兰孔2在宽度方向的距离
+    flange_hole_2_distance_in_height = Parameter(
+        46.44
+    )  # 法兰孔2在高度方向的距离
+    flange_hole_diameter = Parameter(6.5)  # 法兰螺丝孔直径
+
+    def __init__(self, name: str, port_config: Port):
+        super().__init__(name, port_config)
+        return
+
+    def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA187":
+        super().create_waveguide(modeler)
+        return self
+
+
+class RWHA187_10(RWHA187):
+    """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99GHz, 增益10dB, FDP48矩形平法兰"""
 
     total_length = Parameter(110)
 
@@ -321,7 +437,38 @@ class RWHA187_20(BasicWaveguideHornAntenna):
         return self
 
 
-class RWHA159_10(BasicWaveguideHornAntenna):
+class RWHA159(BasicWaveguideHornAntenna):
+
+    waveguide_width = Parameter(40.4)
+    waveguide_height = Parameter(20.2)
+    waveguide_length = Parameter(20)
+
+    total_length = waveguide_length
+
+    aperture_width = waveguide_width
+    aperture_height = waveguide_height
+
+    # FDP58矩形平法兰
+    BUILD_FLANGE = True
+    flange_width = Parameter(81)
+    flange_height = Parameter(61.9)
+    flange_thickness = Parameter(7)
+    flange_hole_1_distance_in_width = Parameter(25.4)
+    flange_hole_1_distance_in_height = Parameter(44.46)
+    flange_hole_2_distance_in_width = Parameter(64.66)
+    flange_hole_2_distance_in_height = Parameter(19.04)
+    flange_hole_diameter = Parameter(6.5)
+
+    def __init__(self, name: str, port_config: Port):
+        super().__init__(name, port_config)
+        return
+
+    def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA159":
+        super().create_waveguide(modeler)
+        return self
+
+
+class RWHA159_10(RWHA159):
     """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益10dB, FDP58矩形平法兰"""
 
     waveguide_width = Parameter(40.4)
