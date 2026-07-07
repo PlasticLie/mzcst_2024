@@ -416,7 +416,7 @@ class RWHA187_10(RWHA187):
         return self
 
 
-class RWHA187_20(BasicWaveguideHornAntenna):
+class RWHA187_20(RWHA187):
     """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99 GHz, 增益20dB, FDP48矩形平法兰"""
 
     waveguide_width = Parameter(47.5)
@@ -436,7 +436,7 @@ class RWHA187_20(BasicWaveguideHornAntenna):
         super().create_waveguide(modeler)
         return self
 
-
+@abc.abstractmethod
 class RWHA159(BasicWaveguideHornAntenna):
 
     waveguide_width = Parameter(40.4)
@@ -463,6 +463,7 @@ class RWHA159(BasicWaveguideHornAntenna):
         super().__init__(name, port_config)
         return
 
+    @abc.abstractmethod
     def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA159":
         super().create_waveguide(modeler)
         return self
@@ -489,7 +490,7 @@ class RWHA159_10(RWHA159):
         return self
 
 
-class RWHA159_15(BasicWaveguideHornAntenna):
+class RWHA159_15(RWHA159):
     """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益15dB, FDP58矩形平法兰"""
 
     waveguide_width = Parameter(40.4)
@@ -510,7 +511,7 @@ class RWHA159_15(BasicWaveguideHornAntenna):
         return self
 
 
-class RWHA159_20(BasicWaveguideHornAntenna):
+class RWHA159_20(RWHA159):
     """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益20dB, FDP58矩形平法兰"""
 
     waveguide_width = Parameter(40.4)

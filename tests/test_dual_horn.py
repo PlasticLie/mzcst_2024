@@ -452,7 +452,6 @@ class TestWaveguideHornAntenna:
     RESULT_PATH: str = os.path.join(CURRENT_PATH, "results")
     PROJECT_ABSOLUTE_PATH: str = r"D:\CST-2024-local\fss-PLA-local"
 
-
     logger = logging.getLogger(__name__)
     LOG_PATH: str = os.path.join(PROJECT_ABSOLUTE_PATH, "00-logs")
     LOG_LEVEL = logging.INFO
@@ -870,6 +869,7 @@ class TestWaveguideHornAntenna:
 
 class TestRWHA159_20(TestWaveguideHornAntenna):
     """测试RWHA159-20波导的创建。"""
+
     def __init__(self):
         super().__init__()
         self.horn_type = waveguides.RWHA159_20
@@ -889,6 +889,7 @@ class TestRWHA159_15(TestWaveguideHornAntenna):
 
 class TestRWHA159_10(TestWaveguideHornAntenna):
     """测试RWHA159-10波导的创建。"""
+
     def __init__(self):
         super().__init__()
         self.horn_type = waveguides.RWHA159_10
@@ -899,6 +900,7 @@ class TestRWHA159_10(TestWaveguideHornAntenna):
 
 class TestPEWAN090_20(TestWaveguideHornAntenna):
     """测试PEWAN090-20波导的创建。"""
+
     def __init__(self):
         super().__init__()
         self.horn_type = waveguides.PEWAN090_20
@@ -908,6 +910,7 @@ class TestPEWAN090_20(TestWaveguideHornAntenna):
 
 class TestRWHA187_10(TestWaveguideHornAntenna):
     """测试RWHA187-10波导的创建。"""
+
     def __init__(self):
         super().__init__()
         self.horn_type = waveguides.RWHA187_10
@@ -926,5 +929,6 @@ class TestWR159(TestWaveguideHornAntenna):
 
 
 if __name__ == "__main__":
-    test = TestWaveguideHornAntenna(horn_type=waveguides.RWHA187)
+    test = TestRWHA159_15()
+    test.RUN_SOLVER = False
     test.test_waveguide_performance()
