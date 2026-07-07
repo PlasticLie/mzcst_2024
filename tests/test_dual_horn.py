@@ -521,7 +521,7 @@ class TestWaveguideHornAntenna:
             "fmax", f"{fcenter + f_test_band / 2}", "频带上限(GHz)"
         ).store(m3d)
         wavelength = (
-            (mz.math_.c0 / fcenter / Parameter("1e6"))
+            ("3e8" / fcenter / "1e6")
             .rename("wavelength")
             .redescribe("中心频率波长")
             .store(m3d)
@@ -529,7 +529,10 @@ class TestWaveguideHornAntenna:
         theta = Parameter("theta", "0", "入射俯仰角").store(m3d)
         phi = Parameter("phi", "0", "入射方位角").store(m3d)
 
-        horn_gap = (0 * wavelength).rename("horn_gap").store(m3d)
+        horn_gap_scale = Parameter(
+            "horn_gap_scale", "15", "horn gap scale"
+        ).store(m3d)
+        horn_gap = (horn_gap_scale * wavelength).rename("horn_gap").store(m3d)
 
         self.timestamps.append(time.perf_counter())
         self.logger.info(
@@ -767,7 +770,7 @@ class TestWaveguideHornAntenna:
             attributes={
                 "Method": ' "Hexahedral"',
                 "CalculationType": ' "TD-S"',
-                "StimulationPort": ' "All"',
+                "StimulationPort": f' "{port_up.number}"',
                 "StimulationMode": '"All"',
                 "SteadyStateLimit": ' "-40"',
                 "MeshAdaption": ' "False"',
@@ -867,12 +870,14 @@ class TestRWHA159_10(TestWaveguideHornAntenna):
     f_center = 5
     f_test_band = 4
 
+
 class TestPEWAN090_20(TestWaveguideHornAntenna):
     """测试PEWAN090-20波导的创建。"""
 
     horn_type = waveguides.PEWAN090_20
     f_center = 10
     f_test_band = 4
+
 
 class TestRWHA187_10(TestWaveguideHornAntenna):
     """测试RWHA187-10波导的创建。"""
@@ -881,6 +886,13 @@ class TestRWHA187_10(TestWaveguideHornAntenna):
     f_center = 5
     f_test_band = 4
 
+class TestWR159(TestWaveguideHornAntenna):
+    """测试WR159波导的创建。"""
+
+    horn_type = waveguides.WR159
+    f_center = 5
+    f_test_band = 4
+
 if __name__ == "__main__":
-    test = TestRWHA187_10()
+    test = TestRWHA159_20()
     test.test_waveguide_performance()

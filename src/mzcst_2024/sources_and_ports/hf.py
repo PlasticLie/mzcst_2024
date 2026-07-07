@@ -44,6 +44,33 @@ class Port(BaseObject):
 
         return
 
+    @property
+    def label(self) -> str:
+        """端口标签。
+
+        Returns:
+            str: 端口标签。
+        """
+        return self._label
+
+    @property
+    def number(self) -> int:
+        """端口编号。
+
+        Returns:
+            int: 端口编号。
+        """
+        return self._number
+
+    @property
+    def attributes(self) -> dict[str, str]:
+        """端口属性字典。
+
+        Returns:
+            dict[str, str]: 端口属性字典。
+        """
+        return self._attributes
+
     def create_from_attributes(self, modeler: "interface.Model3D") -> "Port":
         """从属性字典新建端口。
 

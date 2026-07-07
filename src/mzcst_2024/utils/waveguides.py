@@ -232,6 +232,28 @@ class WR90(BasicWaveguideHornAntenna):
         )
         return self
 
+
+class WR159(BasicWaveguideHornAntenna):
+    """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益15dB, FDP58矩形平法兰"""
+
+    waveguide_width = Parameter(40.4)
+    waveguide_height = Parameter(20.2)
+    waveguide_length = Parameter(20)
+
+    total_length = Parameter(250)
+
+    aperture_width = Parameter(149.2)
+    aperture_height = Parameter(104.1)
+
+    def __init__(self, name: str, port_config: Port):
+        super().__init__(name, port_config)
+        return
+
+    def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA159_15":
+        super().create_waveguide(modeler)
+        return self
+
+
 class PEWAN090_20(BasicWaveguideHornAntenna):
     """WR90标准增益喇叭天线|专业型, 8.2-12.4GHz, 增益20dB, FDP38矩形平法兰"""
 
@@ -239,10 +261,14 @@ class PEWAN090_20(BasicWaveguideHornAntenna):
     waveguide_height = Parameter(16.38)
     waveguide_length = Parameter(10.92)
 
-    total_length = Parameter(284.2)
+    total_length = Parameter(229.08)
 
     aperture_width = Parameter(111.8)
     aperture_height = Parameter(82.9)
+
+    @property
+    def taper_angle(self) -> Parameter:
+        return Parameter(11.2)
 
     def __init__(self, name: str, port_config: Port):
         super().__init__(name, port_config)
@@ -251,6 +277,7 @@ class PEWAN090_20(BasicWaveguideHornAntenna):
     def create_waveguide(self, modeler: "interface.Model3D") -> "PEWAN090_20":
         super().create_waveguide(modeler)
         return self
+
 
 class RWHA187_10(BasicWaveguideHornAntenna):
     """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99GHz, 增益10dB, FDP48矩形平法兰"""
@@ -264,8 +291,6 @@ class RWHA187_10(BasicWaveguideHornAntenna):
     aperture_width = Parameter(98)
     aperture_height = Parameter(73)
 
-    # taper_angle = Parameter((19.96 + 19.83) / 2)
-
     def __init__(self, name: str, port_config: Port):
         super().__init__(name, port_config)
         return
@@ -276,7 +301,7 @@ class RWHA187_10(BasicWaveguideHornAntenna):
 
 
 class RWHA187_20(BasicWaveguideHornAntenna):
-    """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99GHz, 增益20dB, FDP48矩形平法兰"""
+    """WR187(BJ48)标准增益喇叭天线|专业型, 3.94-5.99 GHz, 增益20dB, FDP48矩形平法兰"""
 
     waveguide_width = Parameter(47.5)
     waveguide_height = Parameter(22.15)
@@ -294,6 +319,7 @@ class RWHA187_20(BasicWaveguideHornAntenna):
     def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA187_20":
         super().create_waveguide(modeler)
         return self
+
 
 class RWHA159_10(BasicWaveguideHornAntenna):
     """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益10dB, FDP58矩形平法兰"""
@@ -315,6 +341,7 @@ class RWHA159_10(BasicWaveguideHornAntenna):
         super().create_waveguide(modeler)
         return self
 
+
 class RWHA159_15(BasicWaveguideHornAntenna):
     """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益15dB, FDP58矩形平法兰"""
 
@@ -334,6 +361,7 @@ class RWHA159_15(BasicWaveguideHornAntenna):
     def create_waveguide(self, modeler: "interface.Model3D") -> "RWHA159_15":
         super().create_waveguide(modeler)
         return self
+
 
 class RWHA159_20(BasicWaveguideHornAntenna):
     """WR159(BJ58)标准增益喇叭天线, 4.64-7.05GHz, 增益20dB, FDP58矩形平法兰"""
