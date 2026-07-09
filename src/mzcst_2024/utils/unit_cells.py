@@ -208,6 +208,97 @@ class JerusalemCross:
         )
         return sub
 
+    def create_boss(self, modeler: "interface.Model3D") -> "Brick":
+        """创建凸台。
+
+        Parameters
+        ----------
+        modeler : interface.Model3D
+            建模器。
+
+        Returns
+        -------
+        Brick
+            凸台对象。
+        """
+        unit_comp = self.name
+        BOSS_COMP: str = "substrate"
+        bosses_info: list[list[str]] = [
+            [
+                "boss_0",  # 横向十字
+                f"{self.base[0] - (self.l_unit / 2)}",  # xmin
+                f"{self.base[0] + (self.l_unit / 2)}",  # xmax
+                f"{self.base[1] - (self.w_cross / 2)}",  # ymin
+                f"{self.base[1] + (self.w_cross / 2)}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_1",  # 纵向十字
+                f"{self.base[0] - (self.w_cross / 2)}",  # xmin
+                f"{self.base[0] + (self.w_cross / 2)}",  # xmax
+                f"{self.base[1] - (self.l_unit / 2)}",  # ymin
+                f"{self.base[1] + (self.l_unit / 2)}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_2",  # 下部帽子
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2 + self.w_hat}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_3",  # 上部帽子
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2 - self.w_hat}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_4",  # 左侧帽子
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2 + self.w_cross}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_5",  # 右侧帽子
+                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2 - self.w_cross}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+        ]
+        bosses: list[Brick] = []
+        for j in range(len(bosses_info)):
+            bosses.append(Brick(*bosses_info[j]).create(modeler))
+
+        for j in range(len(bosses_info) - 1, 0, -1):
+            bosses[j - 1].add(modeler, bosses[j])
+        return bosses[0]
+
     def create_boss_and_shell(
         self, modeler: "interface.Model3D"
     ) -> tuple["Brick", "Brick"]:
