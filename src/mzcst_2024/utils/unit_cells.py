@@ -60,6 +60,7 @@ class JerusalemCross:
         l_hat: ParameterLike,
         w_hat: ParameterLike,
         h_trace: ParameterLike,
+        h_boss: ParameterLike = Parameter(0),
         substrate_material: material.Material = material.VACUUM,
         trace_material: material.Material = material.PEC,
         *,
@@ -67,14 +68,15 @@ class JerusalemCross:
     ):
         """根据结构参数初始化耶路撒冷十字结构。"""
         self.name = name
-        self.l_sub = l_sub
-        self.w_sub = w_sub
-        self.h_sub = h_sub
-        self.l_cross = l_cross
-        self.w_cross = w_cross
-        self.l_hat = l_hat
-        self.w_hat = w_hat
-        self.h_trace = h_trace
+        self.l_sub = Parameter(l_sub)
+        self.w_sub = Parameter(w_sub)
+        self.h_sub = Parameter(h_sub)
+        self.l_cross = Parameter(l_cross)
+        self.w_cross = Parameter(w_cross)
+        self.l_hat = Parameter(l_hat)
+        self.w_hat = Parameter(w_hat)
+        self.h_trace = Parameter(h_trace)
+        self.h_boss = Parameter(h_boss)
         self.substrate_material = substrate_material
         self.trace_material = trace_material
 
@@ -106,8 +108,8 @@ class JerusalemCross:
                 f"{self.base[0] + (self.l_unit / 2)}",  # xmax
                 f"{self.base[1] - (self.w_cross / 2)}",  # ymin
                 f"{self.base[1] + (self.w_cross / 2)}",  # ymax
-                f"{self.base[2] + self.h_sub}",  # zmin
-                f"{self.base[2] + self.h_sub + self.h_trace}",  # zmax
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss + self.h_trace}",  # zmax
                 unit_comp + "/" + TRACE_COMP,  # 分组名
                 self.trace_material.name,  # 材料名
             ],
@@ -117,8 +119,8 @@ class JerusalemCross:
                 f"{self.base[0] + (self.w_cross / 2)}",  # xmax
                 f"{self.base[1] - (self.l_unit / 2)}",  # ymin
                 f"{self.base[1] + (self.l_unit / 2)}",  # ymax
-                f"{self.base[2] + self.h_sub}",  # zmin
-                f"{self.base[2] + self.h_sub + self.h_trace}",  # zmax
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss + self.h_trace}",  # zmax
                 unit_comp + "/" + TRACE_COMP,  # 分组名
                 self.trace_material.name,  # 材料名
             ],
@@ -128,8 +130,8 @@ class JerusalemCross:
                 f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
                 f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2}",  # ymin
                 f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2 + self.w_hat}",  # ymax
-                f"{self.base[2] + self.h_sub}",  # zmin
-                f"{self.base[2] + self.h_sub + self.h_trace}",  # zmax
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss + self.h_trace}",  # zmax
                 unit_comp + "/" + TRACE_COMP,  # 分组名
                 self.trace_material.name,  # 材料名
             ],
@@ -139,8 +141,8 @@ class JerusalemCross:
                 f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
                 f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2 - self.w_hat}",  # ymin
                 f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2}",  # ymax
-                f"{self.base[2] + self.h_sub}",  # zmin
-                f"{self.base[2] + self.h_sub + self.h_trace}",  # zmax
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss + self.h_trace}",  # zmax
                 unit_comp + "/" + TRACE_COMP,  # 分组名
                 self.trace_material.name,  # 材料名
             ],
@@ -150,8 +152,8 @@ class JerusalemCross:
                 f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2 + self.w_cross}",  # xmax
                 f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
                 f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
-                f"{self.base[2] + self.h_sub}",  # zmin
-                f"{self.base[2] + self.h_sub + self.h_trace}",  # zmax
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss + self.h_trace}",  # zmax
                 unit_comp + "/" + TRACE_COMP,  # 分组名
                 self.trace_material.name,  # 材料名
             ],
@@ -161,8 +163,8 @@ class JerusalemCross:
                 f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2}",  # xmax
                 f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
                 f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
-                f"{self.base[2] + self.h_sub}",  # zmin
-                f"{self.base[2] + self.h_sub + self.h_trace}",  # zmax
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss + self.h_trace}",  # zmax
                 unit_comp + "/" + TRACE_COMP,  # 分组名
                 self.trace_material.name,  # 材料名
             ],
@@ -206,6 +208,113 @@ class JerusalemCross:
         )
         return sub
 
+    def create_boss_and_shell(
+        self, modeler: "interface.Model3D"
+    ) -> tuple["Brick", "Brick"]:
+        """创建凸台和凸台的互补壳。
+
+        Parameters
+        ----------
+        modeler : interface.Model3D
+            建模器。
+
+        Returns
+        -------
+        tuple[Brick, Brick]
+            凸台对象和互补壳对象。
+        """
+        unit_comp = self.name
+        BOSS_COMP: str = "substrate"
+        bosses_info: list[list[str]] = [
+            [
+                "boss_0",  # 横向十字
+                f"{self.base[0] - (self.l_unit / 2)}",  # xmin
+                f"{self.base[0] + (self.l_unit / 2)}",  # xmax
+                f"{self.base[1] - (self.w_cross / 2)}",  # ymin
+                f"{self.base[1] + (self.w_cross / 2)}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_1",  # 纵向十字
+                f"{self.base[0] - (self.w_cross / 2)}",  # xmin
+                f"{self.base[0] + (self.w_cross / 2)}",  # xmax
+                f"{self.base[1] - (self.l_unit / 2)}",  # ymin
+                f"{self.base[1] + (self.l_unit / 2)}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_2",  # 下部帽子
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2 + self.w_hat}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_3",  # 上部帽子
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2 - self.w_hat}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_4",  # 左侧帽子
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2 + self.w_cross}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+            [
+                "boss_5",  # 右侧帽子
+                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2 - self.w_cross}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
+                f"{self.base[2] + self.h_sub}",  # zmin
+                f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+                unit_comp + "/" + BOSS_COMP,  # 分组名
+                self.substrate_material.name,  # 材料名
+            ],
+        ]
+        bosses: list[Brick] = []
+        for j in range(len(bosses_info)):
+            bosses.append(Brick(*bosses_info[j]).create(modeler))
+
+        for j in range(len(bosses_info) - 1, 0, -1):
+            bosses[j - 1].add(modeler, bosses[j])
+
+        SHELL_COMP: str = "shell"
+        shell = Brick(
+            "shell",  # 实体名
+            f"{self.base[0] - self.l_sub/2}",  # xmin
+            f"{self.base[0] + self.l_sub/2}",  # xmax
+            f"{self.base[1] - self.w_sub/2}",  # ymin
+            f"{self.base[1] + self.w_sub/2}",  # ymax
+            f"{self.base[2] + self.h_sub}",  # zmin
+            f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+            unit_comp + "/" + SHELL_COMP,  # 分组名
+            material.VACUUM_,  # 材料名
+        ).create(modeler)
+        shell.insert(modeler, bosses[0])
+        return bosses[0], shell
+
     def create_flat_unit(
         self, modeler: "interface.Model3D"
     ) -> "JerusalemCross":
@@ -222,11 +331,40 @@ class JerusalemCross:
             The instance itself.
         """
         time_start = time.perf_counter()
+        boss_old = self.h_boss
+        self.h_boss = Parameter(0)
         self.create_substrate(modeler)
         self.create_traces(modeler)
+        self.h_boss = boss_old
         time_end = time.perf_counter()
         _logger.info(
             "%s",
             f'Flat unit cell of "{self.name}" created, execution time: {common.time_to_string(time_end - time_start)}',
+        )
+        return self
+
+    def create_bossed_unit(
+        self, modeler: "interface.Model3D"
+    ) -> "JerusalemCross":
+        """Create Jerusalem Cross unit cell with boss in the given modeler.
+
+        Parameters
+        ----------
+        modeler : interface.Model3D
+            The specified modeler.
+
+        Returns
+        -------
+        JerusalemCross
+            The instance itself.
+        """
+        time_start = time.perf_counter()
+        self.create_substrate(modeler)
+        self.create_boss_and_shell(modeler)
+        self.create_traces(modeler)
+        time_end = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Bossed unit cell of "{self.name}" created, execution time: {common.time_to_string(time_end - time_start)}',
         )
         return self
