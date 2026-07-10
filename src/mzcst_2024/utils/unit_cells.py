@@ -412,9 +412,9 @@ class JerusalemCross:
         return self
 
     def create_bossed_unit(
-        self, modeler: "interface.Model3D"
+        self, modeler: "interface.Model3D",
     ) -> "JerusalemCross":
-        """Create Jerusalem Cross unit cell with boss in the given modeler.
+        """创建有凸台的耶路撒冷十字结构单元。
 
         Parameters
         ----------
