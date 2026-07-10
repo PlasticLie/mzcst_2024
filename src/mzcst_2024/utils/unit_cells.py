@@ -316,7 +316,7 @@ class JerusalemCross:
     def create_boss_and_shell(
         self, modeler: "interface.Model3D"
     ) -> tuple["Brick", "Brick"]:
-        """创建凸台和凸台的互补壳。
+        """创建凸台和凸台的互补壳（没有间隙）。
 
         Parameters
         ----------
@@ -365,7 +365,9 @@ class JerusalemCross:
         """
         unit_comp = self.name
 
-        boss_temp = self.create_boss(modeler, gap=shell_gap)
+        boss_temp = self.create_boss(
+            modeler, gap=shell_gap, boss_name="boss_temp"
+        )
         SHELL_COMP: str = "shell"
         shell = Brick(
             "shell",  # 实体名
