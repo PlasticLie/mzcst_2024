@@ -208,28 +208,42 @@ class JerusalemCross:
         )
         return sub
 
-    def create_boss(self, modeler: "interface.Model3D") -> "Brick":
+    def create_boss(
+        self,
+        modeler: "interface.Model3D",
+        *,
+        gap: ParameterLike = 0,
+        boss_name: str | None = None,
+    ) -> "Brick":
         """创建凸台。
 
         Parameters
         ----------
         modeler : interface.Model3D
             建模器。
+        gap : ParameterLike, optional
+            凸台之间的间隙，默认为0。
+        boss_name : str, optional
+            凸台的名称，默认为 None，如果为 None，则使用默认名称 "boss"。
 
         Returns
         -------
         Brick
             凸台对象。
         """
+        boss_gap = Parameter(gap)
         unit_comp = self.name
-        BOSS_COMP: str = "substrate"
+        if boss_name is not None:
+            BOSS_COMP: str = boss_name
+        else:
+            BOSS_COMP: str = "boss"
         bosses_info: list[list[str]] = [
             [
                 "boss_0",  # 横向十字
-                f"{self.base[0] - (self.l_unit / 2)}",  # xmin
-                f"{self.base[0] + (self.l_unit / 2)}",  # xmax
-                f"{self.base[1] - (self.w_cross / 2)}",  # ymin
-                f"{self.base[1] + (self.w_cross / 2)}",  # ymax
+                f"{self.base[0] - (self.l_unit / 2) - boss_gap}",  # xmin
+                f"{self.base[0] + (self.l_unit / 2) + boss_gap}",  # xmax
+                f"{self.base[1] - (self.w_cross / 2) - boss_gap}",  # ymin
+                f"{self.base[1] + (self.w_cross / 2) + boss_gap}",  # ymax
                 f"{self.base[2] + self.h_sub}",  # zmin
                 f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
                 unit_comp + "/" + BOSS_COMP,  # 分组名
@@ -237,10 +251,10 @@ class JerusalemCross:
             ],
             [
                 "boss_1",  # 纵向十字
-                f"{self.base[0] - (self.w_cross / 2)}",  # xmin
-                f"{self.base[0] + (self.w_cross / 2)}",  # xmax
-                f"{self.base[1] - (self.l_unit / 2)}",  # ymin
-                f"{self.base[1] + (self.l_unit / 2)}",  # ymax
+                f"{self.base[0] - (self.w_cross / 2) - boss_gap}",  # xmin
+                f"{self.base[0] + (self.w_cross / 2) + boss_gap}",  # xmax
+                f"{self.base[1] - (self.l_unit / 2) - boss_gap}",  # ymin
+                f"{self.base[1] + (self.l_unit / 2) + boss_gap}",  # ymax
                 f"{self.base[2] + self.h_sub}",  # zmin
                 f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
                 unit_comp + "/" + BOSS_COMP,  # 分组名
@@ -248,10 +262,10 @@ class JerusalemCross:
             ],
             [
                 "boss_2",  # 下部帽子
-                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2}",  # xmin
-                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
-                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2}",  # ymin
-                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2 + self.w_hat}",  # ymax
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 - boss_gap}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat + boss_gap}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2 - boss_gap}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.w_unit) / 2 + self.w_hat + boss_gap}",  # ymax
                 f"{self.base[2] + self.h_sub}",  # zmin
                 f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
                 unit_comp + "/" + BOSS_COMP,  # 分组名
@@ -259,10 +273,10 @@ class JerusalemCross:
             ],
             [
                 "boss_3",  # 上部帽子
-                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2}",  # xmin
-                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat}",  # xmax
-                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2 - self.w_hat}",  # ymin
-                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2}",  # ymax
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 - boss_gap}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_hat) / 2 + self.l_hat + boss_gap}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2 - self.w_hat - boss_gap}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub + self.w_unit) / 2 + boss_gap}",  # ymax
                 f"{self.base[2] + self.h_sub}",  # zmin
                 f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
                 unit_comp + "/" + BOSS_COMP,  # 分组名
@@ -270,10 +284,10 @@ class JerusalemCross:
             ],
             [
                 "boss_4",  # 左侧帽子
-                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2}",  # xmin
-                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2 + self.w_cross}",  # xmax
-                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
-                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2 - boss_gap}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub - self.l_unit) / 2 + self.w_cross + boss_gap}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 - boss_gap}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat + boss_gap}",  # ymax
                 f"{self.base[2] + self.h_sub}",  # zmin
                 f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
                 unit_comp + "/" + BOSS_COMP,  # 分组名
@@ -281,10 +295,10 @@ class JerusalemCross:
             ],
             [
                 "boss_5",  # 右侧帽子
-                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2 - self.w_cross}",  # xmin
-                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2}",  # xmax
-                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2}",  # ymin
-                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat}",  # ymax
+                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2 - self.w_cross - boss_gap}",  # xmin
+                f"{self.base[0] - self.center_x + (self.l_sub + self.l_unit) / 2 + boss_gap}",  # xmax
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 - boss_gap}",  # ymin
+                f"{self.base[1] - self.center_y + (self.w_sub - self.l_hat) / 2 + self.l_hat + boss_gap}",  # ymax
                 f"{self.base[2] + self.h_sub}",  # zmin
                 f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
                 unit_comp + "/" + BOSS_COMP,  # 分组名
@@ -331,6 +345,41 @@ class JerusalemCross:
         ).create(modeler)
         shell.insert(modeler, boss)
         return boss, shell
+
+    def create_shell(
+        self, modeler: "interface.Model3D", shell_gap: ParameterLike = 0
+    ) -> "Brick":
+        """创建凸台的互补壳。
+
+        Parameters
+        ----------
+        modeler : interface.Model3D
+            建模器。
+        shell_gap : ParameterLike
+            壳体与凸台的间隙。
+
+        Returns
+        -------
+        Brick
+            互补壳对象。
+        """
+        unit_comp = self.name
+
+        boss_temp = self.create_boss(modeler, gap=shell_gap)
+        SHELL_COMP: str = "shell"
+        shell = Brick(
+            "shell",  # 实体名
+            f"{self.base[0] - self.l_sub/2}",  # xmin
+            f"{self.base[0] + self.l_sub/2}",  # xmax
+            f"{self.base[1] - self.w_sub/2}",  # ymin
+            f"{self.base[1] + self.w_sub/2}",  # ymax
+            f"{self.base[2] + self.h_sub}",  # zmin
+            f"{self.base[2] + self.h_sub + self.h_boss}",  # zmax
+            unit_comp + "/" + SHELL_COMP,  # 分组名
+            material.VACUUM_,  # 材料名
+        ).create(modeler)
+        shell.subtract(modeler, boss_temp)
+        return shell
 
     def create_flat_unit(
         self, modeler: "interface.Model3D"
