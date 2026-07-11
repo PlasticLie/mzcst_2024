@@ -110,11 +110,20 @@ class JerusalemCross(BaseUnitCellObject):
         self.substrate_material = substrate_material
         self.trace_material = trace_material
 
-        # 计算派生参数
+        # 生成派生参数
         self.l_unit = 2 * (w_hat + l_cross) + w_cross
         self.w_unit = 2 * (w_hat + l_cross) + w_cross
         self.center_x = l_sub / 2
         self.center_y = w_sub / 2
+
+        self.trace_comp = "traces"
+        self.substrate_comp = "substrate"
+        self.boss_comp = "boss"
+        self.shell_comp = "shell"
+        self.trace = None
+        self.substrate = None
+        self.boss = None
+        self.shell = None
         return
 
     def create_traces(self, modeler: "interface.Model3D") -> "Brick":
@@ -128,7 +137,7 @@ class JerusalemCross(BaseUnitCellObject):
         """
         t0 = time.perf_counter()
         unit_comp = self.name
-        TRACE_COMP: str = "traces"
+        TRACE_COMP: str = self.trace_comp
         traces_info: list[list[str]] = [
             [
                 "trace_0",  # 横向十字
@@ -216,7 +225,7 @@ class JerusalemCross(BaseUnitCellObject):
         t0 = time.perf_counter()
         unit_comp = self.name
 
-        substrate_comp: str = "substrate"
+        substrate_comp: str = self.substrate_comp
         sub = Brick(
             "substrate",  # 实体名
             f"{self.base[0] - self.l_sub/2}",  # xmin
@@ -263,8 +272,9 @@ class JerusalemCross(BaseUnitCellObject):
         unit_comp = self.name
         if boss_name is not None:
             BOSS_COMP: str = boss_name
+            self.boss_comp = boss_name
         else:
-            BOSS_COMP: str = "boss"
+            BOSS_COMP: str = self.boss_comp
         bosses_info: list[list[str]] = [
             [
                 "boss_0",  # 横向十字
@@ -359,7 +369,7 @@ class JerusalemCross(BaseUnitCellObject):
         boss = self.create_boss(modeler, gap=shell_gap, boss_name="boss_temp")
         unit_comp = self.name
 
-        SHELL_COMP: str = "shell"
+        SHELL_COMP: str = self.shell_comp
         shell = Brick(
             "shell",  # 实体名
             f"{self.base[0] - self.l_sub/2}",  # xmin
@@ -396,7 +406,7 @@ class JerusalemCross(BaseUnitCellObject):
         boss_temp = self.create_boss(
             modeler, gap=shell_gap, boss_name="boss_temp"
         )
-        SHELL_COMP: str = "shell"
+        SHELL_COMP: str = self.shell_comp
         shell = Brick(
             "shell",  # 实体名
             f"{self.base[0] - self.l_sub/2}",  # xmin
@@ -456,10 +466,10 @@ class JerusalemCross(BaseUnitCellObject):
             The instance itself.
         """
         time_start = time.perf_counter()
-        self.create_substrate(modeler)
+        sub = self.create_substrate(modeler)
         # self.create_boss_and_shell(modeler, shell_gap=shell_gap)
-        self.create_boss(modeler)
-        self.create_traces(modeler)
+        boss = self.create_boss(modeler)
+        trace = self.create_traces(modeler)
         time_end = time.perf_counter()
         _logger.info(
             "%s",
