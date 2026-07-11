@@ -22,7 +22,8 @@ from ..sources_and_ports.hf import Port
 
 _logger = logging.getLogger(__name__)
 
-class BaseUnitCell(abc.ABC):
+
+class BaseUnitCellObject(abc.ABC):
     """周期结构单元的基类。
 
     Attributes
@@ -51,7 +52,8 @@ class BaseUnitCell(abc.ABC):
         self.name = name
         self.base = [Parameter(b) for b in base]
 
-class JerusalemCross(BaseUnitCell):
+
+class JerusalemCross(BaseUnitCellObject):
     """
     耶路撒冷十字结构单元。
 
@@ -438,7 +440,8 @@ class JerusalemCross(BaseUnitCell):
         return self
 
     def create_bossed_unit(
-        self, modeler: "interface.Model3D", *, shell_gap: ParameterLike = 0
+        self,
+        modeler: "interface.Model3D",
     ) -> "JerusalemCross":
         """创建有凸台的耶路撒冷十字结构单元。
 
