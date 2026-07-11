@@ -226,7 +226,7 @@ class JerusalemCross(BaseUnitCellObject):
         unit_comp = self.name
 
         substrate_comp: str = self.substrate_comp
-        sub = Brick(
+        self.substrate = Brick(
             "substrate",  # 实体名
             f"{self.base[0] - self.l_sub/2}",  # xmin
             f"{self.base[0] + self.l_sub/2}",  # xmax
@@ -243,7 +243,7 @@ class JerusalemCross(BaseUnitCellObject):
             "%s",
             f'Substrate of "{self.name}" created, execution time: {common.time_to_string(t1-t0)}',
         )
-        return sub
+        return self.substrate
 
     def create_boss(
         self,
@@ -349,7 +349,8 @@ class JerusalemCross(BaseUnitCellObject):
 
         for j in range(len(bosses_info) - 1, 0, -1):
             bosses[j - 1].add(modeler, bosses[j])
-        return bosses[0]
+        self.boss = bosses[0]
+        return self.boss
 
     def create_boss_and_shell(
         self, modeler: "interface.Model3D", *, shell_gap: ParameterLike = 0
@@ -407,7 +408,7 @@ class JerusalemCross(BaseUnitCellObject):
             modeler, gap=shell_gap, boss_name="boss_temp"
         )
         SHELL_COMP: str = self.shell_comp
-        shell = Brick(
+        self.shell = Brick(
             "shell",  # 实体名
             f"{self.base[0] - self.l_sub/2}",  # xmin
             f"{self.base[0] + self.l_sub/2}",  # xmax
@@ -418,8 +419,8 @@ class JerusalemCross(BaseUnitCellObject):
             unit_comp + "/" + SHELL_COMP,  # 分组名
             material.VACUUM_,  # 材料名
         ).create(modeler)
-        shell.subtract(modeler, boss_temp)
-        return shell
+        self.shell.subtract(modeler, boss_temp)
+        return self.shell
 
     def create_flat_unit(
         self, modeler: "interface.Model3D"
@@ -452,7 +453,7 @@ class JerusalemCross(BaseUnitCellObject):
     def create_bossed_unit(
         self,
         modeler: "interface.Model3D",
-    ) -> "JerusalemCross":
+    ) -> tuple[Brick, Brick]:
         """创建有凸台的耶路撒冷十字结构单元。
 
         Parameters
@@ -462,17 +463,18 @@ class JerusalemCross(BaseUnitCellObject):
 
         Returns
         -------
-        JerusalemCross
-            The instance itself.
+        tuple[Brick,  Brick]
+            The substrate and trace bricks.
         """
         time_start = time.perf_counter()
-        sub = self.create_substrate(modeler)
-        # self.create_boss_and_shell(modeler, shell_gap=shell_gap)
-        boss = self.create_boss(modeler)
-        trace = self.create_traces(modeler)
+        self.substrate = self.create_substrate(modeler)
+        self.boss = self.create_boss(modeler)
+        self.substrate.add(modeler, self.boss)
+        self.boss = None
+        self.trace = self.create_traces(modeler)
         time_end = time.perf_counter()
         _logger.info(
             "%s",
             f'Bossed unit cell of "{self.name}" created, execution time: {common.time_to_string(time_end - time_start)}',
         )
-        return self
+        return self.substrate, self.trace
