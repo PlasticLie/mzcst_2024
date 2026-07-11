@@ -22,8 +22,36 @@ from ..sources_and_ports.hf import Port
 
 _logger = logging.getLogger(__name__)
 
+class BaseUnitCell(abc.ABC):
+    """周期结构单元的基类。
 
-class JerusalemCross:
+    Attributes
+    ----------
+    name : str
+        结构名称
+    base : list[Parameter]
+        结构基点坐标 [x, y, z]
+    """
+
+    def __init__(
+        self,
+        name: str,
+        *,
+        base: tuple[ParameterLike, ParameterLike, ParameterLike] = (0, 0, 0),
+    ):
+        """初始化周期结构单元。
+
+        Parameters
+        ----------
+        name : str
+            结构名称
+        base : tuple[ParameterLike, ParameterLike, ParameterLike], optional
+            结构基点坐标，默认为 (0, 0, 0)
+        """
+        self.name = name
+        self.base = [Parameter(b) for b in base]
+
+class JerusalemCross(BaseUnitCell):
     """
     耶路撒冷十字结构单元。
 
@@ -67,7 +95,7 @@ class JerusalemCross:
         base: tuple[ParameterLike, ParameterLike, ParameterLike] = (0, 0, 0),
     ):
         """根据结构参数初始化耶路撒冷十字结构。"""
-        self.name = name
+        super().__init__(name, base=base)
         self.l_sub = Parameter(l_sub)
         self.w_sub = Parameter(w_sub)
         self.h_sub = Parameter(h_sub)
@@ -79,8 +107,6 @@ class JerusalemCross:
         self.h_boss = Parameter(h_boss)
         self.substrate_material = substrate_material
         self.trace_material = trace_material
-
-        self.base = [Parameter(b) for b in base]
 
         # 计算派生参数
         self.l_unit = 2 * (w_hat + l_cross) + w_cross
@@ -314,9 +340,9 @@ class JerusalemCross:
         return bosses[0]
 
     def create_boss_and_shell(
-        self, modeler: "interface.Model3D"
+        self, modeler: "interface.Model3D", *, shell_gap: ParameterLike = 0
     ) -> tuple["Brick", "Brick"]:
-        """创建凸台和凸台的互补壳（没有间隙）。
+        """创建凸台和凸台的互补壳（带壳体间隙）。
 
         Parameters
         ----------
@@ -328,7 +354,7 @@ class JerusalemCross:
         tuple[Brick, Brick]
             凸台对象和互补壳对象。
         """
-        boss = self.create_boss(modeler)
+        boss = self.create_boss(modeler, gap=shell_gap, boss_name="boss_temp")
         unit_comp = self.name
 
         SHELL_COMP: str = "shell"
@@ -386,7 +412,7 @@ class JerusalemCross:
     def create_flat_unit(
         self, modeler: "interface.Model3D"
     ) -> "JerusalemCross":
-        """Create Jerusalem Cross unit cell in the given modeler.
+        """创建平坦的耶路撒冷十字结构单元，不含凸台。
 
         Parameters
         ----------
@@ -412,7 +438,7 @@ class JerusalemCross:
         return self
 
     def create_bossed_unit(
-        self, modeler: "interface.Model3D",
+        self, modeler: "interface.Model3D", *, shell_gap: ParameterLike = 0
     ) -> "JerusalemCross":
         """创建有凸台的耶路撒冷十字结构单元。
 
@@ -428,7 +454,8 @@ class JerusalemCross:
         """
         time_start = time.perf_counter()
         self.create_substrate(modeler)
-        self.create_boss_and_shell(modeler)
+        # self.create_boss_and_shell(modeler, shell_gap=shell_gap)
+        self.create_boss(modeler)
         self.create_traces(modeler)
         time_end = time.perf_counter()
         _logger.info(
