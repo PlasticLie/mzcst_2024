@@ -22,11 +22,10 @@ class Component(BaseObject):
         self._name = CSTPath(name)
         return
 
-    @classmethod
-    def delete_all_empty_components(cls, modeler: interface.Model3D):
+    def delete_all_empty_components(self, modeler: interface.Model3D):
         """Deletes all empty components."""
         title = "Deletes all empty components."
-        cmd = "Component.DeleteAllEmptyComponents"
+        cmd = f"Component.DeleteAllEmptyComponents({self._name})"
         modeler.add_to_history(title, cmd)
         _logger.info("%s", title)
         return
