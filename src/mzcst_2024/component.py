@@ -22,8 +22,17 @@ class Component(BaseObject):
         self._name = CSTPath(name)
         return
 
-    @staticmethod
-    def hide(modeler: interface.Model3D):
+    @classmethod
+    def delete_all_empty_components(cls, modeler: interface.Model3D):
+        """Deletes all empty components."""
+        title = "Deletes all empty components."
+        cmd = "Component.DeleteAllEmptyComponents"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def hide(cls, modeler: interface.Model3D):
         """Hides the currently selected objects."""
         title = "Hides the currently selected objects."
         cmd = "Component.Hide"
@@ -31,8 +40,8 @@ class Component(BaseObject):
         _logger.info("%s", title)
         return
 
-    @staticmethod
-    def show(modeler: interface.Model3D):
+    @classmethod
+    def show(cls, modeler: interface.Model3D):
         """Shows the currently selected objects."""
         title = "Shows the currently selected objects."
         cmd = "Component.Show"
@@ -40,8 +49,8 @@ class Component(BaseObject):
         _logger.info("%s", title)
         return
 
-    @staticmethod
-    def hide_unselected(modeler: interface.Model3D):
+    @classmethod
+    def hide_unselected(cls, modeler: interface.Model3D):
         """Hides the currently not selected objects."""
         title = "Hides the currently not selected objects."
         cmd = "Component.HideUnselected"
@@ -49,8 +58,17 @@ class Component(BaseObject):
         _logger.info("%s", title)
         return
 
-    @staticmethod
-    def show_all(modeler: interface.Model3D):
+    @classmethod
+    def show_unselected(cls, modeler: interface.Model3D):
+        """Shows the currently not selected objects."""
+        title = "Shows the currently not selected objects."
+        cmd = "Component.ShowUnselected"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all(cls, modeler: interface.Model3D):
         """Shows all hideable objects."""
         title = "Shows all hideable objects."
         cmd = "Component.ShowAll"
@@ -58,8 +76,8 @@ class Component(BaseObject):
         _logger.info("%s", title)
         return
 
-    @staticmethod
-    def hide_all(modeler: interface.Model3D):
+    @classmethod
+    def hide_all(cls, modeler: interface.Model3D):
         """Hides or shows all hideable objects."""
         title = "Hides or shows all hideable objects."
         cmd = "Component.HideAll"
@@ -67,11 +85,110 @@ class Component(BaseObject):
         _logger.info("%s", title)
         return
 
-    @staticmethod
-    def show_unselected(modeler: interface.Model3D):
-        """Shows the currently not selected objects."""
-        title = "Shows the currently not selected objects."
-        cmd = "Component.ShowUnselected"
+    @classmethod
+    def hide_all_ports(cls, modeler: interface.Model3D):
+        """Hides all ports."""
+        title = "Hides all ports."
+        cmd = "Component.HideAllPorts"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all_ports(cls, modeler: interface.Model3D):
+        """Shows all ports."""
+        title = "Shows all ports."
+        cmd = "Component.ShowAllPorts"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def hide_all_field_sources(cls, modeler: interface.Model3D):
+        """Hides all field sources."""
+        title = "Hides all field sources."
+        cmd = "Component.HideAllFieldSources"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all_field_sources(cls, modeler: interface.Model3D):
+        """Shows all field sources."""
+        title = "Shows all field sources."
+        cmd = "Component.ShowAllFieldSources"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def hide_all_lumped_elements(cls, modeler: interface.Model3D):
+        """Hides all lumped elements."""
+        title = "Hides all lumped elements."
+        cmd = "Component.HideAllLumpedElements"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all_lumped_elements(cls, modeler: interface.Model3D):
+        """Shows all lumped elements."""
+        title = "Shows all lumped elements."
+        cmd = "Component.ShowAllLumpedElements"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def hide_all_wires(cls, modeler: interface.Model3D):
+        """Hides all wires."""
+        title = "Hides all wires."
+        cmd = "Component.HideAllWires"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all_wires(cls, modeler: interface.Model3D):
+        """Shows all wires."""
+        title = "Shows all wires."
+        cmd = "Component.ShowAllWires"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def hide_all_dielectric(cls, modeler: interface.Model3D):
+        """Hides all dielectric."""
+        title = "Hides all dielectric."
+        cmd = "Component.HideAllDielectric"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all_dielectric(cls, modeler: interface.Model3D):
+        """Shows all dielectric."""
+        title = "Shows all dielectric."
+        cmd = "Component.ShowAllDielectric"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def hide_all_metals(cls, modeler: interface.Model3D):
+        """Hides all metals."""
+        title = "Hides all metals."
+        cmd = "Component.HideAllMetals"
+        modeler.add_to_history(title, cmd)
+        _logger.info("%s", title)
+        return
+
+    @classmethod
+    def show_all_metals(cls, modeler: interface.Model3D):
+        """Shows all metals."""
+        title = "Shows all metals."
+        cmd = "Component.ShowAllMetals"
         modeler.add_to_history(title, cmd)
         _logger.info("%s", title)
         return
