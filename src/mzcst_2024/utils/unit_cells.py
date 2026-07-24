@@ -422,6 +422,31 @@ class JerusalemCross(BaseUnitCellObject):
         self.shell.subtract(modeler, boss_temp)
         return self.shell
 
+    def create_flat_traces(self, modeler: "interface.Model3D") -> "Brick":
+        """忽略凸台，创建平坦的耶路撒冷十字结构单元的铜层。
+
+        Parameters
+        ----------
+        modeler : interface.Model3D
+            The specified modeler.
+
+        Returns
+        -------
+        Brick
+            The instance itself.
+        """
+        time_start = time.perf_counter()
+        boss_old = self.h_boss
+        self.h_boss = Parameter(0)
+        self.trace = self.create_traces(modeler)
+        self.h_boss = boss_old
+        time_end = time.perf_counter()
+        _logger.info(
+            "%s",
+            f'Flat traces of "{self.name}" created, execution time: {common.time_to_string(time_end - time_start)}',
+        )
+        return self.trace
+
     def create_flat_unit(
         self, modeler: "interface.Model3D"
     ) -> "JerusalemCross":
