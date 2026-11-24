@@ -6,6 +6,7 @@ import logging
 import pathlib
 import typing
 import warnings
+from collections.abc import Iterable, Iterator, Sequence
 
 from . import interface
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
@@ -13,12 +14,200 @@ from .winwrap_basic.expression import WinWrapBasicExpressionValidator
 
 _logger = logging.getLogger(__name__)
 __all__ = [
+    "CSTObjectAttribute",
+    "AttributeList",
     "BaseObject",
     "VbaObject",
     "Parameter",
+    "ParameterList",
     "Units",
     "change_solver_type",
 ]
+
+
+_AttributeValue = typing.TypeVar("_AttributeValue", bound=str | int | float)
+
+
+class CSTObjectAttribute:
+    """属性值接受数字、字符串或它们的列表，并统一存储为字符串列表。"""
+
+    def __init__(
+        self, name: str, value: str | int | float | list[_AttributeValue]
+    ) -> None:
+        self._name: str = name
+        self._value: list[str] = (
+            [str(item) for item in value]
+            if isinstance(value, list)
+            else [str(value)]
+        )
+        return
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def value(self) -> list[str]:
+        return self._value
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(name={self._name}, value={self._value})"
+        )
+
+    def __str__(self) -> str:
+        name_str = f".{self._name}"
+        value_str = ""
+        for iv, v in enumerate(self._value):
+            name_str += f' "{v}"'
+            if iv < len(self._value) - 1:
+                name_str += ", "
+        return f"{name_str} {value_str}"
+
+
+class AttributeList:
+    """属性列表，支持按位置或名称访问。
+
+    可由单个属性、属性列表，或等长的名称和值列表初始化。
+    名称重复时按名称访问第一个属性；名称不存在时抛出 KeyError。
+    切片返回普通列表。
+    """
+
+    @typing.overload
+    def __init__(
+        self, names: CSTObjectAttribute | list[CSTObjectAttribute] = ...
+    ) -> None: ...
+
+    @typing.overload
+    def __init__(
+        self,
+        names: list[str],
+        values: Sequence[str | int | float | list[_AttributeValue]],
+    ) -> None: ...
+
+    def __init__(
+        self,
+        names: (
+            CSTObjectAttribute | list[CSTObjectAttribute] | list[str] | None
+        ) = None,
+        values: (
+            Sequence[str | int | float | list[_AttributeValue]] | None
+        ) = None,
+    ) -> None:
+        self._attributes: list[CSTObjectAttribute] = []
+        if values is not None:
+            if not isinstance(names, list) or not all(
+                isinstance(name, str) for name in names
+            ):
+                raise TypeError("names must be a list of strings")
+            if len(names) != len(values):
+                raise ValueError("names and values must have the same length")
+            attributes = [
+                CSTObjectAttribute(name, value)
+                for name, value in zip(names, values)
+            ]
+        elif names is None:
+            attributes = []
+        elif isinstance(names, CSTObjectAttribute):
+            attributes = [names]
+        elif isinstance(names, list) and all(
+            isinstance(attribute, CSTObjectAttribute) for attribute in names
+        ):
+            attributes = list(names)
+        else:
+            raise TypeError(
+                "expected a CSTObjectAttribute or a list of CSTObjectAttributes"
+            )
+        self._replace_attributes(attributes)
+
+    def _replace_attributes(
+        self, attributes: Iterable[CSTObjectAttribute]
+    ) -> None:
+        validated: list[CSTObjectAttribute] = []
+        for attribute in attributes:
+            if not isinstance(attribute, CSTObjectAttribute):
+                raise TypeError("expected a CSTObjectAttribute")
+            validated.append(attribute)
+        self._attributes[:] = validated
+
+    def __iter__(self) -> Iterator[CSTObjectAttribute]:
+        return iter(self._attributes)
+
+    def __len__(self) -> int:
+        return len(self._attributes)
+
+    def append(self, attribute: CSTObjectAttribute) -> None:
+        """在列表末尾添加属性。"""
+        self._replace_attributes([*self._attributes, attribute])
+
+    def _index_for_name(self, name: str) -> int:
+        for index, attribute in enumerate(self):
+            if attribute.name == name:
+                return index
+        raise KeyError(name)
+
+    @typing.overload
+    def __getitem__(
+        self, key: typing.SupportsIndex | str
+    ) -> CSTObjectAttribute: ...
+
+    @typing.overload
+    def __getitem__(self, key: slice) -> list[CSTObjectAttribute]: ...
+
+    def __getitem__(
+        self, key: typing.SupportsIndex | str | slice
+    ) -> CSTObjectAttribute | list[CSTObjectAttribute]:
+        if isinstance(key, str):
+            key = self._index_for_name(key)
+        return self._attributes[key]
+
+    @typing.overload
+    def __setitem__(
+        self, key: typing.SupportsIndex | str, value: CSTObjectAttribute
+    ) -> None: ...
+
+    @typing.overload
+    def __setitem__(
+        self, key: slice, value: Iterable[CSTObjectAttribute]
+    ) -> None: ...
+
+    def __setitem__(
+        self,
+        key: typing.SupportsIndex | str | slice,
+        value: CSTObjectAttribute | Iterable[CSTObjectAttribute],
+    ) -> None:
+        if isinstance(key, str):
+            key = self._index_for_name(key)
+        attributes = self._attributes.copy()
+        if isinstance(key, slice):
+            if isinstance(value, CSTObjectAttribute):
+                raise TypeError(
+                    "slice assignment requires an iterable of attributes"
+                )
+            attributes[key] = value
+        else:
+            if not isinstance(value, CSTObjectAttribute):
+                raise TypeError("expected a CSTObjectAttribute")
+            attributes[key] = value
+        self._replace_attributes(attributes)
+
+    def __delitem__(self, key: typing.SupportsIndex | str | slice) -> None:
+        if isinstance(key, str):
+            key = self._index_for_name(key)
+        attributes = self._attributes.copy()
+        del attributes[key]
+        self._replace_attributes(attributes)
+
+    def to_list(self) -> list[list[str | list[str]]]:
+        """按属性顺序返回 [名称, 字符串值列表]。"""
+        return [[attribute.name, attribute.value.copy()] for attribute in self]
+
+    def to_dict(self) -> dict[str, list[str]]:
+        """返回名称到字符串值列表的字典；名称重复时保留第一个。"""
+        result: dict[str, list[str]] = {}
+        for attribute in self:
+            result.setdefault(attribute.name, attribute.value.copy())
+        return result
 
 
 class BaseObject(abc.ABC):
@@ -332,7 +521,6 @@ class Parameter:
         description: str = "",
     ) -> None:
         super().__init__()
-
         if isinstance(name, Parameter):
             self._name: str = name.name
             self._expression: str = name.expression
@@ -855,22 +1043,116 @@ ParameterLike = Parameter | int | float | str
 
 
 class ParameterList:
-    """参数列表"""
+    """参数列表，支持按位置或变量名访问。
 
-    def __init__(self, names: list[str], values: list[ParameterLike]):
-        self._names: list[str] = names
-        self._values: list[str] = [str(v) for v in values]
-        pass
+    可由单个参数、参数列表，或等长的变量名和表达式列表初始化。
+    重名时按名称索引访问第一个参数；找不到名称时抛出 KeyError。
+    切片与普通 list 一样返回列表。
+    """
 
-    def __getitem__(self, key):
-        return Parameter(self._names[key], self._values[key])
+    @typing.overload
+    def __init__(self, names: Parameter | list[Parameter] = ...) -> None: ...
+
+    @typing.overload
+    def __init__(
+        self, names: list[str], values: Sequence[ParameterLike]
+    ) -> None: ...
+
+    def __init__(
+        self,
+        names: Parameter | list[Parameter] | list[str] | None = None,
+        values: Sequence[ParameterLike] | None = None,
+    ) -> None:
+        if values is not None:
+            if not isinstance(names, list) or not all(
+                isinstance(name, str) for name in names
+            ):
+                raise TypeError("names must be a list of strings")
+            if len(names) != len(values):
+                raise ValueError("names and values must have the same length")
+            self._parameters: list[Parameter] = [
+                Parameter(name, value) for name, value in zip(names, values)
+            ]
+        elif names is None:
+            self._parameters = []
+        elif isinstance(names, Parameter):
+            self._parameters = [names]
+        elif isinstance(names, list) and all(
+            isinstance(parameter, Parameter) for parameter in names
+        ):
+            self._parameters = list(names)
+        else:
+            raise TypeError("expected a Parameter or a list of Parameters")
+
+    def __iter__(self) -> Iterator[Parameter]:
+        return iter(self._parameters)
+
+    def __len__(self) -> int:
+        return len(self._parameters)
+
+    def append(self, parameter: Parameter) -> None:
+        """在列表末尾添加参数。"""
+        self._parameters.append(parameter)
+
+    def _index_for_name(self, name: str) -> int:
+        for index, parameter in enumerate(self):
+            if parameter.name == name:
+                return index
+        raise KeyError(name)
+
+    @typing.overload
+    def __getitem__(self, key: typing.SupportsIndex | str) -> Parameter: ...
+
+    @typing.overload
+    def __getitem__(self, key: slice) -> list[Parameter]: ...
+
+    def __getitem__(
+        self, key: typing.SupportsIndex | str | slice
+    ) -> Parameter | list[Parameter]:
+        if isinstance(key, str):
+            key = self._index_for_name(key)
+        return self._parameters[key]
+
+    @typing.overload
+    def __setitem__(
+        self, key: typing.SupportsIndex | str, value: Parameter
+    ) -> None: ...
+
+    @typing.overload
+    def __setitem__(self, key: slice, value: Iterable[Parameter]) -> None: ...
+
+    def __setitem__(
+        self,
+        key: typing.SupportsIndex | str | slice,
+        value: Parameter | Iterable[Parameter],
+    ) -> None:
+        if isinstance(key, str):
+            key = self._index_for_name(key)
+        if isinstance(key, slice):
+            self._parameters[key] = typing.cast(Iterable[Parameter], value)
+        else:
+            self._parameters[key] = typing.cast(Parameter, value)
+
+    def __delitem__(self, key: typing.SupportsIndex | str | slice) -> None:
+        if isinstance(key, str):
+            key = self._index_for_name(key)
+        del self._parameters[key]
+
+    def to_list(self) -> list[list[str]]:
+        """按参数顺序返回 [名称, 表达式] 列表。"""
+        return [[parameter.name, parameter.expression] for parameter in self]
+
+    def to_dict(self) -> dict[str, str]:
+        """返回名称到表达式的字典；名称重复时保留第一个。"""
+        result: dict[str, str] = {}
+        for parameter in self:
+            result.setdefault(parameter.name, parameter.expression)
+        return result
 
     def store(self, modeler: "interface.Model3D") -> "ParameterList":
         """将参数列表存储到CST建模环境中。
 
-        Adds or modifies an arbitrary number of parameters in one go. For bulk changes of many parameters this method can be considerably faster than changing parameters one after another in a loop.
-
-        The parameters are allowed to arbitrarily depend on each other or on other already existing parameters.
+        按列表顺序调用每个参数的 store 方法，包括参数描述。
 
         Args:
             modeler (interface.Model3D): 建模环境。
@@ -878,11 +1160,8 @@ class ParameterList:
         Returns:
             self (ParameterList): 对象自身的引用。
         """
-        for name, value in zip(self._names, self._values):
-            modeler.add_to_history(
-                f"Store parameter: {name}",
-                'MakeSureParameterExists("' + name + '", "' + value + '")',
-            )
+        for parameter in self:
+            parameter.store(modeler)
         return self
 
 

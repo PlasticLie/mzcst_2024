@@ -25,6 +25,38 @@
 
 测试服： `pip install -i https://test.pypi.org/simple/ --upgrade mzcst-2024`
 
+`ParameterList` 可以由参数对象或等长的名称、表达式列表创建：
+
+```python
+from mzcst_2024 import Parameter, ParameterList
+
+parameters = ParameterList(["width", "height"], ["10", "width / 2"])
+parameters.append(Parameter("depth", 3, "深度"))
+width = parameters["width"]  # 也支持数字索引和切片
+parameters.store(modeler)   # 按顺序保存，包含参数描述
+```
+
+也可以传入单个 `Parameter` 或 `Parameter` 列表。名称索引支持读取、替换和删除；
+名称不存在时抛出 `KeyError`；名称重复时索引操作作用于第一个匹配的参数。
+列表不会自动去重。
+它支持数字索引、切片、遍历、`len` 和 `append`，但不是 `list`，也不提供其他列表方法。
+`parameters.to_list()` 返回 `[[名称, 表达式], ...]`；`parameters.to_dict()` 返回
+名称到表达式的字典，名称重复时保留第一个。两种转换均不包含参数描述。
+
+`AttributeList` 同样支持按名称或位置访问、修改和删除，也可由等长的名称和值列表创建：
+
+```python
+from mzcst_2024 import AttributeList, BaseAttribute
+
+attributes = AttributeList(["Name", "Range"], ["example", [1, 2]])
+attributes.append(BaseAttribute("Enabled", 1))
+attributes.to_list()  # [["Name", ["example"]], ["Range", ["1", "2"]], ...]
+attributes.to_dict()  # {"Name": ["example"], "Range": ["1", "2"], ...}
+```
+
+属性值统一转换为字符串列表；转换结果中的值列表是副本。列表不会自动去重，
+名称重复时按名称访问和字典转换均保留第一个匹配的属性。
+
 
 以下内容来自CST 2024的官方帮助文档。
 

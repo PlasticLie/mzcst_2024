@@ -49,4 +49,13 @@ from . import (  # cst.asymptotic; _global,
     utils,
     winwrap_basic,
 )
-from .global_ import BaseObject, CSTPath, Parameter, ParameterLike, VbaObject
+from .global_ import (
+    AttributeList,
+    BaseObject,
+    CSTObjectAttribute,
+    CSTPath,
+    Parameter,
+    ParameterLike,
+    ParameterList,
+    VbaObject,
+)
