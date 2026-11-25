@@ -2,6 +2,7 @@
 
 import abc
 import ast
+import json
 import logging
 import pathlib
 import typing
@@ -25,21 +26,34 @@ __all__ = [
 ]
 
 
-_AttributeValue = typing.TypeVar("_AttributeValue", bound=str | int | float)
+_AttributeValue = str | int | float
 
 
 class CSTObjectAttribute:
-    """属性值接受数字、字符串或它们的列表，并统一存储为字符串列表。"""
+    """属性值接受数字、字符串或它们的列表，并统一存储为字符串列表。
+
+    名称不能包含引号；值中的双引号只能成对出现在首尾。
+    value 属性返回副本。
+    """
 
     def __init__(
-        self, name: str, value: str | int | float | list[_AttributeValue]
+        self, name: str, value: str | int | float | list[_AttributeValue] = ""
     ) -> None:
+        if '"' in name or "'" in name:
+            raise ValueError("attribute name must not contain quotes")
         self._name: str = name
         self._value: list[str] = (
             [str(item) for item in value]
             if isinstance(value, list)
             else [str(value)]
         )
+        for item in self._value:
+            if '"' in item and not (
+                item.count('"') == 2 and item.startswith('"') and item.endswith('"')
+            ):
+                raise ValueError(
+                    "attribute value must have double quotes only as a pair at both ends"
+                )
         return
 
     @property
@@ -48,20 +62,29 @@ class CSTObjectAttribute:
 
     @property
     def value(self) -> list[str]:
-        return self._value
+        return self._value.copy()
+
+    def to_list(self) -> list[str]:
+        """返回以名称开头、后接各字符串值的列表。"""
+        return [self._name, *self._value]
+
+    def to_dict(self) -> dict[str, list[str]]:
+        """返回名称到字符串值列表的字典，其中值列表是副本。"""
+        return {self._name: self._value.copy()}
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}(name={self._name}, value={self._value})"
-        )
+        name = json.dumps(self._name, ensure_ascii=False)
+        value = json.dumps(self._value, ensure_ascii=False)
+        return f"{self.__class__.__name__}(name={name}, value={value})"
 
     def __str__(self) -> str:
         name_str = f".{self._name}"
         value_str = ""
         for iv, v in enumerate(self._value):
-            name_str += f' "{v}"'
+            formatted_value = v if v.startswith('"') else quoted(v)
+            value_str += f"{formatted_value}"
             if iv < len(self._value) - 1:
-                name_str += ", "
+                value_str += ", "
         return f"{name_str} {value_str}"
 
 

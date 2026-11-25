@@ -27,7 +27,78 @@ class TestBaseAttribute(unittest.TestCase):
         mixed: list[str | int | float] = ["x", 1, 2.5]
         self.assertEqual(CSTObjectAttribute("name", strings).value, ["x"])
         self.assertEqual(CSTObjectAttribute("name", numbers).value, ["1"])
-        self.assertEqual(CSTObjectAttribute("name", mixed).value, ["x", "1", "2.5"])
+        self.assertEqual(
+            CSTObjectAttribute("name", mixed).value, ["x", "1", "2.5"]
+        )
+
+    def test_quote_validation(self):
+        for name in ('a"b', "a'b"):
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                CSTObjectAttribute(name, "value")
+        for value in ('"', '"start', 'end"', 'in"side', '"a"b"', '""x""'):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                CSTObjectAttribute("name", value)
+        with self.assertRaises(ValueError):
+            CSTObjectAttribute("name", ["valid", 'in"valid'])
+
+        attribute = CSTObjectAttribute("name", ['"quoted"', '""', "unquoted"])
+        self.assertEqual(attribute.value, ['"quoted"', '""', "unquoted"])
+        self.assertEqual(str(attribute), '.name "quoted", "", "unquoted"')
+
+    def test_value_is_independent(self):
+        attribute = CSTObjectAttribute("name", ["original"])
+        values = attribute.value
+        values[0] = 'in"valid'
+        values.append('"')
+        self.assertEqual(attribute.value, ["original"])
+
+    def test_conversions_are_independent(self):
+        attribute = CSTObjectAttribute("name", [1, 2.5, "x"])
+        row = attribute.to_list()
+        mapping = attribute.to_dict()
+        self.assertEqual(row, ["name", "1", "2.5", "x"])
+        self.assertEqual(mapping, {"name": ["1", "2.5", "x"]})
+        row[1] = "changed"
+        row.append("changed")
+        mapping["name"].append("changed")
+        self.assertEqual(attribute.value, ["1", "2.5", "x"])
+
+        self.assertEqual(
+            CSTObjectAttribute("single", 42).to_list(), ["single", "42"]
+        )
+        empty = CSTObjectAttribute("empty", [])
+        self.assertEqual(empty.to_list(), ["empty"])
+        self.assertEqual(empty.to_dict(), {"empty": []})
+
+    def test_str(self):
+        self.assertEqual(str(CSTObjectAttribute("name", 42)), '.name "42"')
+        self.assertEqual(
+            str(CSTObjectAttribute("name", [1, 2.5, "x"])),
+            '.name "1", "2.5", "x"',
+        )
+        self.assertEqual(str(CSTObjectAttribute("name", [])), ".name ")
+
+    def test_repr(self):
+        self.assertEqual(
+            repr(CSTObjectAttribute("name", 42)),
+            'CSTObjectAttribute(name="name", value=["42"])',
+        )
+        self.assertEqual(
+            repr(CSTObjectAttribute("name", [1, 2.5, "x"])),
+            'CSTObjectAttribute(name="name", value=["1", "2.5", "x"])',
+        )
+        self.assertEqual(
+            repr(CSTObjectAttribute("name", [])),
+            'CSTObjectAttribute(name="name", value=[])',
+        )
+        self.assertEqual(
+            repr(CSTObjectAttribute("name", '"c\\d\nx"')),
+            r'CSTObjectAttribute(name="name", value=["\"c\\d\nx\""])',
+        )
+        self.assertEqual(
+            repr(CSTObjectAttribute("名称", "值")),
+            'CSTObjectAttribute(name="名称", value=["值"])',
+        )
 
 
 class TestAttributeList(unittest.TestCase):
@@ -65,10 +136,13 @@ class TestAttributeList(unittest.TestCase):
         third = CSTObjectAttribute("c", 3)
         attributes["a"] = third
         self.assertIs(attributes["c"], third)
-        attributes[1:] = [CSTObjectAttribute("c", 4), CSTObjectAttribute("d", 5)]
-        self.assertEqual(attributes.to_list(), [
-            ["c", ["3"]], ["c", ["4"]], ["d", ["5"]]
-        ])
+        attributes[1:] = [
+            CSTObjectAttribute("c", 4),
+            CSTObjectAttribute("d", 5),
+        ]
+        self.assertEqual(
+            attributes.to_list(), [["c", ["3"]], ["c", ["4"]], ["d", ["5"]]]
+        )
         del attributes["c"]
         self.assertEqual(attributes["c"].value, ["4"])
         del attributes[:]

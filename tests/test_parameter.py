@@ -3,7 +3,64 @@
 import unittest
 from unittest.mock import Mock, call
 
-from mzcst_2024 import Parameter, ParameterList
+from mzcst_2024 import Parameter, ParameterList, math_, winwrap_basic
+
+
+class TestWinWrapBasicExpression(unittest.TestCase):
+    def test_expression_validation(self):
+        validator = winwrap_basic.expression.WinWrapBasicExpressionValidator()
+        test_cases = (
+            ("2 + 3 * 4", True),
+            ("(a + b) * c", True),
+            ("sin(x) + cos(y)", True),
+            ("sqrt(4) + abs(-5)", True),
+            ("a + b - c * d / e", True),
+            ("x^2 + y^2", True),
+            ("(a > b) and (c < d)", True),
+            ("not (x = y)", True),
+            ('"hello" & "world"', True),
+            ("3.14 * r^2", True),
+            ("1.23e-5 + 2.34E+3", True),
+            ("2 + * 3", False),
+            ("(a + b", False),
+            ("sin(,)", False),
+            ("123abc", False),
+            ("+", False),
+            ("a +", False),
+            ("( )", False),
+            ("2 + + 3", False),
+            ("sin(x, , y)", False),
+            ("123.", False),
+        )
+
+        for expression, expected in test_cases:
+            with self.subTest(expression=expression):
+                is_valid, _ = validator.is_valid_winwrap_expression(expression)
+                self.assertEqual(is_valid, expected)
+
+
+class TestParameterCalculations(unittest.TestCase):
+    def test_parameter_operations(self):
+        a = Parameter("a", 1.5, "test description")
+        b = Parameter("b", "2")
+        c = Parameter("c", 36)
+
+        d = ((a + b) * c).rename("d").redescribe("new description")
+        self.assertEqual(d.name, "d")
+        self.assertEqual(d.expression, "((a + b) * c)")
+        self.assertEqual(d.description, "new description")
+
+        e = (a + b * c).rename("e")
+        self.assertEqual(e.name, "e")
+        self.assertEqual(e.expression, "(a + (b * c))")
+
+        f = Parameter(2 / a).rename("f")
+        self.assertEqual(f.name, "f")
+        self.assertEqual(f.expression, "(2 / a)")
+
+        self.assertEqual((a + b).expression, "(a + b)")
+        self.assertEqual(math_.sqrt(2).expression, "Sqr(2)")
+
 
 
 class TestParameterList(unittest.TestCase):
