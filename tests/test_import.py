@@ -15,8 +15,8 @@ if __name__ == "__main__":
     try:
         import mzcst_2024 as mz
 
-        print(mz.__version__)
-        print(mz.__file__)
+        print("mzcst_2024 version: ",mz.__version__)
+        print("mzcst_2024 file: ",mz.__file__)
     except ImportError as e:
         print(f"ImportError: {e}")
 
