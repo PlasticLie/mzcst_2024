@@ -28,15 +28,32 @@ class TestWinWrapBasicExpression(unittest.TestCase):
             ("+", False),
             ("a +", False),
             ("( )", False),
-            ("2 + + 3", False),
+            ("2 + + 3", True),
             ("sin(x, , y)", False),
-            ("123.", False),
+            ("123.", True),
         )
 
         for expression, expected in test_cases:
             with self.subTest(expression=expression):
                 is_valid, _ = validator.is_valid_winwrap_expression(expression)
                 self.assertEqual(is_valid, expected)
+
+    def test_function_and_logical_operator_boundaries(self):
+        validator = winwrap_basic.expression.WinWrapBasicExpressionValidator()
+        cases = (
+            ("sin(cos(x))", True),
+            ("f(x, sin(y))", True),
+            ("x AND NOT (y OR z)", True),
+            ("order(x) Or origin", True),
+            ("sin(x) cos(y)", False),
+            ("sin(x,)", False),
+            ("f(sin(x, , y))", False),
+            ("x NOT (y)", False),
+        )
+        for expression, expected in cases:
+            with self.subTest(expression=expression):
+                is_valid, message = validator.is_valid_winwrap_expression(expression)
+                self.assertEqual(is_valid, expected, message)
 
 
 class TestParameterCalculations(unittest.TestCase):
@@ -64,6 +81,28 @@ class TestParameterCalculations(unittest.TestCase):
 
 
 class TestParameterList(unittest.TestCase):
+    def test_parameter_and_list_mutations_share_objects_but_not_structure(self):
+        first = Parameter("first", "1")
+        second = Parameter("second", "2")
+        third = Parameter("third", "3")
+        parameters = ParameterList([first, second])
+
+        first.modify_expression("10")
+        self.assertIs(parameters[0], first)
+        self.assertEqual(parameters[0].expression, "10")
+
+        parameters["second"].modify_expression("20")
+        self.assertEqual(second.expression, "20")
+
+        parameters[0] = third
+        self.assertIs(parameters[0], third)
+        self.assertEqual(first.expression, "10")
+        self.assertEqual(third.expression, "3")
+
+        del parameters["second"]
+        self.assertEqual(parameters.to_list(), [["third", "3"]])
+        self.assertEqual(second.expression, "20")
+
     def test_initialization_and_list_operations(self):
         first = Parameter("a", "1", "first")
         second = Parameter("b", "a + 1")

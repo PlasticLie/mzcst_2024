@@ -147,18 +147,10 @@ class WinWrapBasicExpressionValidator:
             # 检查多字符运算符
             if i + 1 < n:
                 two_char_op = expression[i : i + 2]
-                if two_char_op in {"<=", ">=", "<>", "or", "and", "not", "xor"}:
-                    # 处理多单词逻辑运算符
-                    if two_char_op == "or" and (
-                        i == 0 or not expression[i - 1].isalnum()
-                    ):
-                        tokens.append("or")
-                        i += 2
-                        continue
-                    elif two_char_op in {"<=", ">=", "<>"}:
-                        tokens.append(two_char_op)
-                        i += 2
-                        continue
+                if two_char_op in {"<=", ">=", "<>"}:
+                    tokens.append(two_char_op)
+                    i += 2
+                    continue
 
             # 检查单字符运算符
             if expression[i] in self.operators.union(
@@ -262,6 +254,18 @@ class WinWrapBasicExpressionValidator:
                 # 逗号后需要新的参数
                 expect_operand = True
 
+            # 处理运算符
+            elif self.is_operator(token):
+                if expect_operand:
+                    # 允许一元运算符 +, -, not
+                    if token_lower in {"+", "-", "not"} and i + 1 < n:
+                        continue
+                    return False, f"位置{i}: 运算符'{token}'需要左操作数"
+                if token_lower == "not":
+                    return False, f"位置{i}: 运算符'{token}'前需要运算符"
+                # 运算符后需要操作数
+                expect_operand = True
+
             # 处理函数调用
             elif (
                 (
@@ -273,19 +277,7 @@ class WinWrapBasicExpressionValidator:
             ):
                 if not expect_operand:
                     return False, f"位置{i}: 函数调用前需要运算符"
-                # 函数调用本身作为操作数
-                expect_operand = False
-                # 跳过函数名，让后续处理括号
-
-            # 处理运算符
-            elif self.is_operator(token):
-                if expect_operand:
-                    # 允许一元运算符 +, -, not
-                    if token in {"+", "-", "not"} and i + 1 < n:
-                        continue  # 一元运算符，仍然期望操作数
-                    return False, f"位置{i}: 运算符'{token}'需要左操作数"
-                # 运算符后需要操作数
-                expect_operand = True
+                # 函数名后的左括号开始参数表达式
 
             # 处理操作数（数字、标识符、字符串）
             else:
