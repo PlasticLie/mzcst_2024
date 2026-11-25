@@ -7,7 +7,7 @@ import logging
 import pathlib
 import typing
 import warnings
-from collections.abc import Iterable, Iterator, Sequence
+from typing import Iterable, Iterator, Sequence
 
 from . import interface
 from .common import NEW_LINE, OPERATION_FAILED, OPERATION_SUCCESS, quoted
@@ -49,7 +49,9 @@ class CSTObjectAttribute:
         )
         for item in self._value:
             if '"' in item and not (
-                item.count('"') == 2 and item.startswith('"') and item.endswith('"')
+                item.count('"') == 2
+                and item.startswith('"')
+                and item.endswith('"')
             ):
                 raise ValueError(
                     "attribute value must have double quotes only as a pair at both ends"

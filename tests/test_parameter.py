@@ -116,8 +116,7 @@ class TestParameterList(unittest.TestCase):
         ):
             with self.subTest(name=name):
                 self.assertFalse(hasattr(parameters, name))
-        with self.assertRaises(TypeError):
-            parameters + []
+        self.assertRaises(TypeError, lambda: parameters + [])
 
     def test_duplicate_names_are_preserved(self):
         first, second = Parameter("a", 1), Parameter("a", 2)
