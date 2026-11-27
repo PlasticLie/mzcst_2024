@@ -78,6 +78,69 @@ class TestBaseAttribute(unittest.TestCase):
         )
         self.assertEqual(str(CSTObjectAttribute("name", [])), ".name ")
 
+    def test_from_str(self):
+        for attribute, expected in (
+            (CSTObjectAttribute("name", 42), ["42"]),
+            (CSTObjectAttribute("name", [1, 2.5, "x"]), ["1", "2.5", "x"]),
+            (CSTObjectAttribute("name", []), []),
+            (CSTObjectAttribute("name", ""), [""]),
+            (
+                CSTObjectAttribute("name with spaces ", ['"a,b"', "c\\d\nx"]),
+                ["a,b", "c\\d\nx"],
+            ),
+            (CSTObjectAttribute("", ["", "值"]), ["", "值"]),
+        ):
+            with self.subTest(attribute=attribute):
+                parsed = CSTObjectAttribute.from_str(str(attribute))
+                self.assertEqual(parsed.name, attribute.name)
+                self.assertEqual(parsed.value, expected)
+                self.assertEqual(str(parsed), str(attribute))
+
+    def test_from_str_rejects_invalid_format(self):
+        for text in (
+            "",
+            "name ",
+            ".name",
+            '.name"value"',
+            '.name "unfinished',
+            '.name "a","b"',
+            '.name "a", ',
+            '.name "a" trailing',
+            '.name "a" "b"',
+            ".na'me ",
+        ):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                CSTObjectAttribute.from_str(text)
+
+    def test_from_dict_item(self):
+        class Key:
+            def __str__(self):
+                return "Name_1"
+
+        for value, expected in (
+            (42, ["42"]),
+            ([1, 2.5, "x"], ["1", "2.5", "x"]),
+            ([], []),
+            (None, ["None"]),
+        ):
+            with self.subTest(value=value):
+                attribute = CSTObjectAttribute.from_dict_item((Key(), value))
+                self.assertEqual(attribute.name, "Name_1")
+                self.assertEqual(attribute.value, expected)
+
+        original = CSTObjectAttribute("name", ["first", "second"])
+        item = next(iter(original.to_dict().items()))
+        self.assertEqual(
+            CSTObjectAttribute.from_dict_item(item).to_dict(), original.to_dict()
+        )
+
+    def test_from_dict_item_rejects_invalid_names_and_values(self):
+        for key in ("", "1name", "_name", "a b", "name\n", "名称", 42):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                CSTObjectAttribute.from_dict_item((key, "value"))
+        with self.assertRaises(ValueError):
+            CSTObjectAttribute.from_dict_item(("name", ['in"valid']))
+
     def test_repr(self):
         self.assertEqual(
             repr(CSTObjectAttribute("name", 42)),

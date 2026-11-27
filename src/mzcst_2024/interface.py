@@ -464,11 +464,11 @@ class DesignEnvironment:
         _logger.info("Disable quiet mode context.")
         return self._env.quiet_mode_disabled()
 
-    def active_project(self) -> Optional[Project]:
-        """Returns the currently active project if any.
+    def active_project(self) -> Project:
+        """Get the currently active project.
 
         Returns:
-            Project | None: 当前活动项目
+            Project: 当前活动项目
         """
         proj = self._env.active_project()
         if proj is None:

@@ -114,8 +114,8 @@ class WinWrapBasicExpressionValidator:
             return False
         if not identifier[0].isalpha():
             return False
-        pattern = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
-        return bool(re.match(pattern, identifier))
+        pattern = r"[a-zA-Z_][a-zA-Z0-9_]*"
+        return bool(re.fullmatch(pattern, identifier))
 
     def is_number(self, token: str) -> bool:
         """检查是否为有效的数字"""

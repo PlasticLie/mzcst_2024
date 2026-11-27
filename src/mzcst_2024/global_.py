@@ -58,6 +58,60 @@ class CSTObjectAttribute:
                 )
         return
 
+    @classmethod
+    def from_str(cls, attr_str: str) -> "CSTObjectAttribute":
+        """解析 __str__ 的输出；值的外层双引号不会保留。
+
+        原值是否已有外层双引号无法从输出中区分。
+        格式无效时抛出 ValueError。
+        """
+        if not attr_str.startswith("."):
+            raise ValueError("attribute string must start with '.'")
+
+        first_quote = attr_str.find('"')
+        if first_quote == -1:
+            if not attr_str.endswith(" "):
+                raise ValueError("invalid attribute string")
+            return cls(attr_str[1:-1], [])
+
+        if first_quote < 2 or attr_str[first_quote - 1] != " ":
+            raise ValueError("invalid attribute string")
+        name = attr_str[1 : first_quote - 1]
+        values: list[str] = []
+        index = first_quote
+        while True:
+            end = attr_str.find('"', index + 1)
+            if end == -1:
+                raise ValueError("unterminated attribute value")
+            values.append(attr_str[index + 1 : end])
+            if end == len(attr_str) - 1:
+                break
+            if attr_str[end + 1 : end + 4] != ', "':
+                raise ValueError("invalid attribute value separator")
+            index = end + 3
+        return cls(name, values)
+
+    @classmethod
+    def from_dict_item(
+        cls, item: tuple[object, object]
+    ) -> "CSTObjectAttribute":
+        """从字典的一个 (key, value) 元素创建属性。
+
+        key 转换为字符串后必须是有效的 WinWrap Basic 标识符。
+        value 为列表时逐项转换为字符串，否则整体转换为字符串。
+        标识符或属性值无效时抛出 ValueError。
+        """
+        key, value = item
+        name = str(key)
+        if not WinWrapBasicExpressionValidator().is_valid_identifier(name):
+            raise ValueError(f"invalid WinWrap Basic identifier: {name!r}")
+        converted = (
+            [str(element) for element in value]
+            if isinstance(value, list)
+            else str(value)
+        )
+        return cls(name, converted)
+
     @property
     def name(self) -> str:
         return self._name
@@ -144,16 +198,48 @@ class AttributeList:
                 "expected a CSTObjectAttribute or a list of CSTObjectAttributes"
             )
         self._replace_attributes(attributes)
+        return
 
     def _replace_attributes(
         self, attributes: Iterable[CSTObjectAttribute]
     ) -> None:
+        """_summary_
+
+        Parameters
+        ----------
+        attributes : Iterable[CSTObjectAttribute]
+            _description_
+
+        Raises
+        ------
+        TypeError
+            _description_
+        """
         validated: list[CSTObjectAttribute] = []
         for attribute in attributes:
             if not isinstance(attribute, CSTObjectAttribute):
                 raise TypeError("expected a CSTObjectAttribute")
             validated.append(attribute)
         self._attributes[:] = validated
+        return
+
+    @classmethod
+    def from_dict(
+        cls, attributes_dict: dict[str, list[str] | str]
+    ) -> "AttributeList":
+        """从字典创建属性列表。
+
+        Args:
+            attributes_dict (dict[str, list[str]]): 属性字典。
+
+        Returns:
+            AttributeList: 属性列表。
+        """
+        attributes = [
+            CSTObjectAttribute(name, value)
+            for name, value in attributes_dict.items()
+        ]
+        return cls(attributes)
 
     def __iter__(self) -> Iterator[CSTObjectAttribute]:
         return iter(self._attributes)
