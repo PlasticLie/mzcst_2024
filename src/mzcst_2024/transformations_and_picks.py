@@ -83,6 +83,8 @@ class WCS:
                 )
             case _:
                 _logger.error("Invalid WCS type.")
+
+        _logger.info(OPERATION_SUCCESS, f"activate {c} coordinates")
         return
 
     @property
@@ -448,8 +450,8 @@ class Rotate(BaseTransform):
         transform block it is 'false' so the pick-points will be deleted.
         by default `False`
     auto_destination : bool, optional
-        **Note:** This attribute is not listed in the documentation. This 
-        setting specifies whether the transformation should be automatically 
+        **Note:** This attribute is not listed in the documentation. This
+        setting specifies whether the transformation should be automatically
         applied to the destination object. by default `True`
     what : _transform_object_type, optional
         This execute a specified transform onto the given type of objects (named
